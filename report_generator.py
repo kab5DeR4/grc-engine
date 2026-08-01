@@ -5,7 +5,7 @@ from typing import Dict, Any
 
 def generate_html_report(report_data: Dict[str, Any], output_path: str = "reports/audit_report.html") -> str:
     """
-    Generates an HTML GRC Audit Report from structured audit data.
+    Generates an HTML GRC Audit Report from structured audit data using the Hand-Drawn design system.
     """
     report_time = datetime.now().strftime("%d-%b-%Y %H:%M:%S")
     
@@ -31,16 +31,21 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
         matched = fw.get("matched_controls", 0)
         total = fw.get("total_controls", 0)
         
+        status_color = "text-hd-accent" if pct < 45 else ("text-hd-secondary" if pct < 80 else "text-green-700")
+        
         framework_rows_html += f"""
-        <tr style="border-bottom: 1px dashed rgba(100, 255, 218, 0.3);">
-            <td style="padding: 16px; font-weight: 700; color: #64ffda;">{fw_name}</td>
-            <td style="padding: 16px; width: 45%;">
-                <div style="border: 1px solid rgba(100, 255, 218, 0.4); height:12px; width:100%; position: relative;">
-                    <div style="background:#64ffda; height:100%; width:{pct}%; opacity: 0.8;"></div>
+        <tr class="border-b-4 border-dashed border-hd-muted hover:bg-white transition-colors">
+            <td class="py-4 px-4 font-kalam font-bold text-xl">{fw_name}</td>
+            <td class="py-4 px-4 w-2/5">
+                <div class="h-6 w-full bg-hd-bg border-[3px] border-hd-border wobbly shadow-[2px_2px_0px_0px_#2d2d2d] overflow-hidden p-0.5">
+                    <div class="h-full bg-hd-secondary wobbly" style="width: {pct}%;"></div>
                 </div>
             </td>
-            <td style="padding: 16px; font-size: 12px;"><strong>[ {pct}% ]</strong> ({matched}/{total} nodes)</td>
-            <td style="padding: 16px;"><span style="color:#64ffda; font-size: 11px;">{status}</span></td>
+            <td class="py-4 px-4 font-bold text-lg">
+                <span>{pct}%</span> 
+                <span class="text-sm ml-1">({matched}/{total})</span>
+            </td>
+            <td class="py-4 px-4 font-kalam font-bold text-xl {status_color}">{status}</td>
         </tr>
         """
 
@@ -50,54 +55,51 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
     impl_list = report_data.get("implemented_controls", [])
     
     if impl_list:
-        for ctrl in impl_list:
-            quote = evidence_map.get(ctrl, "Verified in structural policy text.")
+        implemented_controls_html += '<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">'
+        for i, ctrl in enumerate(impl_list):
             implemented_controls_html += f"""
-            <div style="border: 1px solid rgba(100, 255, 218, 0.4); padding: 15px; margin-bottom: 12px; background: rgba(100, 255, 218, 0.05);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                    <strong style="font-size: 13px; color: #e6f1ff;">[X] {ctrl}</strong>
-                    <span style="font-size: 10px; color: #64ffda;">STATUS: VERIFIED</span>
-                </div>
-                <div style="border-left: 1px dashed #64ffda; padding-left: 10px; font-style: italic; font-size: 12px; color: #8892b0;">
-                    "{quote}"
-                </div>
+            <div class="flex items-center gap-3 p-4 border-2 border-hd-border bg-[#f8f9fa] wobbly hover:rotate-1 transition-transform shadow-[2px_2px_0px_0px_#2d2d2d]">
+                <div class="w-6 h-6 rounded-full bg-hd-secondary text-white flex items-center justify-center font-bold text-sm flex-shrink-0 border border-hd-border">✓</div>
+                <span class="text-base font-bold text-hd-fg leading-tight">{ctrl}</span>
             </div>
             """
+        implemented_controls_html += '</div>'
     else:
-        implemented_controls_html = "<p style='color:#ff3366;'>No compliant controls identified.</p>"
+        implemented_controls_html = "<div class='p-6 bg-[#fff0f0] border-4 border-dashed border-hd-accent wobbly text-hd-accent font-kalam text-2xl font-bold'>No compliant controls identified.</div>"
 
     # Compliance Gaps
     gaps_found = report_data.get("gaps_found", [])
     gaps_html = ""
     if gaps_found:
-        for gap in gaps_found:
+        gaps_html += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">'
+        for i, gap in enumerate(gaps_found):
             if isinstance(gap, dict):
                 ctrl_name = gap.get("control", "Security Node")
                 issue = gap.get("issue", "Structural mechanism absent in policy.")
-                clauses = ", ".join(gap.get("framework_clauses", []))
             else:
                 ctrl_name = str(gap)
                 issue = f"Control {ctrl_name} is missing or inadequately defined."
-                clauses = "ISO 27001 / NIST CSF / GDPR / NIS2"
-                
+            
+            rot = "rotate-1" if i % 2 == 0 else "-rotate-1"
+            
             gaps_html += f"""
-            <div style="border: 1px solid #ff3366; padding: 15px; margin-bottom: 12px; background: rgba(255, 51, 102, 0.05);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-                    <strong style="font-size: 13px; color: #ff3366;">[ ] {ctrl_name}</strong>
-                    <span style="font-size: 10px; color: #ff3366; border: 1px solid #ff3366; padding: 2px 6px;">GAP</span>
+            <div class="flex items-start gap-4 p-5 border-2 border-hd-border bg-[#fff0f0] wobbly hover:rotate-0 transition-transform shadow-[4px_4px_0px_0px_#2d2d2d]">
+                <div class="w-8 h-8 rounded-full bg-hd-accent text-white flex items-center justify-center font-bold flex-shrink-0 border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]">!</div>
+                <div>
+                    <strong class="text-xl font-bold text-hd-accent block mb-1 font-kalam leading-tight">{ctrl_name}</strong>
+                    <p class="text-base text-hd-fg leading-snug">{issue}</p>
                 </div>
-                <p style="font-size: 12px; color: #e6f1ff; margin: 8px 0;">{issue}</p>
-                <div style="font-size: 10px; color: #8892b0;">IMPACTED STANDARDS: {clauses}</div>
             </div>
             """
+        gaps_html += '</div>'
     else:
-        gaps_html = "<p style='color:#64ffda;'>No gaps detected.</p>"
+        gaps_html = "<div class='p-6 bg-[#d4edda] border-4 border-dashed border-green-700 wobbly text-green-800 font-kalam text-2xl font-bold'>No gaps detected. Architecture is fortified.</div>"
 
     # Remediation Steps
     remediation_steps = report_data.get("remediation_steps", [])
     remediation_html = ""
     if remediation_steps:
-        for step in remediation_steps:
+        for i, step in enumerate(remediation_steps):
             if isinstance(step, dict):
                 ctrl = step.get("control", "Control")
                 prio = step.get("priority", "High")
@@ -108,21 +110,25 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
                 prio = "High"
                 action = str(step)
                 ref = "GRC Compliance Standard"
+                
+            prio_color = "bg-hd-accent text-white" if prio == "High" else "bg-[#fff9c4] text-hd-fg"
+            rot = "rotate-2" if i % 2 == 0 else "-rotate-1"
 
             remediation_html += f"""
-            <div style="border: 1px solid rgba(100, 255, 218, 0.4); padding: 15px; margin-bottom: 12px; position: relative;">
-                <div style="position: absolute; top: 0; right: 0; background: #ff3366; color: #0a192f; font-size: 9px; padding: 2px 5px; font-weight: bold;">
+            <div class="bg-white border-[3px] border-hd-border wobbly-md p-6 mb-6 shadow-[6px_6px_0px_0px_#2d2d2d] {rot} relative overflow-hidden group hover:rotate-0 transition-all">
+                <div class="absolute top-4 right-4 {prio_color} border-2 border-hd-border text-sm px-4 py-1 wobbly font-bold shadow-[2px_2px_0px_0px_#2d2d2d]">
                     PRIORITY: {prio}
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                    <strong style="font-size: 13px; color: #e6f1ff;">TARGET: {ctrl}</strong>
+                <div class="mb-3 pr-32">
+                    <span class="text-lg font-kalam text-hd-secondary font-bold block mb-1">TARGET NODE</span>
+                    <strong class="text-hd-fg text-2xl font-bold">{ctrl}</strong>
                 </div>
-                <p style="font-size: 12px; color: #8892b0; margin-bottom: 8px;"><strong>RECOMMENDED ACTION:</strong> {action}</p>
-                <div style="font-size: 10px; color: #64ffda; opacity: 0.8;">FRAMEWORK REFERENCE: {ref}</div>
+                <p class="text-hd-fg text-lg mb-4"><strong>Action:</strong> {action}</p>
+                <div class="text-sm font-bold border-t-2 border-dashed border-hd-muted pt-3 mt-3">FRAMEWORK REF: {ref}</div>
             </div>
             """
     else:
-        remediation_html = "<p style='color:#64ffda;'>No remediation actions required.</p>"
+        remediation_html = "<div class='p-6 bg-[#d4edda] border-4 border-dashed border-green-700 wobbly text-green-800 font-kalam text-2xl font-bold'>No remediation actions required.</div>"
 
     html_content = f"""<!DOCTYPE html>
 <html lang="en">
@@ -130,244 +136,173 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enterprise GRC Audit Report</title>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Hand-Drawn Config -->
+    <script>
+        tailwind.config = {{
+            theme: {{
+                extend: {{
+                    colors: {{
+                        hd: {{
+                            bg: '#fdfbf7',
+                            fg: '#2d2d2d',
+                            muted: '#e5e0d8',
+                            accent: '#ff4d4d',
+                            border: '#2d2d2d',
+                            secondary: '#2d5da1',
+                        }}
+                    }},
+                    fontFamily: {{
+                        kalam: ['Kalam', 'cursive'],
+                        patrick: ['"Patrick Hand"', 'cursive'],
+                    }}
+                }}
+            }}
+        }}
+    </script>
+    
     <style>
-        :root {{
-            --bg-base: #0a192f;
-            --text-primary: #e6f1ff;
-            --text-secondary: #8892b0;
-            --accent-cyan: #64ffda;
-            --accent-red: #ff3366;
-            --border-thin: 1px solid rgba(100, 255, 218, 0.4);
-            --font-mono: 'Roboto Mono', monospace;
-        }}
-        
-        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-        
         body {{
-            background-color: var(--bg-base);
-            color: var(--text-primary);
-            font-family: var(--font-mono);
-            padding: 40px;
-            line-height: 1.6;
-            font-size: 12px;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
+            background-image: radial-gradient(#e5e0d8 1px, transparent 1px);
+            background-size: 24px 24px;
         }}
-        
-        .report-card {{
-            max-width: 1000px;
-            margin: 0 auto;
-            background: rgba(10, 25, 47, 0.9);
-            border: var(--border-thin);
-            padding: 40px;
-            position: relative;
-        }}
-        
-        .report-card::before {{
-            content: '+';
-            position: absolute; top: -8px; left: -4px; color: var(--accent-cyan);
-        }}
-        .report-card::after {{
-            content: '+';
-            position: absolute; bottom: -8px; right: -4px; color: var(--accent-cyan);
-        }}
-        
-        .report-header {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid var(--accent-cyan);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }}
-        
-        .report-title {{
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: 0.1em;
-        }}
-        
-        .mono-label {{
-            font-size: 10px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 4px;
-        }}
-        
-        .meta-grid {{
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 40px;
-        }}
-        
-        .meta-box {{
-            border: var(--border-thin);
-            padding: 15px;
-            background: rgba(255,255,255,0.02);
-        }}
-        
-        .meta-box .val {{
-            font-size: 20px;
-            color: var(--text-primary);
-            margin-top: 8px;
-        }}
-        
-        section {{
-            margin-bottom: 40px;
-        }}
-        
-        h2 {{
-            font-size: 14px;
-            color: var(--accent-cyan);
-            border-bottom: 1px dashed rgba(100, 255, 218, 0.3);
-            padding-bottom: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-        }}
-        
-        table {{
-            width: 100%;
-            border-collapse: collapse;
-            border: var(--border-thin);
-        }}
-        
-        th {{
-            background: rgba(100, 255, 218, 0.1);
-            color: var(--text-primary);
-            font-size: 10px;
-            text-transform: uppercase;
-            padding: 12px;
-            text-align: left;
-            border-bottom: var(--border-thin);
-        }}
-        
-        .pro-summary {{
-            color: var(--text-secondary);
-            border-left: 2px solid var(--accent-cyan);
-            padding-left: 15px;
-            background: rgba(100, 255, 218, 0.02);
-            padding: 15px;
-        }}
-        
-        .footer {{
-            border-top: 1px solid var(--text-secondary);
-            padding-top: 20px;
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-secondary);
-            font-size: 10px;
-        }}
-        
-        @media print {{
-            body {{ background: #0a192f !important; -webkit-print-color-adjust: exact; padding: 0; }}
-            .report-card {{ border: var(--border-thin) !important; }}
-        }}
+        .wobbly {{ border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; }}
+        .wobbly-md {{ border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; }}
+        .wobbly-lg {{ border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px; }}
     </style>
 </head>
-<body>
+<body class="bg-hd-bg text-hd-fg font-patrick antialiased min-h-screen">
 
-<div class="report-card">
-    <div class="report-header">
-        <div>
-            <div class="mono-label">// AUDIT REPORT [GRC]</div>
-            <div class="report-title">
-                ENTERPRISE GRC REPORT
+    <div class="max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        
+        <!-- Report Header -->
+        <header class="bg-white border-4 border-hd-border wobbly p-8 md:p-12 mb-12 shadow-[8px_8px_0px_0px_#2d2d2d] relative rotate-1">
+            <!-- Tape -->
+            <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-32 h-8 bg-gray-400/30 rotate-2 border border-black/10"></div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-start gap-6 border-b-4 border-dashed border-hd-muted pb-8 mb-8">
+                <div>
+                    <div class="font-kalam text-xl text-hd-secondary font-bold mb-1">AUDIT REPORT [GRC]</div>
+                    <h1 class="font-kalam text-5xl md:text-6xl font-bold tracking-tight">Enterprise GRC Report</h1>
+                </div>
+                <div class="text-left md:text-right">
+                    <div class="text-lg mb-1">Generated: {report_time}</div>
+                    <div class="text-lg font-bold border-2 border-hd-border bg-[#fff9c4] px-4 py-1 wobbly shadow-[2px_2px_0px_0px_#2d2d2d] rotate-2 inline-block">Processed Locally</div>
+                </div>
             </div>
-        </div>
-        <div style="text-align:right;">
-            <div class="mono-label">TIMESTAMP: {report_time}</div>
-            <div class="mono-label" style="color:var(--accent-cyan);">STATUS: GENERATED LOCALLY</div>
-        </div>
+
+            <!-- KPI Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                <div class="bg-[#fff9c4] border-[3px] border-hd-border wobbly shadow-[4px_4px_0px_0px_#2d2d2d] p-5 -rotate-2">
+                    <div class="font-kalam text-xl font-bold mb-1 border-b-2 border-dashed border-hd-border pb-1">Evaluation</div>
+                    <div class="text-2xl font-bold {'text-hd-accent' if 'Non-Compliant' in compliant_status else 'text-green-700'} mt-2">{compliant_status}</div>
+                </div>
+                <div class="bg-white border-[3px] border-hd-border wobbly-md shadow-[4px_4px_0px_0px_#2d2d2d] p-5 rotate-1">
+                    <div class="font-kalam text-xl font-bold mb-1 border-b-2 border-dashed border-hd-border pb-1">Coverage</div>
+                    <div class="text-4xl font-bold text-hd-secondary mt-2">{compliance_percent}%</div>
+                </div>
+                <div class="bg-white border-[3px] border-hd-border wobbly-lg shadow-[4px_4px_0px_0px_#2d2d2d] p-5 -rotate-1">
+                    <div class="font-kalam text-xl font-bold mb-1 border-b-2 border-dashed border-hd-border pb-1">Residual Risk</div>
+                    <div class="text-3xl font-bold {'text-hd-accent' if risk_score > 45 else 'text-hd-fg'} mt-2">{risk_level} <span class="text-xl text-hd-fg/70">({risk_score})</span></div>
+                </div>
+                <div class="bg-[#fff0f0] border-[3px] border-hd-border wobbly shadow-[4px_4px_0px_0px_#2d2d2d] p-5 rotate-2">
+                    <div class="font-kalam text-xl font-bold mb-1 border-b-2 border-dashed border-hd-border pb-1">Gaps Found</div>
+                    <div class="text-4xl font-bold text-hd-accent mt-2">{len(gaps_found)}</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Executive Summary -->
+        <section class="mb-16">
+            <h2 class="font-kalam text-4xl font-bold mb-6 flex items-center gap-4">
+                <span class="bg-hd-secondary text-white w-10 h-10 border-[3px] border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d] wobbly flex items-center justify-center rotate-3">1</span> 
+                Executive Summary
+            </h2>
+            <div class="bg-[#fff9c4] border-[4px] border-hd-border wobbly p-8 text-xl leading-relaxed shadow-[6px_6px_0px_0px_#2d2d2d] -rotate-1 relative">
+                <!-- Tack -->
+                <div class="absolute top-4 left-4 w-5 h-5 rounded-full bg-hd-accent border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]"></div>
+                <div class="pl-6">
+                    {summary_text}
+                </div>
+            </div>
+        </section>
+
+        <!-- Framework Alignment -->
+        <section class="mb-16">
+            <h2 class="font-kalam text-4xl font-bold mb-6 flex items-center gap-4">
+                <span class="bg-hd-secondary text-white w-10 h-10 border-[3px] border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d] wobbly flex items-center justify-center -rotate-2">2</span> 
+                Regulatory Framework Alignment
+            </h2>
+            <div class="bg-white border-[4px] border-hd-border wobbly-lg p-2 shadow-[6px_6px_0px_0px_#2d2d2d] rotate-1">
+                <table class="w-full text-left border-collapse bg-[#fcfcfc]">
+                    <thead class="bg-hd-muted font-kalam text-2xl border-b-[3px] border-hd-border">
+                        <tr>
+                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border">Framework Spec</th>
+                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border">Coverage Simulation</th>
+                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border">Compliance Vector</th>
+                            <th class="py-4 px-4 font-bold">Status Flag</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {framework_rows_html}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Verified Controls -->
+        <section class="mb-16">
+            <h2 class="font-kalam text-4xl font-bold mb-6 flex items-center gap-4">
+                <span class="bg-hd-secondary text-white w-10 h-10 border-[3px] border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d] wobbly-md flex items-center justify-center rotate-1">3</span> 
+                Verified Controls & Evidence <span class="text-xl underline decoration-hd-secondary decoration-[3px]">({len(impl_list)} nodes)</span>
+            </h2>
+            <div class="space-y-4">
+                {implemented_controls_html}
+            </div>
+        </section>
+
+        <!-- Detected Gaps -->
+        <section class="mb-16">
+            <h2 class="font-kalam text-4xl font-bold mb-6 flex items-center gap-4 text-hd-accent">
+                <span class="bg-hd-accent text-white w-10 h-10 border-[3px] border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d] wobbly flex items-center justify-center -rotate-3">4</span> 
+                Detected Gaps <span class="text-xl text-hd-fg underline decoration-hd-accent decoration-[3px]">({len(gaps_found)} errors)</span>
+            </h2>
+            <div class="space-y-4">
+                {gaps_html}
+            </div>
+        </section>
+
+        <!-- Remediation -->
+        <section class="mb-16">
+            <h2 class="font-kalam text-4xl font-bold mb-6 flex items-center gap-4">
+                <span class="bg-hd-secondary text-white w-10 h-10 border-[3px] border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d] wobbly flex items-center justify-center rotate-2">5</span> 
+                Remediation Roadmap <span class="text-xl underline decoration-hd-secondary decoration-[3px]">({len(remediation_steps)} actions)</span>
+            </h2>
+            <div class="space-y-4">
+                {remediation_html}
+            </div>
+        </section>
+
+        <footer class="mt-20 pt-8 border-t-4 border-dashed border-hd-muted text-center flex flex-col md:flex-row justify-between items-center text-xl font-bold mb-10">
+            <div class="mb-4 md:mb-0">
+                <p>Enterprise GRC Audit Report</p>
+                <p class="font-kalam text-hd-secondary mt-1 text-2xl">Generated by Privacy-First GRC Agent</p>
+            </div>
+            <div class="bg-white border-2 border-hd-border px-6 py-3 wobbly shadow-[4px_4px_0px_0px_#2d2d2d] rotate-2">
+                <p>Engine: Rules v2.0</p>
+                <p class="mt-1 font-kalam text-hd-accent">Designed by Roshan Nale</p>
+            </div>
+        </footer>
+
     </div>
-
-    <div class="meta-grid">
-        <div class="meta-box">
-            <div class="mono-label">EVALUATION</div>
-            <div class="val" style="color:{'#ff3366' if 'Non-Compliant' in compliant_status else '#64ffda'};">{compliant_status}</div>
-        </div>
-        <div class="meta-box">
-            <div class="mono-label">COVERAGE</div>
-            <div class="val" style="color:var(--accent-cyan);">{compliance_percent}%</div>
-        </div>
-        <div class="meta-box">
-            <div class="mono-label">RESIDUAL RISK RATING</div>
-            <div class="val" style="color:{'#ff3366' if risk_score > 45 else 'var(--text-primary)'};">{risk_level} ({risk_score}/100)</div>
-        </div>
-        <div class="meta-box">
-            <div class="mono-label">GAPS</div>
-            <div class="val" style="color:var(--accent-red);">{len(gaps_found)} ERRORS</div>
-        </div>
-    </div>
-
-    <section>
-        <h2>
-            <span>[01] EXECUTIVE SUMMARY</span>
-        </h2>
-        <div class="pro-summary">
-            {summary_text}
-        </div>
-    </section>
-
-    <section>
-        <h2>
-            <span>[02] REGULATORY FRAMEWORK ALIGNMENT</span>
-        </h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Framework Spec</th>
-                    <th>Coverage Simulation</th>
-                    <th>Compliance Vector</th>
-                    <th>Status Flag</th>
-                </tr>
-            </thead>
-            <tbody>
-                {framework_rows_html}
-            </tbody>
-        </table>
-    </section>
-
-    <section>
-        <h2>
-            <span>[03] VERIFIED CONTROLS & EVIDENCE ({len(impl_list)})</span>
-        </h2>
-        {implemented_controls_html}
-    </section>
-
-    <section>
-        <h2>
-            <span>[04] DETECTED GAPS ({len(gaps_found)})</span>
-        </h2>
-        {gaps_html}
-    </section>
-
-    <section>
-        <h2>
-            <span>[05] REMEDIATION ROADMAP ({len(remediation_steps)})</span>
-        </h2>
-        {remediation_html}
-    </section>
-
-    <div class="footer">
-        <div>
-            <div>AUDIT REPORT</div>
-            <div style="color:var(--accent-cyan); margin-top:4px;">GENERATED LOCALLY</div>
-        </div>
-        <div>
-            ENGINE: RULES v2.0
-        </div>
-    </div>
-</div>
 
 </body>
 </html>
@@ -385,6 +320,6 @@ if __name__ == "__main__":
         with open(report_file, "r", encoding="utf-8") as f:
             data = json.load(f)
         out = generate_html_report(data)
-        print(f"HTML report generated successfully at: {out}")
+        print(f"HTML report generated successfully at: {{out}}")
     else:
         print("No audit_report.json found in reports/ directory.")
