@@ -35,17 +35,17 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
         
         framework_rows_html += f"""
         <tr class="border-b-4 border-dashed border-hd-muted hover:bg-white transition-colors">
-            <td class="py-4 px-4 font-kalam font-bold text-xl">{fw_name}</td>
-            <td class="py-4 px-4 w-2/5">
+            <td class="py-4 px-4 font-kalam font-bold text-xl whitespace-nowrap border-r-[3px] border-hd-border w-1/4">{fw_name}</td>
+            <td class="py-4 px-4 w-2/5 border-r-[3px] border-hd-border">
                 <div class="h-6 w-full bg-hd-bg border-[3px] border-hd-border wobbly shadow-[2px_2px_0px_0px_#2d2d2d] overflow-hidden p-0.5">
                     <div class="h-full bg-hd-secondary wobbly" style="width: {pct}%;"></div>
                 </div>
             </td>
-            <td class="py-4 px-4 font-bold text-lg">
+            <td class="py-4 px-4 font-bold text-lg whitespace-nowrap border-r-[3px] border-hd-border w-1/5">
                 <span>{pct}%</span> 
-                <span class="text-sm ml-1">({matched}/{total})</span>
+                <span class="text-sm ml-1 text-hd-fg/70">({matched}/{total})</span>
             </td>
-            <td class="py-4 px-4 font-kalam font-bold text-xl {status_color}">{status}</td>
+            <td class="py-4 px-4 font-kalam font-bold text-xl whitespace-nowrap w-1/5 {status_color}">{status}</td>
         </tr>
         """
 
@@ -115,7 +115,7 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
             rot = "rotate-2" if i % 2 == 0 else "-rotate-1"
 
             remediation_html += f"""
-            <div style="break-inside: avoid; page-break-inside: avoid;" class="bg-white border-[3px] border-hd-border wobbly-md p-6 mb-6 shadow-[6px_6px_0px_0px_#2d2d2d] {rot} relative overflow-hidden group hover:rotate-0 transition-all">
+            <div style="break-inside: avoid; page-break-inside: avoid; display: block;" class="bg-white border-[3px] border-hd-border wobbly-md p-6 mb-6 shadow-[6px_6px_0px_0px_#2d2d2d] {rot} relative group hover:rotate-0 transition-all">
                 <div class="absolute top-4 right-4 {prio_color} border-2 border-hd-border text-sm px-4 py-1 wobbly font-bold shadow-[2px_2px_0px_0px_#2d2d2d]">
                     PRIORITY: {prio}
                 </div>
@@ -184,20 +184,40 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
                 transform: none !important;
                 animation: none !important;
                 transition: none !important;
+                box-shadow: none !important;
+                overflow: visible !important;
             }}
-            body {{
+            html, body {{
                 background: #fdfbf7 !important;
+                height: auto !important;
+                overflow: visible !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }}
-            header, section, footer, article, tr, .wobbly, .wobbly-md, .wobbly-lg {{
+            header, section, footer, article, .wobbly, .wobbly-md, .wobbly-lg, .grid > div, .space-y-4 > div {{
                 break-inside: avoid !important;
                 page-break-inside: avoid !important;
                 -webkit-column-break-inside: avoid !important;
+                display: block !important;
+                float: none !important;
+                position: static !important;
             }}
-            div {{
-                break-inside: avoid;
-                page-break-inside: avoid;
+            table {{
+                display: table !important;
+                width: 100% !important;
+                table-layout: fixed !important;
+                border-collapse: collapse !important;
+            }}
+            thead {{ display: table-header-group !important; }}
+            tbody {{ display: table-row-group !important; }}
+            tr {{ 
+                display: table-row !important; 
+                page-break-inside: avoid !important; 
+                break-inside: avoid !important; 
+            }}
+            th, td {{ 
+                display: table-cell !important; 
+                vertical-align: middle !important; 
             }}
             h1, h2, h3, h4 {{
                 break-after: avoid !important;
@@ -277,10 +297,10 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
                 <table class="w-full text-left border-collapse bg-[#fcfcfc]">
                     <thead class="bg-hd-muted font-kalam text-2xl border-b-[3px] border-hd-border">
                         <tr>
-                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border">Framework Spec</th>
-                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border">Coverage Simulation</th>
-                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border">Compliance Vector</th>
-                            <th class="py-4 px-4 font-bold">Status Flag</th>
+                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border w-1/4">Framework Spec</th>
+                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border w-2/5">Coverage Simulation</th>
+                            <th class="py-4 px-4 font-bold border-r-[3px] border-hd-border w-1/5">Compliance Vector</th>
+                            <th class="py-4 px-4 font-bold w-1/5">Status Flag</th>
                         </tr>
                     </thead>
                     <tbody>
