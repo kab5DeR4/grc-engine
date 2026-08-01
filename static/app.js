@@ -188,7 +188,7 @@ const App = () => {
                                     <div className="w-20 h-20 mx-auto bg-white border-[3px] border-hd-border wobbly flex items-center justify-center shadow-[4px_4px_0px_0px_#2d2d2d] mb-6 font-kalam text-4xl font-bold text-hd-fg -rotate-2">1</div>
                                     <h4 className="font-kalam text-2xl font-bold text-hd-fg mb-2">Upload</h4>
                                     <p className="text-hd-fg text-lg">Provide your standard operating procedures or policy documents as a PDF.</p>
-                                    <svg className="hidden md:block absolute top-10 left-[60%] w-[80%] h-12 text-hd-secondary" viewBox="0 0 100 50" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+                                    <svg className="hidden md:block absolute top-10 left-[60%] w-[80%] h-12 text-hd-secondary" viewBox="0 0 100 50" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeDasharray="6 6">
                                         <path d="M10,25 Q30,0 50,25 T90,25" />
                                     </svg>
                                 </div>
