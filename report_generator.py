@@ -115,7 +115,7 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
             rot = "rotate-2" if i % 2 == 0 else "-rotate-1"
 
             remediation_html += f"""
-            <div class="bg-white border-[3px] border-hd-border wobbly-md p-6 mb-6 shadow-[6px_6px_0px_0px_#2d2d2d] {rot} relative overflow-hidden group hover:rotate-0 transition-all">
+            <div style="break-inside: avoid; page-break-inside: avoid;" class="bg-white border-[3px] border-hd-border wobbly-md p-6 mb-6 shadow-[6px_6px_0px_0px_#2d2d2d] {rot} relative overflow-hidden group hover:rotate-0 transition-all">
                 <div class="absolute top-4 right-4 {prio_color} border-2 border-hd-border text-sm px-4 py-1 wobbly font-bold shadow-[2px_2px_0px_0px_#2d2d2d]">
                     PRIORITY: {prio}
                 </div>
@@ -180,14 +180,24 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
 
         /* Print & Page Break Fixes */
         @media print {{
+            * {{
+                transform: none !important;
+                animation: none !important;
+                transition: none !important;
+            }}
             body {{
                 background: #fdfbf7 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }}
-            header, section, footer, .wobbly, .wobbly-md, .wobbly-lg, tr, div {{
+            header, section, footer, article, tr, .wobbly, .wobbly-md, .wobbly-lg {{
                 break-inside: avoid !important;
                 page-break-inside: avoid !important;
+                -webkit-column-break-inside: avoid !important;
+            }}
+            div {{
+                break-inside: avoid;
+                page-break-inside: avoid;
             }}
             h1, h2, h3, h4 {{
                 break-after: avoid !important;
