@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRC Audit Dashboard (Prototype)</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🛡️</text></svg>">
+    
+    <!-- Google Fonts: Kalam and Patrick Hand -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- PDF.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    
+    <!-- React & Babel CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Hand-Drawn Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hd: {
+                            bg: '#fdfbf7',
+                            fg: '#2d2d2d',
+                            muted: '#e5e0d8',
+                            accent: '#ff4d4d',
+                            border: '#2d2d2d',
+                            secondary: '#2d5da1',
+                        }
+                    },
+                    fontFamily: {
+                        kalam: ['Kalam', 'cursive'],
+                        patrick: ['"Patrick Hand"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- CSS Styles -->
+    <link rel="stylesheet" href="./style.css?v=10">
+</head>
+<body class="bg-hd-bg text-hd-fg font-patrick antialiased overflow-x-hidden relative min-h-screen flex flex-col">
+    <div id="root" class="flex-grow">
+        <!-- Loader Fallback before React mounts -->
+        <div class="flex flex-col items-center justify-center min-h-screen text-hd-fg font-kalam text-2xl tracking-widest uppercase">
+            <div class="w-12 h-12 border-[4px] border-hd-fg border-t-transparent rounded-full animate-spin mb-4" style="border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;"></div>
+            <p>Loading...</p>
+        </div>
+    </div>
+
+    <!-- React App Script -->
+    <script type="text/babel" src="./app.js?v=10"></script>
+</body>
+</html>
