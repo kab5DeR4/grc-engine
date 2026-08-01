@@ -82,3 +82,21 @@ body {
 .animate-float-bounce {
     animation: float-bounce 3s ease-in-out infinite;
 }
+
+/* Print & Page Break Fixes */
+@media print {
+    body {
+        background: #fdfbf7 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    header, section, footer, .wobbly, .wobbly-md, .wobbly-lg, tr {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+    h1, h2, h3, h4 {
+        break-after: avoid !important;
+        page-break-after: avoid !important;
+    }
+}
+

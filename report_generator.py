@@ -177,6 +177,28 @@ def generate_html_report(report_data: Dict[str, Any], output_path: str = "report
         .wobbly {{ border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; }}
         .wobbly-md {{ border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; }}
         .wobbly-lg {{ border-radius: 225px 15px 255px 15px / 15px 255px 15px 225px; }}
+
+        /* Print & Page Break Fixes */
+        @media print {{
+            body {{
+                background: #fdfbf7 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }}
+            header, section, footer, .wobbly, .wobbly-md, .wobbly-lg, tr, div {{
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }}
+            h1, h2, h3, h4 {{
+                break-after: avoid !important;
+                page-break-after: avoid !important;
+            }}
+        }}
+
+        section, .wobbly-md, .wobbly-lg, .wobbly, tr {{
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }}
     </style>
 </head>
 <body class="bg-hd-bg text-hd-fg font-patrick antialiased min-h-screen">
