@@ -743,6 +743,45 @@ const App = () => {
     const [auditData, setAuditData] = React.useState(null);
     const [reportUrl, setReportUrl] = React.useState("");
 
+    const handleLoadTestPdf = async () => {
+        setUploading(true);
+        try {
+            const response = await fetch('./test-policy.pdf');
+            const arrayBuffer = await response.arrayBuffer();
+            const typedarray = new Uint8Array(arrayBuffer);
+            
+            const pdf = await window.pdfjsLib.getDocument({ data: typedarray }).promise;
+            let extractedText = "";
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                const pageText = content.items.map(item => item.str).join(" ");
+                extractedText += pageText + "\n";
+            }
+
+            if (!extractedText.trim()) {
+                alert("Unable to extract text from the test PDF file.");
+                setUploading(false);
+                return;
+            }
+
+            const result = auditPolicyText(extractedText);
+            setAuditData(result);
+
+            const htmlString = generateHtmlReportString(result);
+            const blob = new Blob([htmlString], { type: "text/html" });
+            const blobUrl = URL.createObjectURL(blob);
+            setReportUrl(blobUrl);
+
+        } catch (error) {
+            console.error("Test PDF Parsing failed:", error);
+            alert("Failed to load test PDF.");
+        } finally {
+            setUploading(false);
+        }
+    };
+
     // Revoke object URL to prevent memory leaks
     React.useEffect(() => {
         return () => {
@@ -880,6 +919,10 @@ const App = () => {
                 </nav>
 
                 <div className="flex items-center gap-4">
+                    <button onClick={handleLoadTestPdf} disabled={uploading} className="inline-flex items-center gap-2 px-6 py-2 bg-hd-secondary text-white border-[3px] border-hd-border wobbly-md cursor-pointer hover:bg-blue-700 shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[2px_2px_0px_0px_#2d2d2d] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-100 font-bold text-lg -rotate-1 mr-4">
+                        <i data-lucide="file-check-2" className="w-5 h-5"></i>
+                        <span>Load Test PDF</span>
+                    </button>
                     <label className="inline-flex items-center gap-2 px-6 py-2 bg-white text-hd-fg border-[3px] border-hd-border wobbly-md cursor-pointer hover:bg-hd-accent hover:text-white shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[2px_2px_0px_0px_#2d2d2d] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-100 font-bold text-lg rotate-1">
                         <input type="file" className="file-input hidden" onChange={handleFileUpload} accept=".pdf" disabled={uploading} />
                         <i data-lucide="upload-cloud" className="w-5 h-5"></i>
@@ -912,6 +955,10 @@ const App = () => {
                             </p>
                             
                             <div className="relative inline-block">
+                                <button onClick={handleLoadTestPdf} disabled={uploading} className="inline-flex items-center gap-3 bg-hd-secondary text-white border-4 border-hd-border wobbly px-10 py-5 cursor-pointer hover:bg-blue-700 shadow-[6px_6px_0px_0px_#2d2d2d] hover:shadow-[3px_3px_0px_0px_#2d2d2d] hover:translate-x-[3px] hover:translate-y-[3px] active:shadow-none active:translate-x-[6px] active:translate-y-[6px] transition-all duration-100 font-bold text-2xl rotate-1 mr-6">
+                                    <i data-lucide="file-check-2" className="w-8 h-8"></i>
+                                    <span>Load Test PDF</span>
+                                </button>
                                 <label className="inline-flex items-center gap-3 bg-white text-hd-fg border-4 border-hd-border wobbly px-10 py-5 cursor-pointer hover:bg-hd-accent hover:text-white shadow-[6px_6px_0px_0px_#2d2d2d] hover:shadow-[3px_3px_0px_0px_#2d2d2d] hover:translate-x-[3px] hover:translate-y-[3px] active:shadow-none active:translate-x-[6px] active:translate-y-[6px] transition-all duration-100 font-bold text-2xl -rotate-1 group">
                                     <input type="file" className="file-input hidden" onChange={handleFileUpload} accept=".pdf" disabled={uploading} />
                                     <i data-lucide={uploading ? "loader" : "file-text"} className={`w-8 h-8 ${uploading ? 'animate-spin' : ''}`}></i>
