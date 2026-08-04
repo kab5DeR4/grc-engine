@@ -185,6 +185,45 @@ const CONTROLS_MATRIX = {
             "NIS2": "Article 21(2)(g) (Cyber Hygiene & Training)"
         }
     },
+        "Incident Response SLA": {
+        keywords: [/\bsla\b/i, /\bresponse time\b/i, /\btime to respond\b/i, /\bmttr\b/i],
+        severity: 10,
+        frameworks: {
+            "ISO 27001:2022": "A.5.24 (Information Security Incident Management)",
+            "SOC 2": "CC7.3 (Incident Response)"
+        }
+    },
+    "Backup Retention Policy": {
+        keywords: [/\bbackup retention\b/i, /\bretention period\b/i, /\bretention policy\b/i],
+        severity: 5,
+        frameworks: {
+            "ISO 27001:2022": "A.8.13 (Information Backup)",
+            "NIST CSF 2.0": "PR.DS-11 (Backup & Recovery)"
+        }
+    },
+    "SOC 2 Type II Mapping": {
+        keywords: [/\bsoc 2\b/i, /\btype ii\b/i, /\btrust services criteria\b/i, /\btsc\b/i],
+        severity: 10,
+        frameworks: {
+            "SOC 2": "General (Trust Services Criteria)"
+        }
+    },
+    "Mobile Device Management (MDM)": {
+        keywords: [/\bmdm\b/i, /\bmobile device\b/i, /\bbyod\b/i],
+        severity: 5,
+        frameworks: {
+            "ISO 27001:2022": "A.8.1 (User Endpoint Devices)",
+            "NIST CSF 2.0": "PR.AT-01 (Device Security)"
+        }
+    },
+    "Endpoint Detection & Response (EDR)": {
+        keywords: [/\bedr\b/i, /\bendpoint protection\b/i, /\bantivirus\b/i, /\banti-malware\b/i],
+        severity: 10,
+        frameworks: {
+            "ISO 27001:2022": "A.8.7 (Protection against malware)",
+            "NIST CSF 2.0": "DE.CM-04 (Endpoint Monitoring)"
+        }
+    },
     "Network Security & Perimeter Control": {
         keywords: [/\bfirewall\b/i, /\bnetwork security\b/i, /\bsegmentation\b/i, /\bvpn\b/i, /\bzero trust\b/i, /\bdmz\b/i],
         severity: 10,
