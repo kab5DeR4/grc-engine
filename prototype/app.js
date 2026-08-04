@@ -746,6 +746,8 @@ const App = () => {
     const [reportUrl, setReportUrl] = React.useState("");
     const [checkedItems, setCheckedItems] = React.useState({});
     const [selectedEvidence, setSelectedEvidence] = React.useState(null);
+    const [filterStatus, setFilterStatus] = React.useState("All");
+    const [filterFramework, setFilterFramework] = React.useState("All");
 
     const handleLoadTestPdf = async () => {
         setUploading(true);
@@ -1093,73 +1095,92 @@ const App = () => {
                             </div>
                         </div>
 
-                        {/* Verified Controls Section */}
+                        
+                        {/* Control Explorer & Filters */}
                         <div className="bg-white border-4 border-hd-border wobbly-md p-8 md:p-10 shadow-[8px_8px_0px_0px_#2d2d2d] rotate-1 relative">
-                            {/* Tape decoration */}
                             <div className="absolute -top-4 left-8 w-24 h-8 bg-gray-400/30 rotate-2 backdrop-blur-sm border border-black/10"></div>
                             
-                            <div className="flex justify-between items-center mb-6 pb-3 border-b-3 border-dashed border-hd-border">
+                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-3 border-b-3 border-dashed border-hd-border">
                                 <h3 className="font-kalam text-3xl font-bold flex items-center gap-3">
-                                    <span className="w-8 h-8 rounded-full bg-hd-secondary text-white inline-flex items-center justify-center font-bold text-lg border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]">✓</span>
-                                    Verified Controls
+                                    <span className="w-8 h-8 rounded-full bg-hd-secondary text-white inline-flex items-center justify-center font-bold text-lg border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]">🔍</span>
+                                    Control Explorer
                                 </h3>
-                                <span className="font-kalam text-lg font-bold bg-[#d4edda] text-green-900 border-2 border-hd-border px-4 py-1 wobbly shadow-[2px_2px_0px_0px_#2d2d2d]">
-                                    {auditData.implemented_controls ? auditData.implemented_controls.length : 0} Implemented
-                                </span>
+                                <div className="flex flex-wrap gap-4 mt-4 md:mt-0">
+                                    <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="px-4 py-2 border-2 border-hd-border font-bold font-patrick text-lg bg-white wobbly-sm shadow-[2px_2px_0px_0px_#2d2d2d] cursor-pointer">
+                                        <option value="All">All Statuses</option>
+                                        <option value="Compliant">Compliant</option>
+                                        <option value="Non-Compliant">Non-Compliant</option>
+                                    </select>
+                                    <select value={filterFramework} onChange={e => setFilterFramework(e.target.value)} className="px-4 py-2 border-2 border-hd-border font-bold font-patrick text-lg bg-white wobbly-sm shadow-[2px_2px_0px_0px_#2d2d2d] cursor-pointer">
+                                        <option value="All">All Frameworks</option>
+                                        <option value="ISO 27001:2022">ISO 27001</option>
+                                        <option value="NIST CSF 2.0">NIST CSF</option>
+                                        <option value="GDPR">GDPR</option>
+                                        <option value="NIS2">NIS2</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                                {auditData.implemented_controls && auditData.implemented_controls.length > 0 ? (
-                                    auditData.implemented_controls.map((ctrl, i) => (
-                                        <div key={i} className="flex items-center gap-3 p-4 border-2 border-hd-border bg-[#f8f9fa] wobbly hover:rotate-1 transition-transform shadow-[2px_2px_0px_0px_#2d2d2d]">
-                                            <div className="w-6 h-6 rounded-full bg-hd-secondary text-white flex items-center justify-center font-bold text-sm flex-shrink-0 border border-hd-border">✓</div>
-                                            <span className="text-base font-bold text-hd-fg leading-tight">{ctrl}</span>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="col-span-full text-hd-accent font-bold text-lg p-4 border-2 border-dashed border-hd-accent bg-[#fff0f0] wobbly">No controls verified.</p>
-                                )}
-                            </div>
-                        </div>
+                            <div className="max-h-[460px] overflow-y-auto pr-3 p-4 border-2 border-hd-border bg-[#fafafa] wobbly-sm shadow-[inset_0px_2px_4px_rgba(0,0,0,0.05)]">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {(() => {
+                                    // Generate unified list
+                                    const controlsList = [
+                                        ...(auditData.implemented_controls || []).map(c => ({
+                                            name: c,
+                                            status: 'Compliant',
+                                            evidence: auditData.evidence_map[c]
+                                        })),
+                                        ...(auditData.gaps_found || []).map(g => ({
+                                            name: g.control,
+                                            status: 'Non-Compliant',
+                                            issue: g.issue
+                                        }))
+                                    ];
 
-                        {/* Identified Gaps Section */}
-                        <div className="bg-white border-4 border-hd-border wobbly p-8 md:p-10 shadow-[8px_8px_0px_0px_#2d2d2d] -rotate-1 relative">
-                            {/* Thumbtack */}
-                            <div className="absolute top-4 right-8 w-6 h-6 rounded-full bg-hd-accent border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]"></div>
-                            
-                            <div className="flex justify-between items-center mb-6 pb-3 border-b-3 border-dashed border-hd-border">
-                                <h3 className="font-kalam text-3xl font-bold text-hd-accent flex items-center gap-3">
-                                    <span className="w-8 h-8 rounded-full bg-hd-accent text-white inline-flex items-center justify-center font-bold text-lg border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]">!</span>
-                                    Identified Compliance Gaps
-                                </h3>
-                                <span className="font-kalam text-lg font-bold bg-hd-accent text-white border-2 border-hd-border px-4 py-1 wobbly shadow-[2px_2px_0px_0px_#2d2d2d]">
-                                    {auditData.gaps_found ? auditData.gaps_found.length : 0} Gaps Detected
-                                </span>
-                            </div>
+                                    // Filter
+                                    const filtered = controlsList.filter(c => {
+                                        if (filterStatus !== 'All' && c.status !== filterStatus) return false;
+                                        if (filterFramework !== 'All') {
+                                            const fws = CONTROLS_MATRIX[c.name]?.frameworks || {};
+                                            if (!Object.keys(fws).some(fw => fw.includes(filterFramework))) return false;
+                                        }
+                                        return true;
+                                    });
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {auditData.gaps_found && auditData.gaps_found.length > 0 ? (
-                                    auditData.gaps_found.map((gap, i) => {
-                                        const name = gap.control || gap;
-                                        const issue = gap.issue || "Missing control requirement in current policy text.";
+                                    if (filtered.length === 0) return <p className="col-span-full font-bold text-lg p-4 border-2 border-dashed border-hd-border bg-gray-50 wobbly">No controls match the selected filters.</p>;
+
+                                    return filtered.map((item, i) => {
+                                        const isCompliant = item.status === 'Compliant';
                                         const rot = i % 3 === 0 ? "rotate-1" : (i % 3 === 1 ? "-rotate-1" : "rotate-2");
+                                        const bgClass = isCompliant ? "bg-[#f8f9fa]" : "bg-[#fff0f0]";
+                                        const iconClass = isCompliant ? "bg-hd-secondary text-white" : "bg-hd-accent text-white";
+                                        const icon = isCompliant ? "✓" : "!";
+
                                         return (
-                                            <div key={i} className={`flex items-start gap-4 p-5 border-2 border-hd-border bg-[#fff0f0] wobbly ${rot} hover:rotate-0 transition-transform shadow-[4px_4px_0px_0px_#2d2d2d] relative`}>
-                                                <div className="w-8 h-8 rounded-full bg-hd-accent text-white flex items-center justify-center font-bold flex-shrink-0 border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]">!</div>
+                                            <div 
+                                                key={i} 
+                                                onClick={() => isCompliant && setSelectedEvidence({name: item.name, evidence: item.evidence})}
+                                                className={`flex items-start gap-4 p-5 border-2 border-hd-border ${bgClass} wobbly ${rot} hover:rotate-0 transition-transform shadow-[4px_4px_0px_0px_#2d2d2d] relative ${isCompliant ? 'cursor-pointer hover:bg-[#fff9c4]' : ''}`}
+                                            >
+                                                <div className={`w-8 h-8 rounded-full ${iconClass} flex items-center justify-center font-bold flex-shrink-0 border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]`}>{icon}</div>
                                                 <div>
-                                                    <strong className="text-xl font-bold text-hd-accent block mb-1 font-kalam leading-tight">{name}</strong>
-                                                    <p className="text-base text-hd-fg leading-snug">{issue}</p>
+                                                    <strong className={`text-xl font-bold ${isCompliant ? 'text-hd-fg' : 'text-hd-accent'} block mb-1 font-kalam leading-tight`}>{item.name}</strong>
+                                                    {isCompliant ? (
+                                                        <p className="text-sm text-hd-fg/80 underline decoration-dashed">Click to view evidence...</p>
+                                                    ) : (
+                                                        <p className="text-base text-hd-fg leading-snug">{item.issue}</p>
+                                                    )}
                                                 </div>
                                             </div>
                                         );
-                                    })
-                                ) : (
-                                    <p className="col-span-full text-green-700 font-bold text-lg p-4 border-2 border-dashed border-green-700 bg-[#d4edda] wobbly">No gaps identified! Excellent compliance posture.</p>
-                                )}
+                                    });
+                                })()}
+                                </div>
                             </div>
                         </div>
 
-                        
+
                         {/* Remediation Planner */}
                         {auditData.remediation_steps && auditData.remediation_steps.length > 0 && (
                             <div className="bg-[#fff9c4] border-4 border-hd-border wobbly-lg p-8 md:p-10 shadow-[8px_8px_0px_0px_#2d2d2d] -rotate-1 relative mt-12">
