@@ -301,6 +301,7 @@ function auditPolicyText(text) {
     for (const [controlName, ctrlInfo] of Object.entries(CONTROLS_MATRIX)) {
         let isImplemented = false;
         let evidenceSnippet = null;
+        let evidenceMatchWord = null;
         
         for (const pattern of ctrlInfo.keywords) {
             const matches = [...text.matchAll(new RegExp(pattern, 'g'))];
@@ -310,6 +311,7 @@ function auditPolicyText(text) {
                 if (!checkNegativeContext(text, matchIndex)) {
                     isImplemented = true;
                     evidenceSnippet = extractEvidenceQuote(text, matchIndex, matchLength);
+                    evidenceMatchWord = text.substring(matchIndex, matchIndex + matchLength);
                     break;
                 }
             }
@@ -318,7 +320,7 @@ function auditPolicyText(text) {
         
         if (isImplemented) {
             implementedControls.append ? implementedControls.push(controlName) : implementedControls.push(controlName);
-            evidenceMap[controlName] = evidenceSnippet || "Policy phrase matched.";
+            evidenceMap[controlName] = { snippet: evidenceSnippet || "Policy phrase matched.", match: evidenceMatchWord };
             
             for (const [fwName, fwClause] of Object.entries(ctrlInfo.frameworks)) {
                 if (frameworkCoverage[fwName]) {
@@ -743,6 +745,7 @@ const App = () => {
     const [auditData, setAuditData] = React.useState(null);
     const [reportUrl, setReportUrl] = React.useState("");
     const [checkedItems, setCheckedItems] = React.useState({});
+    const [selectedEvidence, setSelectedEvidence] = React.useState(null);
 
     const handleLoadTestPdf = async () => {
         setUploading(true);
@@ -1227,6 +1230,50 @@ const App = () => {
 
                     </div>
                 )}
+            
+                {/* Evidence Modal */}
+                {selectedEvidence && (
+                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                        <div className="bg-white border-4 border-hd-border wobbly p-8 max-w-2xl w-full shadow-[8px_8px_0px_0px_#2d2d2d] relative rotate-1 max-h-[90vh] overflow-y-auto">
+                            <button onClick={() => setSelectedEvidence(null)} className="absolute top-4 right-4 text-hd-fg hover:text-hd-accent font-bold text-2xl w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full border-2 border-hd-border">✕</button>
+                            <h3 className="font-kalam text-3xl font-bold mb-2 pr-8">{selectedEvidence.name}</h3>
+                            <div className="text-sm font-bold text-hd-secondary mb-4 pb-4 border-b-2 border-dashed border-hd-muted">
+                                {Object.entries(CONTROLS_MATRIX[selectedEvidence.name]?.frameworks || {}).map(([fw, cl]) => `${fw}: ${cl}`).join(' | ')}
+                            </div>
+                            
+                            <div className="bg-[#fff9c4] p-6 border-2 border-hd-border wobbly-sm text-lg leading-relaxed mb-6 font-patrick">
+                                {(() => {
+                                    let text = selectedEvidence.evidence?.snippet || selectedEvidence.evidence || "";
+                                    let match = selectedEvidence.evidence?.match;
+                                    if (match && text) {
+                                        try {
+                                            const parts = text.split(new RegExp(`(${match})`, 'gi'));
+                                            return parts.map((part, i) => 
+                                                part.toLowerCase() === match.toLowerCase() 
+                                                    ? <mark key={i} className="bg-yellow-300 font-bold px-1 rounded">{part}</mark> 
+                                                    : part
+                                            );
+                                        } catch(e) {
+                                            return text;
+                                        }
+                                    }
+                                    return text;
+                                })()}
+                            </div>
+                            
+                            <button 
+                                onClick={() => {
+                                    navigator.clipboard.writeText(selectedEvidence.evidence?.snippet || selectedEvidence.evidence || "");
+                                    alert('Citation copied to clipboard!');
+                                }}
+                                className="bg-hd-secondary text-white font-bold py-2 px-6 border-2 border-hd-border wobbly hover:bg-blue-700 shadow-[2px_2px_0px_0px_#2d2d2d]"
+                            >
+                                Copy Citation to Clipboard
+                            </button>
+                        </div>
+                    </div>
+                )}
+
             </main>
 
             {/* Informative Footer */}
