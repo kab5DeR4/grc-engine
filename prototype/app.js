@@ -254,10 +254,21 @@ function checkNegativeContext(text, matchIndex) {
 }
 
 function extractEvidenceQuote(text, matchIndex, matchLength) {
-    const start = Math.max(0, matchIndex - 50);
-    const end = Math.min(text.length, matchIndex + matchLength + 70);
-    const snippet = text.substring(start, end).replace(/\n/g, " ").trim();
-    return `...${snippet}...`;
+    let start = matchIndex;
+    let periodCount = 0;
+    while (start > 0) {
+        if (text[start] === '.') periodCount++;
+        if (periodCount === 2) { start++; break; }
+        start--;
+    }
+    let end = matchIndex + matchLength;
+    periodCount = 0;
+    while (end < text.length) {
+        if (text[end] === '.') periodCount++;
+        if (periodCount === 2) { end++; break; }
+        end++;
+    }
+    return text.substring(start, end).replace(/\n/g, " ").trim();
 }
 
 // Client-side Policy Auditer
