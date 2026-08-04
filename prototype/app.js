@@ -742,6 +742,7 @@ const App = () => {
     const [uploading, setUploading] = React.useState(false);
     const [auditData, setAuditData] = React.useState(null);
     const [reportUrl, setReportUrl] = React.useState("");
+    const [checkedItems, setCheckedItems] = React.useState({});
 
     const handleLoadTestPdf = async () => {
         setUploading(true);
@@ -768,6 +769,7 @@ const App = () => {
 
             const result = auditPolicyText(extractedText);
             setAuditData(result);
+            setCheckedItems({});
 
             const htmlString = generateHtmlReportString(result);
             const blob = new Blob([htmlString], { type: "text/html" });
@@ -822,6 +824,7 @@ const App = () => {
                 // Run client-side compliance rules
                 const result = auditPolicyText(extractedText);
                 setAuditData(result);
+            setCheckedItems({});
 
                 // Dynamically compile HTML Report
                 const htmlString = generateHtmlReportString(result);
@@ -1152,6 +1155,42 @@ const App = () => {
                                 )}
                             </div>
                         </div>
+
+                        
+                        {/* Remediation Planner */}
+                        {auditData.remediation_steps && auditData.remediation_steps.length > 0 && (
+                            <div className="bg-[#fff9c4] border-4 border-hd-border wobbly-lg p-8 md:p-10 shadow-[8px_8px_0px_0px_#2d2d2d] -rotate-1 relative mt-12">
+                                <div className="absolute top-4 right-8 w-6 h-6 rounded-full bg-hd-accent border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]"></div>
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-3 border-b-3 border-dashed border-hd-border">
+                                    <h3 className="font-kalam text-3xl font-bold flex items-center gap-3">
+                                        <span className="w-8 h-8 rounded-full bg-hd-accent text-white inline-flex items-center justify-center font-bold text-lg border-2 border-hd-border shadow-[2px_2px_0px_0px_#2d2d2d]">⚙</span>
+                                        Remediation Planner
+                                    </h3>
+                                    <div className="flex items-center gap-4 mt-4 md:mt-0 w-full md:w-1/3">
+                                        <div className="w-full bg-white border-2 border-hd-border h-6 wobbly overflow-hidden shadow-[inset_2px_2px_0px_0px_#2d2d2d]">
+                                            <div className="bg-green-500 h-full transition-all duration-500" style={{width: `${(Object.keys(checkedItems).length / auditData.remediation_steps.length) * 100}%`}}></div>
+                                        </div>
+                                        <span className="font-bold text-xl font-kalam">{Math.round((Object.keys(checkedItems).length / auditData.remediation_steps.length) * 100)}%</span>
+                                    </div>
+                                </div>
+                                <div className="space-y-4">
+                                    {auditData.remediation_steps.map((step, i) => (
+                                        <label key={i} className={`flex items-start gap-4 p-4 border-2 border-hd-border bg-white wobbly hover:bg-gray-50 transition-colors cursor-pointer shadow-[2px_2px_0px_0px_#2d2d2d] ${checkedItems[i] ? 'opacity-75' : ''}`}>
+                                            <input 
+                                                type="checkbox" 
+                                                className="mt-1 w-6 h-6 accent-green-600 cursor-pointer"
+                                                checked={!!checkedItems[i]}
+                                                onChange={() => setCheckedItems(prev => ({...prev, [i]: !prev[i]}))}
+                                            />
+                                            <div className={checkedItems[i] ? 'line-through decoration-hd-accent decoration-2' : ''}>
+                                                <strong className="text-xl font-bold text-hd-fg block mb-1 font-kalam leading-tight">{step.control}</strong>
+                                                <p className="text-base text-hd-fg leading-snug">{step.action}</p>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Report Export */}
                         <div className="bg-white border-4 border-hd-border wobbly-lg p-8 md:p-12 shadow-[8px_8px_0px_0px_#2d2d2d] rotate-1 relative">
