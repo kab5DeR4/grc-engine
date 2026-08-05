@@ -156,7 +156,7 @@ if __name__ == "__main__":
     import uvicorn
     import os
     
-    host = os.getenv("GRC_HOST", "127.0.0.1")
+    host = os.getenv("GRC_HOST", "127.0.0.1")  # default to localhost
     port = int(os.getenv("GRC_PORT", "8000"))
     
     logger.info(f"starting server on http://{host}:{port}")
