@@ -10,9 +10,9 @@ from audit_engine import audit_policy
 from report_generator import generate_html_report
 
 def main() -> None:
-    print("=====================================================")
+    print("=" * 53)
     print("GRC AUDIT TOOL (CLI)")
-    print("=====================================================")
+    print("=" * 53)
     
     pdf_path = input("\nEnter PDF policy file path (e.g. policy.pdf): ").strip()
     if not pdf_path or not os.path.exists(pdf_path):
