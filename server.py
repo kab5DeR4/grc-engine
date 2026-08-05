@@ -116,7 +116,7 @@ async def api_audit(file: UploadFile = File(...)):
 @app.post("/api/export-report")
 async def api_export_report(payload: SimulatedReportPayload):
     try:
-        logger.info("Generating customized HTML report from simulated client state...")
+        logger.info("Generating customized HTML report from simulated client state...")  # generate report
         html_path = "reports/audit_report.html"
         
         # Convert Pydantic model to plain dictionary object
