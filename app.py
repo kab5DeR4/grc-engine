@@ -43,7 +43,7 @@ def main() -> None:
     generate_html_report(audit_result, output_path=html_path)
     print(f"HTML report generated at: {html_path}")
     
-    print("\n=== AUDIT EXECUTIVE SUMMARY ===")
+    print("\n=== AUDIT EXECUTIVE SUMMARY ===")  # print summary header
     print(f"Compliance Status : {audit_result['compliant_status']}")
     print(f"Compliance Ratio  : {audit_result['compliance_percent']}%")
     print(f"Risk Score / Level: {audit_result['risk_score']} / 100 ({audit_result['risk_level']})")
