@@ -92,7 +92,7 @@ async def api_audit(file: UploadFile = File(...)):
             raise HTTPException(status_code=422, detail="Unable to extract text from the PDF file. Verify it is not an image scan.")
         
         # run engine
-        logger.info("running scan")
+        logger.info("Running scan...")
         audit_result = audit_policy(policy_text)
         
         # save reports
