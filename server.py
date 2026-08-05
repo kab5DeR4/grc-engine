@@ -119,7 +119,7 @@ async def api_export_report(payload: SimulatedReportPayload):
         logger.info("Generating customized HTML report from simulated client state...")
         html_path = "reports/audit_report.html"
         
-        # Convert Pydantic model to plain dictionary
+        # Convert Pydantic model to plain dictionary object
         data_dict = payload.dict()
         
         # Render HTML
