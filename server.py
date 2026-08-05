@@ -103,7 +103,7 @@ async def api_audit(file: UploadFile = File(...)):
             json.dump(audit_result, f, indent=4)
             
         generate_html_report(audit_result, output_path=html_path)
-        logger.info("saved reports")
+        logger.info("Saved reports.")
         
         return audit_result
 
