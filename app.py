@@ -25,7 +25,7 @@ def main() -> None:
     for page in reader.pages:
         text = page.extract_text()
         if text:
-            policy_text += text + "\n"
+            policy_text += f"{text}\n"
             
     print(f"Loaded {len(reader.pages)} pages ({len(policy_text)} characters).")
     
