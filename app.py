@@ -49,7 +49,7 @@ def main() -> None:
     print(f"Risk Score / Level: {audit_result['risk_score']} / 100 ({audit_result['risk_level']})")
     print(f"Passed Controls   : {audit_result['passed_controls_count']} / {audit_result['total_controls']}")
     print(f"Identified Gaps   : {audit_result['gaps_count']}")
-    print("=====================================================\n")
+    print("=" * 53 + "\n")
 
 if __name__ == "__main__":
     main()
