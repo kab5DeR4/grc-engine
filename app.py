@@ -9,7 +9,7 @@ from pypdf import PdfReader
 from audit_engine import audit_policy
 from report_generator import generate_html_report
 
-def main():
+def main() -> None:
     print("=====================================================")
     print("GRC AUDIT TOOL (CLI)")
     print("=====================================================")
