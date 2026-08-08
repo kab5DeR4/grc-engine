@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-charcoal: #171e19;
+  --bg-dark-gray: #272727;
+  --panel-bg: #ffffff;
+  
+  --border-light: rgba(23, 30, 25, 0.1); /* charcoal 10% */
+  --border-dark: rgba(183, 198, 194, 0.1); /* sage 10% */
+  
+  --text-primary: #171e19;
+  --text-inverse: #ffffff;
+  --text-muted: #b7c6c2;
+
+  --accent-yellow: #ffe17c;
+  --accent-red: #ef233c;
+  
+  --font-sans: 'Satoshi', system-ui, sans-serif;
+  --font-display: 'Anton', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Brutalist Grid Backgrounds */
+.brutalist-grid-light {
+  background-image: linear-gradient(to right, rgba(183, 198, 194, 0.2) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(183, 198, 194, 0.2) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.brutalist-grid-dark {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Typography Utility Classes */
+.text-mono {
+  font-family: var(--font-mono);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Base App Shell layout */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
