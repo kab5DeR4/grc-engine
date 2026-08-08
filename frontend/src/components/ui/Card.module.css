@@ -1,0 +1,17 @@
+.card {
+  background-color: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Optional hover effect for interactive cards */
+.card[onClick] {
+  cursor: pointer;
+}
+
+.card[onClick]:hover {
+  background-color: var(--panel-elevated);
+  border-color: rgba(255, 255, 255, 0.2);
+}
