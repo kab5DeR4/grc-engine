@@ -1,37 +1,33 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useDemoStore } from '../../store/demoStore';
 
 const Header = () => {
-  const location = useLocation();
-  const isDemo = location.pathname !== '/';
+  const { runScan, scanRunning, lastScan } = useDemoStore();
 
   return (
-    <header className="h-20 flex items-center justify-between px-8 bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-charcoal/10">
-      <div className="flex items-center gap-8">
-        <Link to="/" className="flex items-baseline group hover:opacity-80 transition-opacity">
-          <span className="font-display text-3xl uppercase tracking-normal text-charcoal">GRC ENGINE</span>
-          <span className="font-display text-3xl text-yellow">.</span>
-        </Link>
-
-        {!isDemo && (
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="#product" className="font-sans text-sm font-medium text-charcoal hover:text-yellow transition-colors">Product</a>
-            <a href="#solutions" className="font-sans text-sm font-medium text-charcoal hover:text-yellow transition-colors">Solutions</a>
-            <a href="#pricing" className="font-sans text-sm font-medium text-charcoal hover:text-yellow transition-colors">Pricing</a>
-          </nav>
-        )}
+    <header className="h-[60px] flex items-center justify-between px-8 bg-[#E7E3DA] hairline-b sticky top-0 z-40">
+      <div className="flex items-center">
+        <span className="text-[#1A1917] font-mono text-[11px] font-bold hidden sm:inline-block tracking-widest uppercase">
+          ACME-PRODUCTION-WORKSPACE
+        </span>
       </div>
 
-      <div className="flex items-center gap-6">
-        {isDemo && (
-          <div className="px-3 py-1 bg-yellow/20 border border-yellow/50 rounded-full">
-            <span className="text-[10px] font-bold text-charcoal uppercase tracking-widest font-sans">Demo Mode</span>
-          </div>
-        )}
-        <Link to="/" className="hidden sm:block font-sans text-sm font-medium text-charcoal hover:text-yellow transition-colors">
-          Login
-        </Link>
-        <Link to="/demo" className="bg-charcoal text-white font-sans text-sm font-medium px-6 py-2.5 rounded-full hover:bg-dark-gray transition-colors hover:-translate-y-0.5 transform">
-          Get Started
+      <div className="flex items-center gap-4">
+        <div className="px-2.5 py-1 bg-[#DCD7CB] hairline-all flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-[#9B3418] animate-pulse"></div>
+          <span className="text-[10px] font-mono font-bold text-[#9B3418] uppercase tracking-wider">Demo Mode</span>
+        </div>
+
+        <button 
+          onClick={runScan}
+          disabled={scanRunning}
+          className="studio-btn studio-btn-pigment text-[10.5px] py-1.5 px-3 uppercase"
+        >
+          {scanRunning ? '[ SCANNING... ]' : '[ RUN SYSTEM SCAN ]'}
+        </button>
+
+        <Link to="/login" className="studio-btn text-[10.5px] py-1.5 px-3 uppercase">
+          [ LOGOUT ]
         </Link>
       </div>
     </header>
