@@ -3,69 +3,185 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-charcoal: #171e19;
-  --bg-dark-gray: #272727;
-  --panel-bg: #ffffff;
-  
-  --border-light: rgba(23, 30, 25, 0.1); /* charcoal 10% */
-  --border-dark: rgba(183, 198, 194, 0.1); /* sage 10% */
-  
-  --text-primary: #171e19;
-  --text-inverse: #ffffff;
-  --text-muted: #b7c6c2;
-
-  --accent-yellow: #ffe17c;
-  --accent-red: #ef233c;
-  
-  --font-sans: 'Satoshi', system-ui, sans-serif;
-  --font-display: 'Anton', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --ground: #E7E3DA;
+  --ground-sub: #DCD7CB;
+  --ink: #1A1917;
+  --ink-sub: #4A4741;
+  --muted: #6E6A61;
+  --pigment: #9B3418;
+  --hairline: rgba(26, 25, 23, 0.16);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  border-radius: 0 !important;
 }
 
-body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+html, body {
+  background-color: var(--ground);
+  color: var(--ink);
+  font-family: 'Azeret Mono', monospace;
+  font-size: 13.5px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Brutalist Grid Backgrounds */
-.brutalist-grid-light {
-  background-image: linear-gradient(to right, rgba(183, 198, 194, 0.2) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(183, 198, 194, 0.2) 1px, transparent 1px);
-  background-size: 40px 40px;
+/* Typography styles */
+.font-serif {
+  font-family: 'Instrument Serif', Georgia, serif;
+  letter-spacing: -0.015em;
 }
 
-.brutalist-grid-dark {
-  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
+.font-mono {
+  font-family: 'Azeret Mono', monospace;
 }
 
-/* Typography Utility Classes */
-.text-mono {
-  font-family: var(--font-mono);
+.serif-heading {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
 }
 
-.font-display {
-  font-family: var(--font-display);
+.serif-italic-pigment {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  color: var(--pigment);
 }
 
-/* Base App Shell layout */
+.mono-label {
+  font-family: 'Azeret Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.mono-body {
+  font-family: 'Azeret Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-sub);
+}
+
+/* Hairline utilities */
+.hairline-b {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.hairline-t {
+  border-top: 1px solid var(--hairline);
+}
+
+.hairline-l {
+  border-left: 1px solid var(--hairline);
+}
+
+.hairline-r {
+  border-right: 1px solid var(--hairline);
+}
+
+.hairline-all {
+  border: 1px solid var(--hairline);
+}
+
+/* Pigment hover underline for links */
+.pigment-link {
+  position: relative;
+  text-decoration: none;
+  color: var(--ink);
+  transition: color 0.15s ease;
+}
+
+.pigment-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0%;
+  height: 1.5px;
+  background-color: var(--pigment);
+  transition: width 0.2s ease-in-out;
+}
+
+.pigment-link:hover::after,
+.pigment-link.active::after {
+  width: 100%;
+}
+
+.pigment-link:hover {
+  color: var(--pigment);
+}
+
+/* Studio Button Style (Strict square corners, hairline border, no background fill pigment) */
+.studio-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  background-color: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: 0 !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.studio-btn:hover {
+  background-color: var(--ink);
+  color: var(--ground);
+}
+
+.studio-btn-primary {
+  background-color: var(--ink);
+  color: var(--ground);
+  border: 1px solid var(--ink);
+}
+
+.studio-btn-primary:hover {
+  background-color: var(--pigment);
+  border-color: var(--pigment);
+  color: #FFF;
+}
+
+.studio-btn-pigment {
+  background-color: transparent;
+  color: var(--pigment);
+  border: 1px solid var(--pigment);
+}
+
+.studio-btn-pigment:hover {
+  background-color: var(--pigment);
+  color: #FFF;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ground-sub);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pigment);
+}
+
 #root {
   width: 100%;
   min-height: 100vh;
+  background-color: var(--ground);
 }
