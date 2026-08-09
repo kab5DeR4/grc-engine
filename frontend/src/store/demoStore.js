@@ -9,6 +9,7 @@ import { initialFrameworks } from '../data/demo/frameworks';
 export const useDemoStore = create((set) => ({
   isDemoMode: true,
   setDemoMode: (val) => set({ isDemoMode: val }),
+  toggleDemoMode: () => set({ isDemoMode: true }),
   organization: initialOrganization,
   infrastructure: initialInfrastructure,
   controls: initialControls,
