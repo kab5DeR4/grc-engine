@@ -149,3 +149,7 @@ git push origin feature/my-feature
 ```
 
 Then open a pull request.
+
+---
+*Built with passion, late night coding & coffee bro! student dev edition 🚀*
+
