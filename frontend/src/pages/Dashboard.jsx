@@ -13,6 +13,7 @@ const Dashboard = () => {
     findings
   } = useDemoStore();
 
+  // calculate critical count real quick for telemetry header
   const criticalFindings = findings.filter(f => f.severity === 'CRITICAL');
   const highFindings = findings.filter(f => f.severity === 'HIGH');
 
