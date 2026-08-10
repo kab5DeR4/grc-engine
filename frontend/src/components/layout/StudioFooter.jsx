@@ -44,9 +44,16 @@ export default function StudioFooter() {
 
       <div className="hairline-t pt-4 flex flex-col sm:flex-row justify-between items-center text-[10.5px] mono-label text-[#6E6A61]">
         <div>© 2026 ATELIER GRC ENGINE. ALL CONTROL MATHEMATICS VERIFIED.</div>
-        <div className="flex space-x-6 mt-2 sm:mt-0">
+        <div className="flex items-center space-x-6 mt-2 sm:mt-0">
           <Link to="/contact" className="pigment-link">COMMISSION AUDIT</Link>
           <Link to="/catalogue" className="pigment-link">CATALOGUE</Link>
+          {/* back to top button for convenience lol */}
+          <button 
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+            className="pigment-link bg-transparent border-none p-0 cursor-pointer text-[#9B3418]"
+          >
+            [ TOP ↑ ]
+          </button>
         </div>
       </div>
     </footer>
