@@ -67,6 +67,11 @@ class SimulatedReportPayload(BaseModel):
 
 # endpoints
 
+# quick backend health check endpoint
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "service": "grc-audit-backend"}
+
 @app.post("/api/audit")
 async def api_audit(file: UploadFile = File(...)):
     if not file.filename.endswith(".pdf"):
