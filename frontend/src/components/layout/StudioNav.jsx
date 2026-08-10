@@ -19,6 +19,7 @@ export default function StudioNav() {
     { name: 'INTEGRATIONS', id: 'integrations' },
   ];
 
+  // smooth scroll go brrr when clicking nav items
   const handleNavClick = (e, id) => {
     e.preventDefault();
     if (location.pathname !== '/') {
