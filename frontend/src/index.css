@@ -117,6 +117,7 @@ html, body {
 }
 
 /* Studio Button Style (Strict square corners, hairline border, no background fill pigment) */
+/* fix: make sure pointer events fallback works cleanly */
 .studio-btn, button, a {
   cursor: pointer !important;
   user-select: none !important;
