@@ -117,6 +117,13 @@ html, body {
 }
 
 /* Studio Button Style (Strict square corners, hairline border, no background fill pigment) */
+.studio-btn, button, a {
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  pointer-events: auto;
+}
+
 .studio-btn {
   display: inline-flex;
   align-items: center;
@@ -130,8 +137,16 @@ html, body {
   color: var(--ink);
   border: 1px solid var(--ink);
   border-radius: 0 !important;
-  cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.studio-btn *,
+button *,
+a * {
+  cursor: pointer !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  pointer-events: none !important;
 }
 
 .studio-btn:hover {
