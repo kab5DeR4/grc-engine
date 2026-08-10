@@ -7,6 +7,7 @@ const Button = ({
   className = '', 
   onClick, 
   disabled = false,
+  loading = false,
   ...props 
 }) => {
   const classes = [
@@ -16,14 +17,15 @@ const Button = ({
     className
   ].filter(Boolean).join(' ');
 
+  // simple button spinner support for loading states
   return (
     <button 
       className={classes} 
       onClick={onClick} 
-      disabled={disabled}
+      disabled={disabled || loading}
       {...props}
     >
-      {children}
+      {loading ? <span className="opacity-75">[ LOADING... ]</span> : children}
     </button>
   );
 };
