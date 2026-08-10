@@ -7,6 +7,7 @@ import MaterialPractice from '../components/studio/MaterialPractice';
 import WorkTable from '../components/studio/WorkTable';
 import CloseSection from '../components/studio/CloseSection';
 
+// main marketing landing page view
 export default function LandingPage() {
   return (
     <div className="w-full min-h-screen bg-[#E7E3DA] text-[#1A1917] font-mono">
