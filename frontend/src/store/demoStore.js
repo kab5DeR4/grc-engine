@@ -54,6 +54,7 @@ export const useDemoStore = create((set) => ({
     });
   },
 
+  // quick state store reset and helper functions
   resetDemo: () => {
     set({
       organization: initialOrganization,
@@ -65,5 +66,8 @@ export const useDemoStore = create((set) => ({
       overallCompliance: 84,
       lastScan: '8 minutes ago'
     });
-  }
+  },
+
+  // reset all filters to default real quick
+  resetFilters: () => set({ scanRunning: false }),
 }));
