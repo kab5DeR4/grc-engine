@@ -9,11 +9,13 @@ export default function SplitHero() {
   const [isEngineExpanded, setIsEngineExpanded] = useState(false);
   const [activeElement, setActiveElement] = useState('soc2');
 
+  // quick toggle helper for diagram views
   const handleDemo = () => {
     setDemoMode(true);
     navigate('/dashboard');
   };
 
+  // close expanded details modal real quick
   const closeEngine = () => {
     setIsEngineExpanded(false);
   };
