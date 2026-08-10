@@ -72,6 +72,12 @@ export default function LoginPage() {
             />
           </div>
 
+          {/* remember me state for convenience */}
+          <div className="flex items-center gap-2 text-[11px] mono-body text-[#4A4741]">
+            <input type="checkbox" id="remember" className="accent-[#9B3418]" defaultChecked />
+            <label htmlFor="remember" className="cursor-pointer">Remember session on this device</label>
+          </div>
+
           <button 
             type="submit" 
             className="w-full studio-btn-primary studio-btn text-[11.5px] py-3.5 flex items-center justify-center gap-2"
