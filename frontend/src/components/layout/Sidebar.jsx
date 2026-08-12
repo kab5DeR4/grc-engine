@@ -7,16 +7,17 @@ import {
 
 const navigation = [
   { code: '01', name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { code: '02', name: 'Architecture', href: '/architecture', icon: Code },
-  { code: '03', name: 'Controls', href: '/controls', icon: Shield },
-  { code: '04', name: 'Practice', href: '/practice', icon: FileCheck },
-  { code: '05', name: 'Kinematics', href: '/study', icon: Network },
-  { code: '06', name: 'Drawings', href: '/drawing', icon: BookOpen },
-  { code: '07', name: 'Evidence', href: '/archive', icon: Files },
-  { code: '08', name: 'Findings', href: '/findings', icon: AlertTriangle },
-  { code: '09', name: 'Scans', href: '/scans', icon: Activity },
-  { code: '10', name: 'Reports', href: '/reports', icon: FileText },
-  { code: '11', name: 'Catalogue', href: '/catalogue', icon: Database },
+  { code: '02', name: 'Integrations', href: '/dashboard/integrations', icon: Network },
+  { code: '03', name: 'Architecture', href: '/architecture', icon: Code },
+  { code: '04', name: 'Controls', href: '/controls', icon: Shield },
+  { code: '05', name: 'Practice', href: '/practice', icon: FileCheck },
+  { code: '06', name: 'Kinematics', href: '/study', icon: Network },
+  { code: '07', name: 'Drawings', href: '/drawing', icon: BookOpen },
+  { code: '08', name: 'Evidence', href: '/archive', icon: Files },
+  { code: '09', name: 'Findings', href: '/findings', icon: AlertTriangle },
+  { code: '10', name: 'Scans', href: '/scans', icon: Activity },
+  { code: '11', name: 'Reports', href: '/reports', icon: FileText },
+  { code: '12', name: 'Catalogue', href: '/catalogue', icon: Database },
 ];
 
 export default function Sidebar({ collapsed, onToggle }) {
