@@ -19,6 +19,7 @@ import FeaturesPage from './pages/FeaturesPage';
 import PricingPage from './pages/PricingPage';
 import DocsPage from './pages/DocsPage';
 import IntegrationsPage from './pages/IntegrationsPage';
+import DashboardIntegrations from './pages/DashboardIntegrations';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -41,6 +42,7 @@ function App() {
         {/* Application Dashboard Routes */}
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/integrations" element={<DashboardIntegrations />} />
           <Route path="/architecture" element={<Architecture />} />
           <Route path="/controls" element={<ControlsPage />} />
           <Route path="/drawing" element={<DrawingPage />} />
