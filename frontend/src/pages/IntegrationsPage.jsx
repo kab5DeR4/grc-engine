@@ -180,7 +180,7 @@ export default function IntegrationsPage() {
       <main className="px-6 md:px-12 py-12 max-w-5xl mx-auto w-full flex-1">
         
         {/* Table Header */}
-        <div className="flex items-center px-4 py-2 mb-2 text-[10px] mono-label text-[#6E6A61] border-b border-[#1A1917]/20 uppercase">
+        <div className="flex items-center px-4 py-2 mb-2 text-[10px] mono-label text-[#6E6A61] border-b border-[#1A1917]/20 uppercase gap-4">
           <div className="w-10"></div>
           <div className="flex-1">Platform</div>
           <div className="hidden md:block w-48">Category</div>
@@ -204,7 +204,7 @@ export default function IntegrationsPage() {
                 {/* Clickable Row */}
                 <div 
                   onClick={() => toggleExpand(item.id)}
-                  className="flex items-center px-4 py-3 cursor-pointer group"
+                  className="flex items-center px-4 py-3 cursor-pointer group gap-4"
                 >
                   <div className="w-10 text-[#6E6A61] group-hover:text-[#9B3418] transition-colors">
                     <ItemIcon size={18} />
