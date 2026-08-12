@@ -1,113 +1,289 @@
+import { useState } from 'react';
 import StudioNav from '../components/layout/StudioNav';
 import StudioFooter from '../components/layout/StudioFooter';
-import { ArrowRight, Cloud, GitBranch, Bell, Settings } from 'lucide-react';
+import { 
+  Cloud, GitBranch, Bell, Settings, Search, 
+  Globe, Server, Boxes, GitPullRequest, Terminal, Zap, MessageSquare, 
+  CheckSquare, ShieldAlert, Workflow, ChevronDown, ChevronUp, Network,
+  ShieldCheck, FileCode
+} from 'lucide-react';
 
 export default function IntegrationsPage() {
-  const categories = [
-    {
-      title: 'Cloud Providers',
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedId, setExpandedId] = useState(null);
+
+  const integrations = [
+    { 
+      id: 'aws', 
+      name: 'Amazon Web Services', 
+      category: 'Cloud Provider',
+      status: 'Production', 
       icon: Cloud,
-      desc: 'Connect your infrastructure for continuous telemetry ingestion.',
-      items: [
-        { name: 'Amazon Web Services', type: 'API Integration', status: 'Live' },
-        { name: 'Microsoft Azure', type: 'API Integration', status: 'Live' },
-        { name: 'Google Cloud Platform', type: 'API Integration', status: 'Live' },
-        { name: 'Kubernetes', type: 'Agent / Helm', status: 'Live' },
-      ]
+      architecture: 'Cross-Account IAM Role + AWS EventBridge',
+      telemetry: ['CloudTrail Audit', 'IAM Access Analyzer', 'S3 Config', 'EC2 Security Groups'],
+      compliance: ['SOC 2', 'ISO 27001', 'NIST 800-53', 'CIS AWS']
     },
-    {
-      title: 'CI/CD Pipelines',
+    { 
+      id: 'azure', 
+      name: 'Microsoft Azure', 
+      category: 'Cloud Provider',
+      status: 'Production', 
+      icon: Globe,
+      architecture: 'Azure Service Principal + Event Grid',
+      telemetry: ['Activity Logs', 'Defender Alerts', 'RBAC Matrix', 'Key Vault Audits'],
+      compliance: ['SOC 2', 'ISO 27001', 'HIPAA', 'CIS Azure']
+    },
+    { 
+      id: 'gcp', 
+      name: 'Google Cloud Platform', 
+      category: 'Cloud Provider',
+      status: 'Production', 
+      icon: Server,
+      architecture: 'Service Account Token + Cloud Pub/Sub',
+      telemetry: ['Cloud Audit Logs', 'SCC Findings', 'IAM Policy Bindings', 'VPC Rules'],
+      compliance: ['SOC 2', 'NIST 800-53', 'PCI-DSS v4']
+    },
+    { 
+      id: 'k8s', 
+      name: 'Kubernetes', 
+      category: 'Infrastructure',
+      status: 'Production', 
+      icon: Boxes,
+      architecture: 'DaemonSet + eBPF Runtime Inspection',
+      telemetry: ['Pod Security Standards', 'Admission Audit', 'Network Policies'],
+      compliance: ['NIST SP 800-190', 'SOC 2', 'CIS K8s']
+    },
+    { 
+      id: 'github-actions', 
+      name: 'GitHub Actions', 
+      category: 'CI/CD Pipeline',
+      status: 'Production', 
       icon: GitBranch,
-      desc: 'Enforce Policy as Code directly in your deployment workflows.',
-      items: [
-        { name: 'GitHub Actions', type: 'Native Action', status: 'Live' },
-        { name: 'GitLab CI', type: 'Runner Plugin', status: 'Live' },
-        { name: 'Jenkins', type: 'Pipeline Plugin', status: 'Live' },
-        { name: 'CircleCI', type: 'Orb', status: 'Beta' },
-      ]
+      architecture: 'GitHub App Webhook + Native Check',
+      telemetry: ['PR Security Gates', 'SAST Results', 'Dependency Audits'],
+      compliance: ['SLSA Level 3', 'SOC 2', 'ISO 27001']
     },
-    {
-      title: 'Alerting & Workflow',
-      icon: Bell,
-      desc: 'Route compliance violations to the right team immediately.',
-      items: [
-        { name: 'Slack', type: 'App Integration', status: 'Live' },
-        { name: 'Jira Software', type: 'Ticket Sync', status: 'Live' },
-        { name: 'PagerDuty', type: 'Incident Creation', status: 'Live' },
-        { name: 'ServiceNow', type: 'ITSM Sync', status: 'Beta' },
-      ]
-    }
+    { 
+      id: 'gitlab-ci', 
+      name: 'GitLab CI', 
+      category: 'CI/CD Pipeline',
+      status: 'Production', 
+      icon: GitPullRequest,
+      architecture: 'Pipeline Webhook + Runner Gatekeeper',
+      telemetry: ['MR Gatekeeper', 'Container Vuln Scans', 'Terraform Plan Checks'],
+      compliance: ['SOC 2', 'ISO 27001']
+    },
+    { 
+      id: 'jenkins', 
+      name: 'Jenkins', 
+      category: 'CI/CD Pipeline',
+      status: 'Production', 
+      icon: Terminal,
+      architecture: 'Jenkinsfile Step + Shared Library',
+      telemetry: ['Pipeline Gate Logs', 'Artifact Attestations', 'Build Node State'],
+      compliance: ['NIST 800-53', 'SOC 2']
+    },
+    { 
+      id: 'circleci', 
+      name: 'CircleCI', 
+      category: 'CI/CD Pipeline',
+      status: 'Beta', 
+      icon: Zap,
+      architecture: 'Official Orb + API Attestation',
+      telemetry: ['Orb Execution Steps', 'SBOM Generation', 'Build Signatures'],
+      compliance: ['SLSA Level 2', 'NIST C-SCRM']
+    },
+    { 
+      id: 'slack', 
+      name: 'Slack', 
+      category: 'Workflow',
+      status: 'Production', 
+      icon: MessageSquare,
+      architecture: 'Slack Bot API + Block Kit UI',
+      telemetry: ['Real-Time Alerts', 'Interactive Remediation', 'Executive Digests'],
+      compliance: ['SOC 2', 'ISO 27001']
+    },
+    { 
+      id: 'jira', 
+      name: 'Jira Software', 
+      category: 'Workflow',
+      status: 'Production', 
+      icon: CheckSquare,
+      architecture: 'Atlassian OAuth Webhook + Status Sync',
+      telemetry: ['Auto Ticket Creation', 'SLA Tracking', 'Resolution Sync'],
+      compliance: ['ISO 27001', 'SOC 2']
+    },
+    { 
+      id: 'pagerduty', 
+      name: 'PagerDuty', 
+      category: 'Workflow',
+      status: 'Production', 
+      icon: ShieldAlert,
+      architecture: 'PagerDuty Events API + Escalation Engine',
+      telemetry: ['Critical Pages', 'Escalation Logs', 'On-Call Acks'],
+      compliance: ['SOC 2', 'NIST 800-53']
+    },
+    { 
+      id: 'servicenow', 
+      name: 'ServiceNow', 
+      category: 'Workflow',
+      status: 'Beta', 
+      icon: Workflow,
+      architecture: 'REST Table API + CMDB Sync',
+      telemetry: ['Change Ticket Sync', 'Audit Record Exports', 'CMDB Mapping'],
+      compliance: ['ISO 27001', 'SOC 2']
+    },
   ];
+
+  const filteredIntegrations = integrations.filter(item => 
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const toggleExpand = (id) => {
+    setExpandedId(expandedId === id ? null : id);
+  };
 
   return (
     <div className="w-full min-h-screen bg-[#E7E3DA] text-[#1A1917] font-mono flex flex-col">
       <StudioNav />
       
-      {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center pt-32 pb-20 px-6 md:px-12 text-center border-b border-[#6E6A61]/20 bg-[#F2F0EB]">
-        <div className="inline-block px-3 py-1 bg-[#1A1917] text-[#E7E3DA] mono-label text-[10px] mb-6 tracking-widest">
-          ECOSYSTEM
-        </div>
-        <h1 className="font-serif text-5xl md:text-7xl font-bold mb-6 text-[#1A1917] max-w-4xl tracking-tight">
-          Connect Everything
-        </h1>
-        <p className="max-w-2xl text-[14px] md:text-[16px] text-[#4A4741] leading-relaxed mb-10">
-          GRC Engine sits at the center of your engineering stack. Ingest from anywhere, enforce everywhere, and alert instantly.
-        </p>
-      </section>
-
-      {/* Integration Grids */}
-      <section className="py-24 px-6 md:px-12 max-w-7xl mx-auto space-y-24">
-        {categories.map((category, i) => (
-          <div key={i}>
-            <div className="mb-10 flex items-center border-b border-[#6E6A61]/20 pb-4">
-              <category.icon size={28} className="text-[#9B3418] mr-4" />
-              <div>
-                <h2 className="font-serif text-3xl font-bold">{category.title}</h2>
-                <p className="text-[#6E6A61] text-[13px] mt-1">{category.desc}</p>
-              </div>
+      {/* Header */}
+      <header className="pt-32 pb-12 px-6 md:px-12 max-w-5xl mx-auto w-full border-b border-[#1A1917]/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="mono-label text-[10px] text-[#9B3418] mb-3 tracking-widest uppercase">
+              Ecosystem Matrix
             </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {category.items.map((item, j) => (
-                <div key={j} className="p-6 border border-[#6E6A61]/30 bg-[#F2F0EB] hover:bg-[#1A1917] hover:text-[#E7E3DA] transition-all group cursor-pointer relative overflow-hidden flex flex-col h-[180px]">
-                  <div className="flex justify-between items-start mb-auto">
-                    <div className="h-10 w-10 bg-[#E7E3DA] border border-[#6E6A61]/20 flex items-center justify-center group-hover:border-[#E7E3DA]/30">
-                       <Settings size={20} className="text-[#6E6A61] group-hover:text-[#E7E3DA]" />
-                    </div>
-                    {item.status === 'Beta' && (
-                      <span className="text-[9px] mono-label bg-[#9B3418] text-[#E7E3DA] px-2 py-0.5">BETA</span>
-                    )}
+            <h1 className="font-serif text-4xl md:text-5xl font-bold text-[#1A1917] tracking-tight">
+              Platform Integrations
+            </h1>
+            <p className="text-[13px] text-[#6E6A61] mt-3 max-w-xl leading-relaxed">
+              Real-time ingestion pipelines and automated enforcement hooks.
+            </p>
+          </div>
+          
+          <div className="relative w-full md:w-64">
+            <Search size={14} className="absolute left-3 top-2.5 text-[#6E6A61]" />
+            <input
+              type="text"
+              placeholder="SEARCH PLATFORMS..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-transparent border-b border-[#1A1917]/30 pl-8 pr-3 py-2 text-[11px] mono-label text-[#1A1917] outline-none focus:border-[#9B3418] transition-colors placeholder:text-[#6E6A61]"
+            />
+          </div>
+        </div>
+      </header>
+
+      {/* Minimalist List */}
+      <main className="px-6 md:px-12 py-12 max-w-5xl mx-auto w-full flex-1">
+        
+        {/* Table Header */}
+        <div className="flex items-center px-4 py-2 mb-2 text-[10px] mono-label text-[#6E6A61] border-b border-[#1A1917]/20 uppercase">
+          <div className="w-10"></div>
+          <div className="flex-1">Platform</div>
+          <div className="hidden md:block w-48">Category</div>
+          <div className="w-24 text-right">Status</div>
+          <div className="w-10"></div>
+        </div>
+
+        {/* Rows */}
+        <div className="space-y-1">
+          {filteredIntegrations.map((item) => {
+            const isExpanded = expandedId === item.id;
+            const ItemIcon = item.icon || Settings;
+
+            return (
+              <div 
+                key={item.id} 
+                className={`transition-colors duration-200 border border-transparent ${
+                  isExpanded ? 'bg-[#F2F0EB] border-[#1A1917]/10 shadow-sm' : 'hover:bg-[#F2F0EB]/50'
+                }`}
+              >
+                {/* Clickable Row */}
+                <div 
+                  onClick={() => toggleExpand(item.id)}
+                  className="flex items-center px-4 py-3 cursor-pointer group"
+                >
+                  <div className="w-10 text-[#6E6A61] group-hover:text-[#9B3418] transition-colors">
+                    <ItemIcon size={18} />
                   </div>
                   
-                  <div>
-                    <h3 className="mono-label text-[13px] mb-1">{item.name}</h3>
-                    <p className="text-[11px] text-[#6E6A61] group-hover:text-[#E7E3DA]/70">{item.type}</p>
+                  <div className="flex-1 text-[13px] font-bold text-[#1A1917]">
+                    {item.name}
+                  </div>
+                  
+                  <div className="hidden md:block w-48 text-[11px] text-[#6E6A61]">
+                    {item.category}
+                  </div>
+                  
+                  <div className="w-24 text-right">
+                    <span className={`text-[9px] mono-label px-2 py-0.5 border ${
+                      item.status === 'Production' 
+                        ? 'border-[#1A1917]/20 text-[#1A1917]' 
+                        : 'border-[#9B3418]/30 text-[#9B3418] bg-[#9B3418]/5'
+                    }`}>
+                      {item.status.toUpperCase()}
+                    </span>
                   </div>
 
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0 duration-300">
-                    <ArrowRight size={18} className="text-[#E7E3DA]" />
+                  <div className="w-10 flex justify-end text-[#6E6A61] group-hover:text-[#1A1917] transition-colors">
+                    {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </section>
 
-      {/* Webhooks Section */}
-      <section className="py-24 px-6 md:px-12 bg-[#1A1917] text-[#E7E3DA] border-t-4 border-[#9B3418]">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mono-label text-[#9B3418] mb-4">CUSTOM DEVELOPMENT</div>
-          <h2 className="font-serif text-4xl font-bold mb-6">Build Your Own</h2>
-          <p className="text-[14px] text-[#6E6A61] leading-relaxed mb-10 max-w-2xl mx-auto">
-            Don't see your tool listed? Use our robust GraphQL API and event-driven webhooks to build custom integrations directly into your proprietary internal systems.
-          </p>
-          <button className="px-8 py-3 border border-[#E7E3DA] text-[#E7E3DA] mono-label hover:bg-[#E7E3DA] hover:text-[#1A1917] transition-colors text-[13px]">
-            READ THE API DOCS
-          </button>
+                {/* Inline Compact Expansion */}
+                {isExpanded && (
+                  <div className="px-14 pb-5 pt-1 border-t border-[#1A1917]/5">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-[11px] text-[#4A4741]">
+                      
+                      {/* Architecture */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-1.5 text-[9.5px] mono-label text-[#9B3418]">
+                          <Network size={12} /> ARCHITECTURE
+                        </div>
+                        <p>{item.architecture}</p>
+                      </div>
+
+                      {/* Telemetry */}
+                      <div className="space-y-1.5 md:col-span-1">
+                        <div className="flex items-center gap-1.5 text-[9.5px] mono-label text-[#9B3418]">
+                          <FileCode size={12} /> TELEMETRY STREAMS
+                        </div>
+                        <ul className="list-disc list-inside space-y-0.5 marker:text-[#9B3418]">
+                          {item.telemetry.map((t, i) => <li key={i}>{t}</li>)}
+                        </ul>
+                      </div>
+
+                      {/* Compliance */}
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-1.5 text-[9.5px] mono-label text-[#9B3418]">
+                          <ShieldCheck size={12} /> FRAMEWORKS
+                        </div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {item.compliance.map((c, i) => (
+                            <span key={i} className="px-1.5 py-0.5 bg-[#E7E3DA] border border-[#1A1917]/10 text-[9.5px] text-[#1A1917] font-semibold">
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          
+          {filteredIntegrations.length === 0 && (
+            <div className="text-center py-12 text-[12px] text-[#6E6A61]">
+              No platforms matching "{searchQuery}"
+            </div>
+          )}
         </div>
-      </section>
+      </main>
 
       <StudioFooter />
     </div>
