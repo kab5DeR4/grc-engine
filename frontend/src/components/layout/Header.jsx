@@ -1,7 +1,9 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useDemoStore } from '../../store/demoStore';
 
-const Header = () => {
+// header component memoized so page headers stay light fr
+const Header = memo(() => {
   const { runScan, scanRunning, lastScan } = useDemoStore();
 
   return (
@@ -32,6 +34,8 @@ const Header = () => {
       </div>
     </header>
   );
-};
+});
+
+Header.displayName = 'Header';
 
 export default Header;
