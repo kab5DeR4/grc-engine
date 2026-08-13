@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-export default function StudioNav() {
+const StudioNav = memo(function StudioNav() {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
 
@@ -70,4 +70,6 @@ export default function StudioNav() {
       </div>
     </header>
   );
-}
+});
+
+export default StudioNav;

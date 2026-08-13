@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail } from 'lucide-react';
 
@@ -15,8 +16,8 @@ const LinkedinIcon = ({ size = 15 }) => (
   </svg>
 );
 
-
-export default function StudioFooter() {
+// studio footer component memoized for faster layout fr
+const StudioFooter = memo(function StudioFooter() {
   return (
     <footer className="w-full bg-[#E7E3DA] hairline-t pt-12 pb-6 px-6 md:px-12 flex flex-col justify-between min-h-[220px]">
       <div className="flex flex-col md:flex-row justify-between items-start mb-12">
@@ -87,4 +88,6 @@ export default function StudioFooter() {
       </div>
     </footer>
   );
-}
+});
+
+export default StudioFooter;
