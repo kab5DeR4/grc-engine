@@ -1,7 +1,9 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
-const PageTransition = ({ children }) => {
+// page transition wrapper memoized for clean frame animations fr
+const PageTransition = memo(({ children }) => {
   const location = useLocation();
   
   return (
@@ -15,6 +17,8 @@ const PageTransition = ({ children }) => {
       {children}
     </motion.div>
   );
-};
+});
+
+PageTransition.displayName = 'PageTransition';
 
 export default PageTransition;
