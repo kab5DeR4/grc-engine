@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { 
   LayoutDashboard, Server, Shield, FileCheck, 
@@ -20,7 +21,8 @@ const navigation = [
   { code: '12', name: 'Catalogue', href: '/catalogue', icon: Database },
 ];
 
-export default function Sidebar({ collapsed, onToggle }) {
+// memoize sidebar navigation component fr
+const Sidebar = memo(function Sidebar({ collapsed, onToggle }) {
   return (
     <aside className={`h-full bg-[#DCD7CB] hairline-r flex flex-col justify-between transition-all duration-200 ${collapsed ? 'w-[68px]' : 'w-[240px]'}`}>
       
@@ -81,4 +83,6 @@ export default function Sidebar({ collapsed, onToggle }) {
 
     </aside>
   );
-}
+});
+
+export default Sidebar;
