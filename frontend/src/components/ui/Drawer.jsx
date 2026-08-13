@@ -1,7 +1,9 @@
+import { memo } from 'react';
 import { X } from 'lucide-react';
 import styles from './Drawer.module.css';
 
-const Drawer = ({ isOpen, onClose, title, children, width = '500px' }) => {
+// side drawer component memoized to skip extra renders fr
+const Drawer = memo(({ isOpen, onClose, title, children, width = '500px' }) => {
   if (!isOpen) return null;
 
   return (
@@ -20,6 +22,8 @@ const Drawer = ({ isOpen, onClose, title, children, width = '500px' }) => {
       </div>
     </>
   );
-};
+});
+
+Drawer.displayName = 'Drawer';
 
 export default Drawer;
