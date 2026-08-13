@@ -20,6 +20,7 @@ import PricingPage from './pages/PricingPage';
 import DocsPage from './pages/DocsPage';
 import IntegrationsPage from './pages/IntegrationsPage';
 import DashboardIntegrations from './pages/DashboardIntegrations';
+import PageTransition from './components/layout/PageTransition';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -37,7 +38,7 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
         
         {/* Application Dashboard Routes */}
         <Route element={<AppShell />}>
@@ -56,11 +57,11 @@ function App() {
         </Route>
         
         {/* Marketing/Other Routes */}
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/features" element={<FeaturesPage />} />
-        <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/docs" element={<DocsPage />} />
-        <Route path="/integrations" element={<IntegrationsPage />} />
+        <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="/features" element={<PageTransition><FeaturesPage /></PageTransition>} />
+        <Route path="/pricing" element={<PageTransition><PricingPage /></PageTransition>} />
+        <Route path="/docs" element={<PageTransition><DocsPage /></PageTransition>} />
+        <Route path="/integrations" element={<PageTransition><IntegrationsPage /></PageTransition>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
