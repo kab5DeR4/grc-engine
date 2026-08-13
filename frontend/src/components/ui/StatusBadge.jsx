@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import styles from './StatusBadge.module.css';
 import { CheckCircle2, XCircle, AlertCircle, HelpCircle, Info } from 'lucide-react';
 
@@ -27,7 +28,8 @@ function Activity(props) {
   );
 }
 
-const StatusBadge = ({ status, className = '' }) => {
+// status badge component memoized for quick rendering fr
+const StatusBadge = memo(({ status, className = '' }) => {
   const config = statusConfig[status] || { icon: Info, className: styles.unknown };
   const Icon = config.icon;
 
@@ -37,6 +39,8 @@ const StatusBadge = ({ status, className = '' }) => {
       {status}
     </span>
   );
-};
+});
+
+StatusBadge.displayName = 'StatusBadge';
 
 export default StatusBadge;
