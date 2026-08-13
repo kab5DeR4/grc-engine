@@ -1,6 +1,8 @@
+import { memo } from 'react';
 import styles from './Button.module.css';
 
-const Button = ({ 
+// memoize button component to avoid extra re-renders fr
+const Button = memo(({ 
   children, 
   variant = 'primary', 
   size = 'md', 
@@ -28,6 +30,8 @@ const Button = ({
       {loading ? <span className="opacity-75">[ LOADING... ]</span> : children}
     </button>
   );
-};
+});
+
+Button.displayName = 'Button';
 
 export default Button;
