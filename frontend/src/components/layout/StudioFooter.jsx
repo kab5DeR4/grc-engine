@@ -17,6 +17,7 @@ const LinkedinIcon = ({ size = 15 }) => (
 );
 
 // studio footer component memoized for faster layout fr
+// responsive layout spacing tuned for compact screens fr
 const StudioFooter = memo(function StudioFooter() {
   return (
     <footer className="w-full bg-[#E7E3DA] hairline-t pt-12 pb-6 px-6 md:px-12 flex flex-col justify-between min-h-[220px]">
