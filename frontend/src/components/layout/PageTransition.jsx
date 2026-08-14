@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
 // page transition wrapper memoized for clean frame animations fr
+// keeps page layouts smooth across screen display scaling
 const PageTransition = memo(({ children }) => {
   const location = useLocation();
   
