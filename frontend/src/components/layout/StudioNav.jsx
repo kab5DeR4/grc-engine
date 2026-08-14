@@ -32,6 +32,7 @@ const StudioNav = memo(function StudioNav() {
     }
   };
 
+  // fixed navbar height at 60px so calc(100vh - 60px) in hero works cleanly
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 h-[60px] flex items-center justify-between px-6 md:px-12 transition-all duration-300 ${
