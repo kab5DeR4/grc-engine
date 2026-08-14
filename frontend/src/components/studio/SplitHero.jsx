@@ -56,7 +56,7 @@ export default function SplitHero() {
   const DiagramNode = ({ id, title, main }) => {
     const isActive = activeElement === id;
     return (
-      <button 
+      <button
         onClick={(e) => handleNodeClick(id, e)}
         style={{
           backgroundColor: isActive ? '#9B3418' : '#DCD7CB',
@@ -73,14 +73,14 @@ export default function SplitHero() {
   const Pipe = ({ orientation, length, color = '#1A1917', direction }) => {
     const isVertical = orientation === 'vertical';
     return (
-      <div 
+      <div
         className="relative overflow-hidden bg-[#1A1917]/15 shrink-0 pointer-events-none"
         style={{
           width: isVertical ? '1px' : length,
           height: isVertical ? length : '1px',
         }}
       >
-        <div 
+        <div
           className="absolute pointer-events-none"
           style={{
             backgroundColor: color,
@@ -98,8 +98,8 @@ export default function SplitHero() {
   };
 
   const Joint = ({ color = '#1A1917' }) => (
-    <div 
-      className="w-1.5 h-1.5 rounded-full border bg-[#DCD7CB] z-40 shrink-0 pointer-events-none" 
+    <div
+      className="w-1.5 h-1.5 rounded-full border bg-[#DCD7CB] z-40 shrink-0 pointer-events-none"
       style={{ borderColor: color }}
     ></div>
   );
@@ -107,8 +107,9 @@ export default function SplitHero() {
   const getPipeColor = (id) => activeElement === id ? '#9B3418' : '#1A1917';
 
   return (
-    <section className="relative w-full h-[calc(100vh-60px)] min-h-[720px] mt-[60px] bg-[#DCD7CB] overflow-hidden isolate flex items-stretch px-6 md:px-12 hairline-b">
-      
+    /* hero container min height tuned for smaller laptop windows so taskbar doesnt clip content */
+    <section className="relative w-full h-[calc(100vh-60px)] min-h-[540px] mt-[60px] bg-[#DCD7CB] overflow-hidden isolate flex items-stretch px-6 md:px-12 hairline-b">
+
       {/* Inject Data Flow Keyframes */}
       <style>{`
         @keyframes flowDown {
@@ -139,18 +140,18 @@ export default function SplitHero() {
 
       {/* Invisible Overlay to close when clicking empty space */}
       {isEngineExpanded && (
-        <div 
-          className="absolute inset-0 z-10 cursor-pointer" 
+        <div
+          className="absolute inset-0 z-10 cursor-pointer"
           onClick={closeEngine}
         ></div>
       )}
 
       {/* Left Copy Stack (Normal Hero State) */}
-      <div 
+      <div
         className="relative z-50 max-w-[540px] lg:max-w-[46vw] py-6 md:py-8 flex flex-col justify-between h-full transition-all duration-700 ease-in-out"
-        style={{ 
-          opacity: isEngineExpanded ? 0 : 1, 
-          pointerEvents: isEngineExpanded ? 'none' : 'auto' 
+        style={{
+          opacity: isEngineExpanded ? 0 : 1,
+          pointerEvents: isEngineExpanded ? 'none' : 'auto'
         }}
       >
         <div className="my-auto py-4">
@@ -165,25 +166,25 @@ export default function SplitHero() {
             An advanced platform that continuously translates policy into controls, verifies them against your infrastructure, and produces evidence-backed compliance.
           </p>
           <div className="flex flex-wrap items-center gap-4 relative z-50">
-            <Link 
-              to="/login" 
+            <Link
+              to="/login"
               className="studio-btn-primary studio-btn text-[11px] py-2.5 px-5 select-none cursor-pointer"
             >
               [ GET STARTED ]
             </Link>
-            <button 
+            <button
               type="button"
-              onClick={handleDemo} 
+              onClick={handleDemo}
               className="studio-btn studio-btn-pigment text-[11px] py-2.5 px-5 uppercase select-none cursor-pointer"
             >
               [ TRY DEMO ]
             </button>
-            <button 
+            <button
               type="button"
               onClick={() => {
                 setIsEngineExpanded(true);
                 setActiveElement('soc2');
-              }} 
+              }}
               className="text-[#6E6A61] hover:text-[#1A1917] text-[10.5px] mono-label transition-colors uppercase flex items-center gap-2 ml-2 tracking-widest group cursor-pointer select-none"
             >
               <span className="w-1.5 h-1.5 bg-[#6E6A61] group-hover:bg-[#9B3418] rounded-full transition-colors animate-pulse pointer-events-none"></span>
@@ -198,7 +199,7 @@ export default function SplitHero() {
       </div>
 
       {/* Explanation Panel (Appears on the left when engine is expanded) */}
-      <div 
+      <div
         className={`absolute left-6 md:left-12 top-1/2 -translate-y-1/2 w-[90vw] md:w-[420px] max-w-[440px] z-50 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-auto ${isEngineExpanded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10 pointer-events-none'}`}
       >
         {activeElement && explanations[activeElement] && (
@@ -213,19 +214,19 @@ export default function SplitHero() {
             <p className="mono-body text-[13px] leading-[1.75] text-[#4A4741] mb-6">
               {explanations[activeElement].text}
             </p>
-            
+
             <div className="pt-4 border-t border-[#1A1917]/15 flex gap-8 text-[9.5px] mono-label text-[#6E6A61]">
-               <div>
-                 <div className="mb-1 opacity-60">VALUE DELIVERED</div>
-                 <div className="text-[#1A1917] font-bold flex items-center gap-1.5">
-                   <span className="w-1.5 h-1.5 bg-[#55B685] rounded-full"></span>
-                   CONTINUOUS
-                 </div>
-               </div>
-               <div>
-                 <div className="mb-1 opacity-60">HUMAN EFFORT</div>
-                 <div className="text-[#1A1917] font-bold">ZERO MANUAL</div>
-               </div>
+              <div>
+                <div className="mb-1 opacity-60">VALUE DELIVERED</div>
+                <div className="text-[#1A1917] font-bold flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 bg-[#55B685] rounded-full"></span>
+                  CONTINUOUS
+                </div>
+              </div>
+              <div>
+                <div className="mb-1 opacity-60">HUMAN EFFORT</div>
+                <div className="text-[#1A1917] font-bold">ZERO MANUAL</div>
+              </div>
             </div>
           </div>
         )}
@@ -233,22 +234,22 @@ export default function SplitHero() {
 
       {/* Right Area: The Engine Monolith & Interactive Diagram */}
       <div className="absolute top-0 right-0 bottom-0 left-0 md:left-auto md:w-[70vw] lg:w-[65vw] flex flex-col justify-center items-end pr-4 md:pr-12 pointer-events-none z-20">
-        
+
         <div className="w-full h-full relative flex items-center justify-center pointer-events-none">
-          
+
           {/* STATIC STATE: Exact original GOVERNANCE and ENGINE typography aligned to rock */}
           <div className={`absolute right-0 flex flex-col justify-center items-end w-full transition-opacity duration-700 ease-in-out pointer-events-none ${isEngineExpanded ? 'opacity-0' : 'opacity-100'}`}>
-            <div className="font-serif font-bold text-[#1A1917] tracking-[-0.03em] select-none text-right z-30 pointer-events-none" style={{ fontSize: 'clamp(60px, 13vw, 195px)', lineHeight: 0.82 }}>
+            <div className="font-serif font-bold text-[#1A1917] tracking-[-0.03em] select-none text-right z-30 pointer-events-none" style={{ fontSize: 'clamp(60px, min(13vw, 22vh), 195px)', lineHeight: 0.82 }}>
               GOVERNANCE
             </div>
-            <div className="h-[280px] sm:h-[380px] md:h-[48vh] lg:h-[54vh] max-h-[480px] pointer-events-none"></div>
-            <div className="font-serif font-bold text-[#1A1917] tracking-[-0.03em] select-none text-right z-10 pointer-events-none" style={{ fontSize: 'clamp(60px, 13vw, 195px)', lineHeight: 0.82 }}>
+            <div className="h-[280px] sm:h-[380px] md:h-[48vh] lg:h-[48vh] max-h-[480px] pointer-events-none"></div>
+            <div className="font-serif font-bold text-[#1A1917] tracking-[-0.03em] select-none text-right z-10 pointer-events-none" style={{ fontSize: 'clamp(60px, min(13vw, 22vh), 195px)', lineHeight: 0.82 }}>
               ENGINE
             </div>
           </div>
 
           {/* THE ROCK IMAGE: Centered */}
-          <div 
+          <div
             className={`absolute z-20 transition-all duration-700 flex justify-center items-center ${isEngineExpanded ? 'pointer-events-none scale-[0.80]' : 'pointer-events-auto cursor-pointer group'}`}
             onClick={(e) => {
               if (!isEngineExpanded) {
@@ -265,22 +266,22 @@ export default function SplitHero() {
               EXPLORE ENGINE
             </div>
 
-            <img 
-              src="/grc_cutout_subject.png" 
+            <img
+              src="/grc_cutout_subject.png"
               alt="GRC Engine Monolith"
-              className="h-[280px] sm:h-[380px] md:h-[48vh] lg:h-[54vh] max-h-[480px] w-auto max-w-[88vw] object-contain cursor-pointer"
+              className="h-[280px] sm:h-[380px] md:h-[48vh] lg:h-[48vh] max-h-[480px] w-auto max-w-[88vw] object-contain cursor-pointer"
               style={{ filter: 'drop-shadow(0px 18px 28px rgba(26,25,23,0.22))' }}
             />
           </div>
 
           {/* EXPANDED DIAGRAM STATE: Structural Guide */}
-          <div 
-            className={`absolute inset-0 flex items-center justify-center transition-all duration-1000 delay-100 pointer-events-none ${isEngineExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} 
+          <div
+            className={`absolute inset-0 flex items-center justify-center transition-all duration-1000 delay-100 pointer-events-none ${isEngineExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
             style={{ right: '45%', transform: 'translateX(50%)' }}
           >
             <div className="relative w-[860px] h-[640px] flex items-center justify-center font-mono pointer-events-none">
-              
-              <button 
+
+              <button
                 onClick={(e) => { e.stopPropagation(); closeEngine(); }}
                 className="absolute top-4 right-4 text-[#6E6A61] hover:text-[#9B3418] transition-colors pointer-events-auto text-[11px] font-bold tracking-widest z-50 cursor-pointer select-none"
               >
