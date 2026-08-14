@@ -29,6 +29,26 @@ html, body {
   overflow-x: hidden;
 }
 
+/* Global UI Scaling: Automatically shrink all paddings, margins, fonts, and layouts 
+   when the screen width OR height is constrained, preserving the exact layout proportions. */
+@media screen and (max-width: 1536px), screen and (max-height: 860px) {
+  html, body {
+    font-size: 11.5px;
+  }
+}
+
+@media screen and (max-width: 1280px), screen and (max-height: 760px) {
+  html, body {
+    font-size: 10.5px;
+  }
+}
+
+@media screen and (max-height: 680px) {
+  html, body {
+    font-size: 9.5px;
+  }
+}
+
 /* Typography styles */
 .font-serif {
   font-family: 'Instrument Serif', Georgia, serif;
