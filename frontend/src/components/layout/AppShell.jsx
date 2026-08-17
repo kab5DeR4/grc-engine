@@ -27,7 +27,7 @@ const AppShell = () => {
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col min-w-0 relative z-10 bg-[#E7E3DA]">
         <Header />
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 relative">
+        <main className="flex-1 overflow-y-auto p-4 md:p-5 relative">
           <PageTransition>
             <Outlet />
           </PageTransition>
