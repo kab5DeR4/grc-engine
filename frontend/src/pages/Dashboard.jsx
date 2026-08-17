@@ -18,10 +18,10 @@ const Dashboard = () => {
   const highFindings = findings.filter(f => f.severity === 'HIGH');
 
   return (
-    <div className="flex flex-col gap-10 max-w-[1400px] mx-auto pb-20 font-mono text-[#1A1917]">
+    <div className="flex flex-col gap-5 max-w-[1400px] mx-auto pb-8 font-mono text-[#1A1917]">
       
       {/* Header */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end hairline-b pb-6 gap-4">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end hairline-b pb-4 gap-4">
         <div>
           <div className="mono-label text-[#9B3418] mb-2 flex items-center gap-2">
             <span className="w-2 h-2 bg-[#9B3418] inline-block"></span>
@@ -35,7 +35,7 @@ const Dashboard = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <div className="text-right">
             <span className="mono-label text-[10px] text-[#6E6A61] block">LAST TELEMETRY SCAN</span>
             <span className="mono-body text-[12.5px] text-[#1A1917] font-semibold">{lastScan}</span>
@@ -51,10 +51,10 @@ const Dashboard = () => {
       </header>
 
       {/* Top Grid: Posture Card + Frameworks */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         
         {/* Overall Score Card */}
-        <div className="lg:col-span-4 p-6 bg-[#DCD7CB] hairline-all flex flex-col justify-between">
+        <div className="lg:col-span-4 p-4 bg-[#DCD7CB] hairline-all flex flex-col justify-between">
           <div>
             <div className="mono-label text-[#9B3418] mb-1">METRIC 01.0</div>
             <h3 className="serif-heading text-[26px] text-[#1A1917] mb-2">Overall Score</h3>
@@ -63,7 +63,7 @@ const Dashboard = () => {
             </div>
           </div>
           
-          <div className="my-8 flex items-center justify-between">
+          <div className="my-3 flex items-center justify-between">
             <div className="relative w-32 h-32 flex items-center justify-center bg-[#E7E3DA] hairline-all">
               <span className="font-serif text-[42px] font-bold text-[#1A1917]">{overallCompliance}%</span>
             </div>
@@ -91,10 +91,10 @@ const Dashboard = () => {
         </div>
 
         {/* Frameworks Grid */}
-        <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {frameworks.map(fw => (
             <Link key={fw.id} to="/controls" className="block text-decoration-none group">
-              <div className="p-6 bg-[#E7E3DA] hairline-all group-hover:bg-[#DCD7CB]/50 transition-colors flex flex-col justify-between h-full">
+              <div className="p-4 bg-[#E7E3DA] hairline-all group-hover:bg-[#DCD7CB]/50 transition-colors flex flex-col justify-between h-full">
                 <div>
                   <div className="flex justify-between items-start mb-4">
                     <div className="mono-label text-[#9B3418]">{fw.id}</div>
@@ -116,11 +116,11 @@ const Dashboard = () => {
       </div>
 
       {/* Pipeline Status */}
-      <section className="hairline-t pt-8">
+      <section className="hairline-t pt-4">
         <div className="mono-label text-[#9B3418] mb-2">SECTION 02 — COMPLIANCE PIPELINE</div>
-        <h2 className="serif-heading text-[28px] text-[#1A1917] mb-6">Pipeline Verification Stages</h2>
+        <h2 className="serif-heading text-[28px] text-[#1A1917] mb-3">Pipeline Verification Stages</h2>
         
-        <div className="p-6 bg-[#DCD7CB] hairline-all grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
+        <div className="p-4 bg-[#DCD7CB] hairline-all grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
           {['INFRASTRUCTURE', 'DISCOVERY', 'NORMALIZATION', 'EVALUATION', 'EVIDENCE', 'MAPPING', 'POSTURE'].map((stage, idx) => (
             <div key={stage} className="p-3 bg-[#E7E3DA] hairline-all flex flex-col items-center justify-center text-center">
               <ShieldCheck size={18} className="text-[#9B3418] mb-2" />
@@ -132,11 +132,11 @@ const Dashboard = () => {
       </section>
 
       {/* Findings & Coverage */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 hairline-t pt-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 hairline-t pt-4">
         
         {/* Priority Findings */}
         <section className="lg:col-span-8">
-          <div className="flex justify-between items-end mb-6">
+          <div className="flex justify-between items-end mb-3">
             <div>
               <div className="mono-label text-[#9B3418] mb-1">SECTION 03 — AUDIT FINDINGS</div>
               <h2 className="serif-heading text-[28px] text-[#1A1917]">Priority Findings</h2>
@@ -177,7 +177,7 @@ const Dashboard = () => {
         {/* Coverage */}
         <section className="lg:col-span-4">
           <div className="mono-label text-[#9B3418] mb-1">SECTION 04 — ECOSYSTEM</div>
-          <h2 className="serif-heading text-[28px] text-[#1A1917] mb-6">Connected Environments</h2>
+          <h2 className="serif-heading text-[28px] text-[#1A1917] mb-3">Connected Environments</h2>
           
           <div className="space-y-4">
             {['aws', 'github', 'kubernetes'].map((env) => {
