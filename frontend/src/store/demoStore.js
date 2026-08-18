@@ -6,8 +6,41 @@ import { initialFindings } from '../data/demo/findings';
 import { initialEvidence } from '../data/demo/evidence';
 import { initialFrameworks } from '../data/demo/frameworks';
 
+const getInitialTheme = () => {
+  if (typeof window === 'undefined') return false;
+  const stored = localStorage.getItem('grc_theme');
+  if (stored) return stored === 'dark';
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
+
 export const useDemoStore = create((set) => ({
   isDemoMode: true,
+  isDarkMode: getInitialTheme(),
+  setDarkMode: (val) => {
+    if (typeof document !== 'undefined') {
+      if (val) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('grc_theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('grc_theme', 'light');
+      }
+    }
+    set({ isDarkMode: val });
+  },
+  toggleDarkMode: () => set((state) => {
+    const newVal = !state.isDarkMode;
+    if (typeof document !== 'undefined') {
+      if (newVal) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('grc_theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('grc_theme', 'light');
+      }
+    }
+    return { isDarkMode: newVal };
+  }),
   setDemoMode: (val) => set({ isDemoMode: val }),
   toggleDemoMode: () => set({ isDemoMode: true }),
   organization: initialOrganization,
