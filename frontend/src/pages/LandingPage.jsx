@@ -10,7 +10,7 @@ import CloseSection from '../components/studio/CloseSection';
 // main marketing landing page view
 export default function LandingPage() {
   return (
-    <div className="w-full min-h-screen bg-[#E7E3DA] text-[#1A1917] font-mono">
+    <div className="w-full min-h-screen bg-[#E7E3DA] dark:bg-[#121110] text-[#1A1917] dark:text-[#E7E3DA] font-sans transition-colors duration-200">
       <StudioNav />
       <main>
         <SplitHero />
