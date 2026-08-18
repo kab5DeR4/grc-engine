@@ -86,9 +86,9 @@ export default function SplitHero() {
           left: x,
           top: y,
           width: width,
-          backgroundColor: isActive ? '#9B3418' : '#DCD7CB',
-          color: isActive ? '#FFFFFF' : '#1A1917',
-          borderColor: isActive ? '#9B3418' : 'rgba(26, 25, 23, 0.4)',
+          backgroundColor: isActive ? 'var(--pigment)' : 'var(--ground-sub)',
+          color: isActive ? '#FFFFFF' : 'var(--ink)',
+          borderColor: isActive ? 'var(--pigment)' : 'var(--hairline)',
           transform: 'translate(-50%, -50%)',
           boxShadow: isActive ? '0 0 20px rgba(155,52,24,0.4)' : 'none'
         }}
@@ -107,13 +107,13 @@ export default function SplitHero() {
     return (
       <g>
         {/* Base Track */}
-        <path d={path} fill="none" stroke="rgba(26,25,23,0.15)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={path} fill="none" stroke="var(--hairline)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         {/* Active Flow Animation */}
         {isActive && (
           <path 
             d={path} 
             fill="none" 
-            stroke="#9B3418" 
+            stroke="var(--pigment)" 
             strokeWidth="2.5" 
             strokeLinecap="round" 
             strokeLinejoin="round"
@@ -140,8 +140,8 @@ export default function SplitHero() {
       `}</style>
 
       {/* Background Grid */}
-      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" style={{
-        backgroundImage: 'linear-gradient(#1A1917 1px, transparent 1px), linear-gradient(90deg, #1A1917 1px, transparent 1px)',
+      <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none" style={{
+        backgroundImage: 'linear-gradient(var(--ink) 1px, transparent 1px), linear-gradient(90deg, var(--ink) 1px, transparent 1px)',
         backgroundSize: '40px 40px'
       }}></div>
 
