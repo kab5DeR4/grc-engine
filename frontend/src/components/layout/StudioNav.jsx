@@ -186,7 +186,7 @@ const StudioNav = memo(function StudioNav() {
       onMouseLeave={() => setActiveDropdown(null)}
     >
       {/* Main Header Bar */}
-      <div className="h-[60px] flex items-center justify-between px-6 lg:px-12 max-w-[1600px] mx-auto">
+      <div className="h-[60px] flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 w-full max-w-[92vw] 2xl:max-w-[1600px] mx-auto">
         {/* Wordmark */}
         <Link 
           to="/" 
