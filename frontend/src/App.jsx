@@ -22,6 +22,9 @@ import IntegrationsPage from './pages/IntegrationsPage';
 import DashboardIntegrations from './pages/DashboardIntegrations';
 import PageTransition from './components/layout/PageTransition';
 
+import { useDemoStore } from './store/demoStore';
+import ScrollToTopButton from './components/ui/ScrollToTopButton';
+
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -33,14 +36,22 @@ function ScrollToTop() {
 }
 
 function App() {
+  const { isDarkMode } = useDemoStore();
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
   return (
     <Router>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
-        
-        {/* Application Dashboard Routes */}
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/integrations" element={<DashboardIntegrations />} />
@@ -55,8 +66,6 @@ function App() {
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/catalogue" element={<CataloguePage />} />
         </Route>
-        
-        {/* Marketing/Other Routes */}
         <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
         <Route path="/features" element={<PageTransition><FeaturesPage /></PageTransition>} />
         <Route path="/pricing" element={<PageTransition><PricingPage /></PageTransition>} />
@@ -64,6 +73,7 @@ function App() {
         <Route path="/integrations" element={<PageTransition><IntegrationsPage /></PageTransition>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      <ScrollToTopButton />
     </Router>
   );
 }
