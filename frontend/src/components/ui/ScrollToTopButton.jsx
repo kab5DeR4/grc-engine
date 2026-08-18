@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowUp } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 
 export default function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
@@ -21,6 +21,7 @@ export default function ScrollToTopButton() {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
+      // smooth scroll go zoom
     });
   };
 
@@ -29,11 +30,10 @@ export default function ScrollToTopButton() {
   return (
     <button
       onClick={scrollToTop}
-      className="fixed bottom-6 right-6 z-50 py-2.5 px-4 bg-[#E7E3DA] dark:bg-[#161514] text-[#1A1917] dark:text-[#E7E3DA] hairline-all shadow-2xl hover:bg-[#1A1917] hover:text-[#E7E3DA] dark:hover:bg-[#FF6B4A] dark:hover:text-[#121110] transition-all duration-300 flex items-center gap-2 mono-label text-[10.5px] cursor-pointer group animate-fade-up"
+      className="fixed bottom-6 right-6 z-50 w-10 h-10 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-700 shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex items-center justify-center cursor-pointer group"
       aria-label="Scroll to top"
     >
-      <ArrowUp size={13} className="text-[#9B3418] dark:text-[#FF6B4A] group-hover:text-inherit group-hover:-translate-y-0.5 transition-transform" />
-      <span>[ TOP ]</span>
+      <ChevronUp size={18} className="transition-transform group-hover:-translate-y-0.5 duration-300" />
     </button>
   );
 }
