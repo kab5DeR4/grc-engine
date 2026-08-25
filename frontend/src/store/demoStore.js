@@ -10,7 +10,7 @@ const getInitialTheme = () => {
   if (typeof window === 'undefined') return false;
   const stored = localStorage.getItem('grc_theme');
   if (stored) return stored === 'dark';
-  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  return false;
 };
 
 export const useDemoStore = create((set) => ({
