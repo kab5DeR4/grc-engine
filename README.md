@@ -142,14 +142,24 @@ The current engine:
 * [ ] Policy versioning
 * [ ] Continuous compliance monitoring
 
-```bash
-git checkout -b feature/my-feature
-git commit -m "feat: add my feature"
-git push origin feature/my-feature
-```
+## Contributing
 
-Then open a pull request.
+Contributions make the open-source community an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
----
+1. **Fork** the Project
+2. **Create** your Feature Branch  
+   ```bash
+   git checkout -b feature/my-feature
+   ```
+3. **Commit** your Changes  
+   ```bash
+   git commit -m "feat: add my feature"
+   ```
+4. **Push** to the Branch  
+   ```bash
+   git push origin feature/my-feature
+   ```
+5. **Open** a Pull Request
+
 *Built with passion, late night coding & coffee bro! student dev edition 🚀*
 
