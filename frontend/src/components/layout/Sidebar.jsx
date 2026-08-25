@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { 
-  LayoutDashboard, Server, Shield, FileCheck, 
+  LayoutDashboard, Shield, FileCheck, 
   Files, AlertTriangle, Activity, 
   FileText, Database, Code, BookOpen, Network
 } from 'lucide-react';
