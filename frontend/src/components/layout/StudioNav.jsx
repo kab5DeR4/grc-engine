@@ -1,13 +1,12 @@
 import { useState, useEffect, memo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Moon, Sun, Menu, X } from 'lucide-react';
-import { useDemoStore } from '../../store/demoStore';
+import { Menu, X } from 'lucide-react';
+import ThemeDensitySelector from '../ui/ThemeDensitySelector';
 
 const StudioNav = memo(function StudioNav() {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isDarkMode, toggleDarkMode } = useDemoStore();
   const [activeDropdown, setActiveDropdown] = useState(null);
 
   useEffect(() => {
@@ -320,15 +319,8 @@ const StudioNav = memo(function StudioNav() {
             </Link>
           </div>
 
-          {/* Theme Toggle Button */}
-          <button 
-            onClick={toggleDarkMode}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#1A1917]/70 dark:text-[#E7E3DA]/70 hover:text-[#1A1917] dark:hover:text-[#E7E3DA] hover:bg-[#1A1917]/5 dark:hover:bg-[#E7E3DA]/5 transition-colors bg-transparent border-none cursor-pointer"
-            title="Toggle Dark Mode"
-            aria-label="Toggle Theme"
-          >
-            {isDarkMode ? <Sun size={15} /> : <Moon size={15} />}
-          </button>
+          {/* Selector interactivo de temas y densidad */}
+          <ThemeDensitySelector />
 
           {/* Sign in Button */}
           <Link 
