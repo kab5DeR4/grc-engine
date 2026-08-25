@@ -6,41 +6,76 @@ import { initialFindings } from '../data/demo/findings';
 import { initialEvidence } from '../data/demo/evidence';
 import { initialFrameworks } from '../data/demo/frameworks';
 
+// Recuperar el tema guardado en almacenamiento local o utilizar 'bone' por defecto en la primera carga
 const getInitialTheme = () => {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') return 'bone';
   const stored = localStorage.getItem('grc_theme');
-  if (stored) return stored === 'dark';
-  return false;
+  if (stored && ['bone', 'obsidian', 'blueprint', 'auditor'].includes(stored)) {
+    return stored;
+  }
+  if (stored === 'dark') return 'obsidian';
+  if (stored === 'light') return 'bone';
+  return 'bone';
+};
+
+// Recuperar la densidad visual guardada para mantener las preferencias del usuario persistentes
+const getInitialDensity = () => {
+  if (typeof window === 'undefined') return 'editorial';
+  const stored = localStorage.getItem('grc_density');
+  if (stored && ['editorial', 'compact'].includes(stored)) {
+    return stored;
+  }
+  return 'editorial';
 };
 
 export const useDemoStore = create((set) => ({
   isDemoMode: true,
-  isDarkMode: getInitialTheme(),
-  setDarkMode: (val) => {
+  theme: getInitialTheme(),
+  density: getInitialDensity(),
+  isDarkMode: ['obsidian', 'blueprint'].includes(getInitialTheme()),
+
+  // Establecer un tema específico y sincronizarlo con localStorage para persistencia
+  setTheme: (val) => {
     if (typeof document !== 'undefined') {
-      if (val) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('grc_theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('grc_theme', 'light');
-      }
+      localStorage.setItem('grc_theme', val);
     }
-    set({ isDarkMode: val });
+    const isDark = ['obsidian', 'blueprint'].includes(val);
+    set({ theme: val, isDarkMode: isDark });
   },
-  toggleDarkMode: () => set((state) => {
-    const newVal = !state.isDarkMode;
+
+  // Ajustar la densidad del layout para adaptar el espacio a monitoreo masivo o lectura amplia
+  setDensity: (val) => {
     if (typeof document !== 'undefined') {
-      if (newVal) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('grc_theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('grc_theme', 'light');
-      }
+      localStorage.setItem('grc_density', val);
     }
-    return { isDarkMode: newVal };
+    set({ density: val });
+  },
+
+  toggleDensity: () => set((state) => {
+    const nextDensity = state.density === 'compact' ? 'editorial' : 'compact';
+    if (typeof document !== 'undefined') {
+      localStorage.setItem('grc_density', nextDensity);
+    }
+    return { density: nextDensity };
   }),
+
+  // Alternar el tema rápido entre luz y oscuridad manteniendo compatibilidad de botones existentes
+  toggleDarkMode: () => set((state) => {
+    const nextTheme = state.theme === 'bone' ? 'obsidian' : 'bone';
+    if (typeof document !== 'undefined') {
+      localStorage.setItem('grc_theme', nextTheme);
+    }
+    const isDark = ['obsidian', 'blueprint'].includes(nextTheme);
+    return { theme: nextTheme, isDarkMode: isDark };
+  }),
+
+  setDarkMode: (val) => {
+    const nextTheme = val ? 'obsidian' : 'bone';
+    if (typeof document !== 'undefined') {
+      localStorage.setItem('grc_theme', nextTheme);
+    }
+    set({ theme: nextTheme, isDarkMode: val });
+  },
   setDemoMode: (val) => set({ isDemoMode: val }),
   toggleDemoMode: () => set({ isDemoMode: true }),
   organization: initialOrganization,
