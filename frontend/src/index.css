@@ -2,25 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* ==========================================================================
+   SISTEMA MULTI-TEMA Y VARIABLES DE DISEÑO
+   Definición de las 4 paletas principales: Bone, Obsidian, Blueprint y Auditor
+   ========================================================================== */
+
+/* 1. Warm Bone Light (Tema por defecto - Editorial cálido) */
+:root, .theme-bone {
   --ground: #E7E3DA;
   --ground-sub: #DCD7CB;
   --ink: #1A1917;
-  --ink-sub: #4A4741;
-  --muted: #6E6A61;
+  --ink-sub: #3E3B35;
+  --muted: #5E5A52;
   --pigment: #9B3418;
+  --pigment-subtle: rgba(155, 52, 24, 0.12);
   --hairline: rgba(26, 25, 23, 0.16);
+  --grid-line: rgba(26, 25, 23, 0.05);
+  color-scheme: light;
 }
 
-.dark {
+/* 2. Obsidian Dark (Tema oscuro clásico - Alto contraste nocturno y texto ultra legible) */
+.theme-obsidian, .dark:not(.theme-blueprint):not(.theme-auditor):not(.theme-bone) {
   --ground: #121110;
-  --ground-sub: #1C1B18;
-  --ink: #C9C4B8;
-  --ink-sub: #9E988B;
-  --muted: #757065;
+  --ground-sub: #1E1D1A;
+  --ink: #F5F3EF;
+  --ink-sub: #D1CCC0;
+  --muted: #9E988B;
   --pigment: #FF6B4A;
-  --hairline: rgba(201, 196, 184, 0.14);
+  --pigment-subtle: rgba(255, 107, 74, 0.18);
+  --hairline: rgba(201, 196, 184, 0.18);
+  --grid-line: rgba(201, 196, 184, 0.05);
   color-scheme: dark;
+}
+
+/* 3. Blueprint Technical (Tema slate naval de alto contraste con acentos cian) */
+.theme-blueprint {
+  --ground: #0B132B;
+  --ground-sub: #16223F;
+  --ink: #F8FAFC;
+  --ink-sub: #CBD5E1;
+  --muted: #94A3B8;
+  --pigment: #38BDF8;
+  --pigment-subtle: rgba(56, 189, 248, 0.18);
+  --hairline: rgba(56, 189, 248, 0.25);
+  --grid-line: rgba(56, 189, 248, 0.10);
+  --accent-alert: #F59E0B;
+  color-scheme: dark;
+}
+
+/* 4. Auditor Clean White (Tema blanco puro con máximo contraste WCAG AAA para auditorías) */
+.theme-auditor {
+  --ground: #FFFFFF;
+  --ground-sub: #F1F5F9;
+  --ink: #000000;
+  --ink-sub: #1E293B;
+  --muted: #475569;
+  --pigment: #C2410C;
+  --pigment-subtle: rgba(194, 65, 12, 0.12);
+  --hairline: rgba(15, 23, 42, 0.22);
+  --grid-line: rgba(15, 23, 42, 0.06);
+  color-scheme: light;
 }
 
 * {
@@ -215,148 +256,221 @@ a * {
 }
 
 /* ==========================================================================
-   Dark Mode Universal Overrides
+   Universal Multi-Theme Mappings
+   Garantiza que todos los componentes adopten las variables CSS dinámicamente
    ========================================================================== */
-.dark, .dark body, .dark #root {
+html:not(.theme-bone),
+html:not(.theme-bone) body,
+html:not(.theme-bone) #root {
   background-color: var(--ground) !important;
   color: var(--ink) !important;
 }
 
-/* Background overrides */
-.dark [class*="bg-[#E7E3DA]"]:not([class*="/"]),
-.dark [class*="bg-[#e7e3da]"]:not([class*="/"]) {
-  background-color: var(--ground) !important;
-}
-
-.dark [class*="bg-[#DCD7CB]"]:not([class*="/"]),
-.dark [class*="bg-[#dcd7cb]"]:not([class*="/"]) {
+/* Fondos dinámicos para temas no predeterminados */
+html:not(.theme-bone) [class*="bg-[#E7E3DA]"],
+html:not(.theme-bone) [class*="bg-[#e7e3da]"] {
   background-color: var(--ground-sub) !important;
 }
 
-.dark [class*="bg-[#F8F7F4]"]:not([class*="/"]),
-.dark [class*="bg-[#F5F3EF]"]:not([class*="/"]),
-.dark [class*="bg-[#EFECE6]"]:not([class*="/"]),
-.dark [class*="bg-[#EDE9E0]"]:not([class*="/"]),
-.dark [class*="bg-[#F0EEEA]"]:not([class*="/"]),
-.dark [class*="bg-[#f0f2f5]"]:not([class*="/"]) {
+html:not(.theme-bone) [class*="bg-[#DCD7CB]"],
+html:not(.theme-bone) [class*="bg-[#dcd7cb]"] {
   background-color: var(--ground-sub) !important;
 }
 
-.dark [class*="bg-white"]:not([class*="/"]),
-.dark [class*="bg-[#FFFFFF]"]:not([class*="/"]),
-.dark [class*="bg-[#ffffff]"]:not([class*="/"]),
-.dark [class*="bg-[#FFF]"]:not([class*="/"]) {
+html:not(.theme-bone) [class*="bg-[#F8F7F4]"],
+html:not(.theme-bone) [class*="bg-[#F5F3EF]"],
+html:not(.theme-bone) [class*="bg-[#EFECE6]"],
+html:not(.theme-bone) [class*="bg-[#EDE9E0]"],
+html:not(.theme-bone) [class*="bg-[#F0EEEA]"],
+html:not(.theme-bone) [class*="bg-[#f0f2f5]"],
+html:not(.theme-bone) [class*="bg-[#F2F0EB]"],
+html:not(.theme-bone) [class*="bg-[#f2f0eb]"],
+html:not(.theme-bone) [class*="bg-white"],
+html:not(.theme-bone) [class*="bg-[#FFFFFF]"],
+html:not(.theme-bone) [class*="bg-[#ffffff]"],
+html:not(.theme-bone) [class*="bg-[#FFF]"] {
   background-color: var(--ground-sub) !important;
 }
 
-/* Text overrides */
-.dark [class*="text-[#1A1917]"],
-.dark [class*="text-[#1a1917]"] {
+/* Textos dinámicos con alto contraste */
+html:not(.theme-bone) [class*="text-[#1A1917]"],
+html:not(.theme-bone) [class*="text-[#1a1917]"],
+html:not(.theme-bone) [class*="text-black"] {
   color: var(--ink) !important;
 }
 
-.dark [class*="text-[#4A4741]"],
-.dark [class*="text-[#4a4741]"] {
+html:not(.theme-bone) [class*="text-[#4A4741]"],
+html:not(.theme-bone) [class*="text-[#4a4741]"] {
   color: var(--ink-sub) !important;
 }
 
-.dark [class*="text-[#6E6A61]"],
-.dark [class*="text-[#6e6a61]"] {
+html:not(.theme-bone) [class*="text-[#6E6A61]"],
+html:not(.theme-bone) [class*="text-[#6e6a61]"] {
   color: var(--muted) !important;
 }
 
-.dark [class*="text-[#2d3436]"] {
+html:not(.theme-bone) [class*="text-[#2d3436]"] {
   color: var(--ink) !important;
 }
 
-/* Pigment accent overrides in dark mode */
-.dark [class*="text-[#9B3418]"],
-.dark [class*="text-[#9b3418]"] {
+/* Pigmentos y acentos */
+html:not(.theme-bone) [class*="text-[#9B3418]"],
+html:not(.theme-bone) [class*="text-[#9b3418]"] {
   color: var(--pigment) !important;
 }
 
-.dark [class*="border-[#9B3418]"],
-.dark [class*="border-[#9b3418]"] {
+html:not(.theme-bone) [class*="border-[#9B3418]"],
+html:not(.theme-bone) [class*="border-[#9b3418]"] {
   border-color: var(--pigment) !important;
 }
 
-.dark [class*="bg-[#9B3418]"]:not([class*="/"]),
-.dark [class*="bg-[#9b3418]"]:not([class*="/"]) {
+html:not(.theme-bone) [class*="bg-[#9B3418]"],
+html:not(.theme-bone) [class*="bg-[#9b3418]"] {
   background-color: var(--pigment) !important;
 }
 
-/* Border overrides */
-.dark [class*="border-[#1A1917]"],
-.dark [class*="border-[#1a1917]"] {
+/* Mapeo de badges sutiles transparentes */
+html:not(.theme-bone) [class*="bg-[#9B3418]/"],
+html:not(.theme-bone) [class*="bg-[#9b3418]/"] {
+  background-color: var(--pigment-subtle) !important;
+}
+
+/* Bordes y líneas divisorias */
+html:not(.theme-bone) [class*="border-[#1A1917]"],
+html:not(.theme-bone) [class*="border-[#1a1917]"],
+html:not(.theme-bone) [class*="border-[#DCD7CB]"],
+html:not(.theme-bone) [class*="border-[#dcd7cb]"],
+html:not(.theme-bone) [class*="border-[#E7E3DA]"],
+html:not(.theme-bone) [class*="border-[#e7e3da]"],
+html:not(.theme-bone) [class*="border-black"],
+html:not(.theme-bone) .hairline-b,
+html:not(.theme-bone) .hairline-t,
+html:not(.theme-bone) .hairline-l,
+html:not(.theme-bone) .hairline-r,
+html:not(.theme-bone) .hairline-all {
   border-color: var(--hairline) !important;
 }
 
-.dark [class*="border-[#DCD7CB]"],
-.dark [class*="border-[#dcd7cb]"] {
-  border-color: var(--hairline) !important;
-}
-
-.dark [class*="border-[#E7E3DA]"],
-.dark [class*="border-[#e7e3da]"] {
-  border-color: var(--hairline) !important;
-}
-
-.dark [class*="border-black"] {
-  border-color: var(--hairline) !important;
-}
-
-.dark .hairline-b,
-.dark .hairline-t,
-.dark .hairline-l,
-.dark .hairline-r,
-.dark .hairline-all {
-  border-color: var(--hairline) !important;
-}
-
-/* Studio UI primitives in dark mode */
-.dark .studio-btn {
+/* Botones Studio */
+html:not(.theme-bone) .studio-btn {
   color: var(--ink) !important;
   border-color: var(--ink) !important;
 }
 
-.dark .studio-btn:hover {
+html:not(.theme-bone) .studio-btn:hover {
   background-color: var(--ink) !important;
   color: var(--ground) !important;
 }
 
-.dark .studio-btn-primary {
+html:not(.theme-bone) .studio-btn-primary {
   background-color: var(--ink) !important;
   color: var(--ground) !important;
   border-color: var(--ink) !important;
 }
 
-.dark .studio-btn-primary:hover {
+html:not(.theme-bone) .studio-btn-primary:hover {
   background-color: var(--pigment) !important;
   border-color: var(--pigment) !important;
   color: #FFFFFF !important;
 }
 
-.dark .studio-btn-pigment {
+html:not(.theme-bone) .studio-btn-pigment {
   color: var(--pigment) !important;
   border-color: var(--pigment) !important;
 }
 
-.dark .studio-btn-pigment:hover {
+html:not(.theme-bone) .studio-btn-pigment:hover {
   background-color: var(--pigment) !important;
   color: #FFFFFF !important;
 }
 
-/* Form fields & inputs in dark mode */
-.dark input, 
-.dark textarea, 
-.dark select {
+/* Entradas de formulario y tablas */
+html:not(.theme-bone) input, 
+html:not(.theme-bone) textarea, 
+html:not(.theme-bone) select {
   background-color: var(--ground-sub) !important;
   color: var(--ink) !important;
   border-color: var(--hairline) !important;
 }
 
-.dark table th,
-.dark table td {
+html:not(.theme-bone) table th,
+html:not(.theme-bone) table td {
   border-color: var(--hairline) !important;
 }
+
+/* ==========================================================================
+   MODO DE DENSIDAD COMPACTA (SecOps View)
+   Reduce el espaciado y márgenes para optimizar la supervisión de múltiples controles
+   ========================================================================== */
+.density-compact main {
+  padding-top: 1rem !important;
+  padding-bottom: 1.25rem !important;
+}
+
+.density-compact .py-12 {
+  padding-top: 1.25rem !important;
+  padding-bottom: 1.25rem !important;
+}
+
+.density-compact .px-6,
+.density-compact .px-8,
+.density-compact .px-12 {
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+.density-compact .mb-12 {
+  margin-bottom: 1rem !important;
+}
+
+.density-compact .mb-8 {
+  margin-bottom: 0.75rem !important;
+}
+
+.density-compact .p-6 {
+  padding: 0.85rem !important;
+}
+
+.density-compact .p-5 {
+  padding: 0.75rem !important;
+}
+
+.density-compact .p-4 {
+  padding: 0.55rem !important;
+}
+
+.density-compact .gap-8 {
+  gap: 0.85rem !important;
+}
+
+.density-compact .gap-6 {
+  gap: 0.65rem !important;
+}
+
+.density-compact .gap-4 {
+  gap: 0.45rem !important;
+}
+
+.density-compact .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.45rem !important;
+}
+
+.density-compact .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 0.65rem !important;
+}
+
+.density-compact table th,
+.density-compact table td {
+  padding: 0.35rem 0.5rem !important;
+  font-size: 11px !important;
+}
+
+/* Cuadrícula Blueprint sutil para temas de ingeniería */
+.theme-blueprint body,
+.theme-blueprint #root {
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
 
