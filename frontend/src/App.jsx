@@ -36,15 +36,13 @@ function ScrollToTop() {
 }
 
 function App() {
-  const { isDarkMode } = useDemoStore();
+  const { theme, density } = useDemoStore();
 
+  // Asignación directa de clases en documentElement para simplificar la sincronización visual
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [isDarkMode]);
+    const isDark = theme === 'obsidian' || theme === 'blueprint';
+    document.documentElement.className = `theme-${theme || 'bone'} density-${density || 'editorial'} ${isDark ? 'dark' : ''}`;
+  }, [theme, density]);
 
   return (
     <Router>
