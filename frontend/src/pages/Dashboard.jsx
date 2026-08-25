@@ -1,5 +1,5 @@
 import { useDemoStore } from '../store/demoStore';
-import { ArrowUpRight, ArrowRight, ShieldCheck, Activity } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
