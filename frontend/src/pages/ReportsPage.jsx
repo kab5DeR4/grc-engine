@@ -1,28 +1,59 @@
+import { useDemoStore } from '../store/demoStore';
+import { ROLES } from '../data/demo/rbac';
+import RbacPermissionBanner from '../components/settings/RbacPermissionBanner';
 
 export default function ReportsPage() {
+  const { hasPermission, appendAuditLog, currentUser } = useDemoStore();
+  const canExport = hasPermission('export_pdf');
+
   const handlePrint = () => {
+    if (!canExport) return;
+    appendAuditLog(
+      'ATTESTATION_PDF_EXPORTED',
+      'REPORT_VOL_04_SOC2_NIST',
+      'INFO',
+      `User ${currentUser.name} generated cryptographic attestation export package.`
+    );
     window.print();
   };
 
   return (
     <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
       
-      <main className="py-12 px-6 md:px-12">
+      <main className="py-12 px-6 md:px-12 space-y-8">
         {/* Page Header */}
-        <div className="mb-12 pb-6 hairline-b flex flex-col md:flex-row md:items-end justify-between">
+        <div className="pb-6 hairline-b flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="mono-label text-[#9B3418] mb-2">GRC COMPLIANCE REPORTING</div>
             <h1 className="serif-heading text-[36px] md:text-[54px] text-[#1A1917]">
               Executive Audit & <span className="serif-italic-pigment">Attestation Report</span>
             </h1>
           </div>
-          <button 
-            onClick={handlePrint}
-            className="studio-btn-primary studio-btn text-[11px] mt-4 md:mt-0"
-          >
-            [ PRINT / EXPORT PDF ]
-          </button>
+          {canExport ? (
+            <button 
+              onClick={handlePrint}
+              className="studio-btn-primary studio-btn text-[11px]"
+            >
+              [ PRINT / EXPORT PDF ]
+            </button>
+          ) : (
+            <button 
+              disabled
+              className="studio-btn opacity-50 cursor-not-allowed text-[10.5px] border-dashed"
+              title="PDF attestation export is restricted for Read-Only Viewers."
+            >
+              [ EXPORT RESTRICTED: RBAC ]
+            </button>
+          )}
         </div>
+
+        {/* RBAC Banner if user cannot export */}
+        {!canExport && (
+          <RbacPermissionBanner
+            actionName="exporting official attestation PDF reports"
+            requiredRole="EXTERNAL AUDITOR, SECURITY ENGINEER, or ADMIN"
+          />
+        )}
 
         {/* Printable Report Document Card */}
         <div className="bg-[#E7E3DA] p-8 md:p-12 hairline-all max-w-4xl mx-auto">
@@ -86,7 +117,6 @@ export default function ReportsPage() {
           </div>
         </div>
       </main>
-
-          </div>
+    </div>
   );
 }

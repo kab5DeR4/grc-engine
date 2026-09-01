@@ -1,6 +1,11 @@
 import { useState } from 'react';
+import { useDemoStore } from '../store/demoStore';
+import RbacPermissionBanner from '../components/settings/RbacPermissionBanner';
 
 export default function ScansPage() {
+  const { hasPermission, appendAuditLog, currentUser } = useDemoStore();
+  const canRunScans = hasPermission('run_scans');
+
   const [scanning, setScanning] = useState(false);
   const [progress, setProgress] = useState(100);
   const [logs, setLogs] = useState([
@@ -13,9 +18,18 @@ export default function ScansPage() {
   ]);
 
   const runScan = () => {
+    if (!canRunScans) return;
+
     setScanning(true);
     setProgress(0);
     setLogs(['[NOW] INITIATING REAL-TIME GRC TELEMETRY SCAN...']);
+
+    appendAuditLog(
+      'MANUAL_SYSTEM_SCAN_TRIGGERED',
+      'CONSOLE_SCAN_RUNNER',
+      'INFO',
+      `Operator ${currentUser.name} triggered live telemetry scan run.`
+    );
 
     let current = 0;
     const interval = setInterval(() => {
@@ -36,26 +50,44 @@ export default function ScansPage() {
   return (
     <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
       
-      <main className="py-12 px-6 md:px-12">
+      <main className="py-12 px-6 md:px-12 space-y-8">
         {/* Page Header */}
-        <div className="mb-12 pb-6 hairline-b flex flex-col md:flex-row md:items-end justify-between">
+        <div className="pb-6 hairline-b flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <div className="mono-label text-[#9B3418] mb-2">POLICY & TELEMETRY SCANNER</div>
             <h1 className="serif-heading text-[36px] md:text-[54px] text-[#1A1917]">
               Real-Time Scan Console & <span className="serif-italic-pigment">Drift Probe</span>
             </h1>
           </div>
-          <button 
-            onClick={runScan}
-            disabled={scanning}
-            className="studio-btn-primary studio-btn text-[11px] mt-4 md:mt-0"
-          >
-            {scanning ? '[ SCANNING CLUSTER... ]' : '[ RUN LIVE SCAN NOW ]'}
-          </button>
+          {canRunScans ? (
+            <button 
+              onClick={runScan}
+              disabled={scanning}
+              className="studio-btn-primary studio-btn text-[11px]"
+            >
+              {scanning ? '[ SCANNING CLUSTER... ]' : '[ RUN LIVE SCAN NOW ]'}
+            </button>
+          ) : (
+            <button 
+              disabled
+              className="studio-btn opacity-50 cursor-not-allowed text-[10.5px] border-dashed"
+              title="Scan execution is restricted for External Auditors and Read-Only Viewers."
+            >
+              [ SCAN RESTRICTED: RBAC ]
+            </button>
+          )}
         </div>
 
+        {/* RBAC restriction banner if non-privileged persona */}
+        {!canRunScans && (
+          <RbacPermissionBanner
+            actionName="initiating live cluster telemetry scans"
+            requiredRole="PLATFORM ADMIN or SECURITY ENGINEER"
+          />
+        )}
+
         {/* Scan Progress Bar */}
-        <div className="mb-8 p-6 bg-[#DCD7CB] hairline-all">
+        <div className="p-6 bg-[#DCD7CB] hairline-all">
           <div className="flex justify-between items-center mb-2 mono-label text-[11px]">
             <span>TELEMETRY SCAN PROGRESS</span>
             <span className="text-[#9B3418] font-bold">{progress}%</span>
@@ -85,7 +117,6 @@ export default function ScansPage() {
           </div>
         </div>
       </main>
-
-          </div>
+    </div>
   );
 }
