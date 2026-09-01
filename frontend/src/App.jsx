@@ -14,6 +14,7 @@ import CataloguePage from './pages/CataloguePage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import Architecture from './pages/Architecture';
+import SettingsPage from './pages/SettingsPage';
 import AppShell from './components/layout/AppShell';
 import FeaturesPage from './pages/FeaturesPage';
 import PricingPage from './pages/PricingPage';
@@ -63,6 +64,8 @@ function App() {
           <Route path="/findings" element={<FindingsPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/catalogue" element={<CataloguePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings/:tab" element={<SettingsPage />} />
         </Route>
         <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
         <Route path="/features" element={<PageTransition><FeaturesPage /></PageTransition>} />
