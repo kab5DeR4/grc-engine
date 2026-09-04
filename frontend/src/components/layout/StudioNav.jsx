@@ -44,14 +44,14 @@ const StudioNav = memo(function StudioNav() {
           badge: 'Live',
         },
         {
+          name: 'Connected Environments',
+          desc: 'Manage live API sync & telemetry pipelines',
+          href: '/dashboard/integrations',
+        },
+        {
           name: 'Architecture Topology',
           desc: 'Interactive node graph & system boundaries',
           href: '/architecture',
-        },
-        {
-          name: 'Framework Catalogue',
-          desc: 'SOC 2, ISO 27001 & NIST CSF specifications',
-          href: '/catalogue',
         },
         {
           name: 'Evaluation Model',
@@ -69,7 +69,7 @@ const StudioNav = memo(function StudioNav() {
           href: '/controls',
         },
         {
-          name: 'Automated Scanners',
+          name: 'Telemetry Scanners',
           desc: 'Cloud infra & code scanning engine',
           href: '/scans',
         },
@@ -86,42 +86,32 @@ const StudioNav = memo(function StudioNav() {
       ],
     },
     {
-      category: 'Studio & Evidence',
+      category: 'Proofs & Governance',
       items: [
         {
-          name: 'System Drawing',
-          desc: 'Interactive visual compliance diagrams',
-          href: '/drawing',
-        },
-        {
-          name: 'Gap Study',
-          desc: 'Framework baseline evaluation workbench',
-          href: '/study',
-        },
-        {
-          name: 'Policy Practice',
-          desc: 'Operational workflow & policy execution',
-          href: '/practice',
-        },
-        {
-          name: 'Evidence Archive',
-          desc: 'Cryptographic proof storage & logs',
+          name: 'Evidence Vault',
+          desc: 'Cryptographic proof storage & SHA-256 hashes',
           href: '/archive',
+        },
+        {
+          name: 'Settings & RBAC Matrix',
+          desc: 'Sovereign governance, API keys & audit ledger',
+          href: '/settings/profile',
+        },
+        {
+          name: 'Platform Capabilities',
+          desc: 'Discover architecture & discovery engine',
+          id: 'capabilities',
         },
       ],
     },
     {
-      category: 'Ecosystem & Sync',
+      category: 'Ecosystem & Docs',
       items: [
         {
-          name: 'Cloud & CI/CD Integrations',
+          name: 'Integrations Catalogue',
           desc: 'AWS, GCP, GitHub, Okta & pipeline sync',
           href: '/integrations',
-        },
-        {
-          name: 'Active Connected Hub',
-          desc: 'Manage live API sync & data pipelines',
-          href: '/dashboard/integrations',
         },
         {
           name: 'Platform Features',
@@ -129,9 +119,14 @@ const StudioNav = memo(function StudioNav() {
           href: '/features',
         },
         {
-          name: 'Pipeline Telemetry',
-          desc: 'Continuous evidence capture flow',
-          id: 'integrations',
+          name: 'Documentation & API',
+          desc: 'Integration guides & technical specs',
+          href: '/docs',
+        },
+        {
+          name: 'Pricing & Plans',
+          desc: 'Transparent tiers for scaling teams',
+          href: '/pricing',
         },
       ],
     },
