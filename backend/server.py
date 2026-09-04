@@ -72,9 +72,12 @@ class SimulatedReportPayload(BaseModel):
 async def health_check():
     return {"status": "ok", "service": "grc-audit-backend"}
 
-@app.post("/api/audit")
+# legacy PDF audit endpoint preserved under both legacy and standard paths
+@app.post("/api/legacy/audit", tags=["Legacy PDF Audit"])
+@app.post("/api/audit", tags=["Legacy PDF Audit"])
 async def api_audit(file: UploadFile = File(...)):
     if not file.filename.endswith(".pdf"):
+
         logger.error(f"Invalid file extension uploaded: {file.filename}")
         raise HTTPException(status_code=400, detail="Only standard PDF policy files are accepted.")
 
