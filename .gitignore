@@ -31,6 +31,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+*.db
+*.sqlite
+*.sqlite3
+
 
 # Virtual Environments
 .venv/
