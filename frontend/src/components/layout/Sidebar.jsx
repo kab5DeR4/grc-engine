@@ -1,9 +1,8 @@
 import { memo } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { 
-  LayoutDashboard, Shield, FileCheck, 
-  Files, AlertTriangle, Activity, 
-  FileText, Database, Code, BookOpen, Network, Sliders 
+  LayoutDashboard, Shield, Files, AlertTriangle, 
+  Activity, FileText, Code, Network, Sliders 
 } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 import { ROLE_DETAILS } from '../../data/demo/rbac';
@@ -12,17 +11,14 @@ const navigation = [
   { code: '01', name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { code: '02', name: 'Integrations', href: '/dashboard/integrations', icon: Network },
   { code: '03', name: 'Architecture', href: '/architecture', icon: Code },
-  { code: '04', name: 'Controls', href: '/controls', icon: Shield },
-  { code: '05', name: 'Practice', href: '/practice', icon: FileCheck },
-  { code: '06', name: 'Kinematics', href: '/study', icon: Network },
-  { code: '07', name: 'Drawings', href: '/drawing', icon: BookOpen },
-  { code: '08', name: 'Evidence', href: '/archive', icon: Files },
-  { code: '09', name: 'Findings', href: '/findings', icon: AlertTriangle },
-  { code: '10', name: 'Scans', href: '/scans', icon: Activity },
-  { code: '11', name: 'Reports', href: '/reports', icon: FileText },
-  { code: '12', name: 'Catalogue', href: '/catalogue', icon: Database },
-  { code: '13', name: 'Settings & RBAC', href: '/settings/profile', icon: Sliders },
+  { code: '04', name: 'Controls Matrix', href: '/controls', icon: Shield },
+  { code: '05', name: 'Evidence Vault', href: '/archive', icon: Files },
+  { code: '06', name: 'Findings & Gaps', href: '/findings', icon: AlertTriangle },
+  { code: '07', name: 'Telemetry Scans', href: '/scans', icon: Activity },
+  { code: '08', name: 'Attestation Reports', href: '/reports', icon: FileText },
+  { code: '09', name: 'Settings & RBAC', href: '/settings/profile', icon: Sliders },
 ];
+
 
 // memoize sidebar navigation component fr
 const Sidebar = memo(function Sidebar({ collapsed, onToggle }) {
