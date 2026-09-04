@@ -1,81 +1,87 @@
 # GRC Engine — Frontend
 
-The frontend user interface for the Governance, Risk, and Compliance (GRC) Engine platform. Built with React, Vite, Framer Motion, and Tailwind CSS.
+> Studio editorial brutalist frontend interface for Governance, Risk & Compliance. Built with React 19, Vite, Tailwind CSS, and Zustand.
 
-## Features
+---
 
-- **Posture Overview Dashboard**: Real-time compliance monitoring, posture score, and telemetry scan simulation.
-- **Integration Management**: Connector interfaces for third-party cloud infrastructure and developer tooling (AWS, GCP, GitHub, Okta, Jira, Slack).
-- **Architecture Mapping**: Infrastructure topology mapping displaying real-time security compliance indicators directly over system assets.
-- **Controls Registry**: Standard compliance checks mapped across frameworks such as SOC 2, ISO 27001, HIPAA, and GDPR.
-- **Tactical Remediation Playbook**: Step-by-step resolution guides for active compliance gaps and security findings.
-- **Findings & Vulnerabilities Console**: Centralized interface to review, ignore, or simulate resolution of compliance issues.
-- **Evidence Locker**: Document and asset repository mapping system configuration dumps and policies directly to audit controls.
-- **Telemetry Scanner**: Diagnostic tool for running continuous compliance evaluation scans across connected environments.
-- **Auditor Readiness Reports**: One-click generation of audit-ready compliance reporting (SOC 2 readiness, ISO 27001 Annex A, GDPR).
-- **Standards Catalogue**: Searchable reference database mapping standard control definitions, rules, and framework criteria.
+## Features & Capabilities
+
+- **Studio Editorial Brutalist Design System:** Custom theme engine with 4 curated palettes (*Bone, Obsidian, Blueprint, Auditor*) and interactive density modes (*Editorial vs. Compact*).
+- **Live RBAC Persona Simulator:** Real-time role switching between *Security Lead, Compliance Auditor, DevOps Engineer, and Read-Only Executive* with instant UI adaptation.
+- **Posture Overview Dashboard:** High-level compliance health metrics, framework adherence percentages, and risk scores across SOC 2, ISO 27001, NIST CSF 2.0, and CIS v8.
+- **Integrations Hub:** Connection management & ping telemetry for cloud providers and dev tools (GitHub, AWS, GCP, Azure, Kubernetes, Okta).
+- **Controls Registry & Catalogue:** Comprehensive inventory of compliance controls mapped directly to framework requirements.
+- **Findings & Vulnerability Console:** Security gaps detection, severity classification, and simulated step-by-step remediation flows.
+- **Evidence Locker & Vault:** Cryptographic proof inspector with SHA-256 hash chains for tamper-evident auditor verification.
+- **Telemetry Scanner:** Live compliance scanning simulation and execution logs.
+- **Audit Trail & Governance:** Immutable event log tracking every system action and configuration change.
+
+---
 
 ## Tech Stack
 
-- **React 19** - Frontend user interface library
-- **Vite 8** - Build tool and development server
-- **Zustand 5** - State management
-- **Framer Motion 13** - UI animations and transitions
-- **Tailwind CSS 3** - Utility-first styling framework
-- **Oxlint** - Static code linter
+- **React 19** — Frontend component framework
+- **Vite 8** — Next-gen frontend tooling and rapid HMR
+- **Zustand 5** — Reactive client state & telemetry simulation store
+- **Tailwind CSS 3** — Design tokens, themes, and utility classes
+- **Lucide React** — Consistent icon set
+- **Framer Motion 13** — Page transitions and smooth micro-interactions
+- **Oxlint** — Ultra-fast static analysis and linting
+
+---
 
 ## Project Structure
 
-```
-├── public/              # Static public assets
+```text
+frontend/
+├── public/              # Static assets & brand logos
 ├── src/
-│   ├── components/      # Shared layout, navigation, and page components
-│   ├── data/            # Mock dataset definitions
-│   ├── lib/             # Utility functions
-│   ├── pages/           # Application views and subpages
-│   ├── store/           # Global state containers (Zustand)
-│   ├── App.jsx          # Root application component and routing
-│   ├── index.css        # Global CSS styles and design tokens
+│   ├── components/      # Reusable UI components
+│   │   ├── audit/       # PDF audit uploader and report viewers
+│   │   ├── layout/      # AppShell, Sidebar, Header, PageTransition
+│   │   ├── studio/      # Theme selector, density switcher, and style tokens
+│   │   └── ui/          # Generic cards, modals, tables, and buttons
+│   ├── data/            # Canonical frameworks and controls definitions
+│   ├── lib/             # Theme helpers, crypto utilities, and formatters
+│   ├── pages/           # Application views (Dashboard, Integrations, Controls, Findings, Evidence, Settings)
+│   ├── store/           # Zustand stores (demoStore.js, authStore.js)
+│   ├── App.jsx          # Root routing and shell integration
+│   ├── index.css        # Global CSS variables, custom scrollbars, and brutalist tokens
 │   └── main.jsx         # Application entry point
-├── clean.cjs            # Page header/footer cleanup utility script
-├── tailwind.config.js   # Tailwind CSS configuration
-└── vite.config.js       # Vite configuration
+├── tailwind.config.js   # Tailwind theme extensions (bone, ink, pigment)
+└── vite.config.js       # Vite bundler configuration
 ```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 
-Ensure you have Node.js (v18+ recommended) installed.
+Node.js `v18+` and npm installed.
 
-### Installation
-
-Install project dependencies:
+### Installation & Development
 
 ```bash
+# Install dependencies
 npm install
-```
 
-### Development Server
-
-Start the local development server:
-
-```bash
+# Start local dev server
 npm run dev
 ```
 
-### Build for Production
+Visit `http://localhost:5173` to explore the dashboard.
 
-Compile production assets:
+### Production Build
 
 ```bash
 npm run build
 ```
 
-### Linting
+---
 
-Run Oxlint for static code analysis:
+## License
 
-```bash
-npm run lint
-```
+MIT License.
+
+

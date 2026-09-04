@@ -1,68 +1,79 @@
-# GRC Audit Platform
+# GRC Engine — Backend
 
-A Governance, Risk, and Compliance (GRC) security policy auditing tool. It checks policy PDF documents against various cybersecurity frameworks locally using a React frontend and a FastAPI backend.
+> High-performance FastAPI backend service powering deterministic compliance evaluation, async SQLAlchemy 2.0 ORM persistence, Alembic migrations, and cryptographic evidence management.
 
-**Live Prototype:** [grc-engine.vercel.app](https://grc-engine.vercel.app/)
+---
 
-## Features
+## Architecture & Modules
 
-- **Local Processing**: PDF extraction and evaluations run locally.
-- **Rules Engine**: Uses regex, boundary checks, and basic negation detection (e.g. detects *"MFA is not enforced"*).
-- **Standards Mapping**: Maps 19 security controls against:
-  - ISO/IEC 27001:2022
-  - NIST Cybersecurity Framework 2.0
-  - EU GDPR
-  - EU NIS2 Directive
-- **Quote Extraction**: Extracts snippets from the policy as evidence.
-- **Risk Simulator**: Toggle controls in the UI to see how compliance and risk metrics change.
-- **Reports**: Generates HTML and JSON audit reports.
+- **FastAPI Application (`server.py`):** Async REST API gateway exposing health probes, database endpoints, and legacy policy analyzers.
+- **Database Engine (`database.py`):** Async SQLAlchemy 2.0 engine configured with SQLite (`aiosqlite`) for local development and PostgreSQL compatibility for production.
+- **Data Models (`models/`):** 11 core domain entities:
+  - `Organization` & `Workspace`
+  - `User` & `ApiKey`
+  - `Integration` (GitHub, AWS, GCP connectors)
+  - `Asset` (discovered repositories, cloud resources)
+  - `Control`, `Framework`, `FrameworkRequirement`, `ControlMapping`
+  - `Evidence`, `Finding`, `ScanJob`, `AuditLog`
+- **Migrations (`alembic/`):** Version-controlled schema migrations with auto-generation and upgrade commands.
+- **Compliance Baseline Seeds (`scripts/seed_db.py`):** Auto-populates baseline frameworks (SOC 2 Type II, ISO/IEC 27001:2022, NIST CSF 2.0, CIS Critical Security Controls v8).
+- **Legacy PDF Audit Engine (`audit_engine.py`):** Preserved local-first policy text parsing and negation-aware regex scanning under `/api/legacy/audit`.
 
-## Architecture
+---
 
-```
-   [PDF Upload]
-        │
-        ▼
-   [FastAPI] (server.py)
-        │
-        ▼
-   [PDF Parsing] (pypdf)
-        │
-        ▼
-   [Audit Engine] (audit_engine.py)
-        │
-        ▼
-   [Report Generation] (reports/audit_report.json, html)
-        │
-        ▼
-   [React UI]
-```
+## Setup & Running
 
-## How to Run
+### 1. Environment Setup
 
-1. Install dependencies:
 ```bash
+# Create and activate virtual environment
+python -m venv .venv
+
+# On Windows:
+.venv\Scripts\activate
+# On Linux / macOS:
+source .venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-2. Start the server:
+### 2. Database Migrations & Seeding
+
 ```bash
-python server.py
+# Run Alembic migrations to create tables
+alembic upgrade head
+
+# Seed baseline compliance frameworks & controls
+python scripts/seed_db.py
 ```
-Or via uvicorn:
+
+### 3. Run Development Server
+
 ```bash
+# Run server
+python server.py
+
+# Or directly with uvicorn
 uvicorn server:app --reload --port 8000
 ```
 
-3. Open `http://localhost:8000` in your browser.
+- API Base URL: `http://127.0.0.1:8000`
+- Interactive Swagger Docs: `http://127.0.0.1:8000/docs`
+- ReDoc Docs: `http://127.0.0.1:8000/redoc`
 
-## Deployment
+---
 
-The app is lightweight since it uses regex rather than heavy ML models.
-- **RAM**: < 80 MB
-- **Execution**: < 0.5s per PDF
-- Can be hosted on most standard platforms (Docker, Render, AWS, etc.)
+## Security & Data Integrity
+
+- **Deterministic Evaluation:** 100% reproducible pass/fail verdicts and risk calculation.
+- **Tamper-Evident Evidence Vault:** Audit artifacts hashed using SHA-256 for cryptographic non-repudiation.
+- **Local-First Privacy:** No sensitive infrastructure tokens or policy data leaves your secure perimeter.
+
+---
 
 ## License
 
 MIT License.
+
+
