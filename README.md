@@ -72,23 +72,8 @@ GRC Engine turns traditional compliance upside down: **Infrastructure is the sin
 
 > Experience the live dashboard with real-time persona switching (Platform Admin, Security Engineer, External Auditor) and theme selector.
 
-```text
-+-------------------------------------------------------------------------------+
-| GRC ENGINE  [● LIVE TELEMETRY]                    [Persona: Security Engineer]|
-+-------------------------------------------------------------------------------+
-| OVERALL POSTURE      SOC 2 TYPE II     ISO 27001:2022      NIST CSF 2.0       |
-|      92%                 88%                94%                90%            |
-|  [HEALTHY]         (Change Mgmt)      (Access Control)   (Protect PR.DS)      |
-+-------------------------------------------------------------------------------+
-| DISCOVERED ASSETS    OPEN FINDINGS     EVIDENCE VAULT     DRIFT DETECTED      |
-|     14 Repos            3 Gaps          42 SHA-256 Proofs     0 Critical      |
-+-------------------------------------------------------------------------------+
-| RECENT FINDINGS & AUTOMATED REMEDIATIONS                                      |
-| 🔴 CTL-GH-01 | Main branch missing protection rule (Require 2 reviewers)     |
-|    Remediation: gh api -X PUT /repos/org/repo/branches/main/protection        |
-| 🟢 CTL-GH-03 | Secret scanning & push protection active (Verified SHA-256)   |
-+-------------------------------------------------------------------------------+
-```
+<img width="1919" height="946" alt="image" src="https://github.com/user-attachments/assets/7160d545-925f-4257-adbf-bab943823652" />
+
 
 🚀 **Try the interactive app:** [https://grc-engine.vercel.app](https://grc-engine.vercel.app)
 
