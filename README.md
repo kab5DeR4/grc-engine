@@ -117,26 +117,7 @@ GRC Engine turns traditional compliance upside down: **Infrastructure is the sin
 
 ---
 
-## Roadmap
-
-```text
-Phase 00 : Project Reset & Code Hygiene                          [Completed]
-Phase 01 : Database Architecture & Core Domain Models            [Completed]
-Phase 02 : Backend Application Core & Modular API v1             [Completed]
-Phase 03 : Connector Engine & Live GitHub Integration            [In Progress]
-Phase 04 : Asset Discovery Subsystem                             [Planned]
-Phase 05 : Technical Control Normalization Subsystem             [Planned]
-Phase 06 : Compliance Framework Matrix & Deterministic Rules     [Planned]
-Phase 07 : Cryptographic Evidence Vault (SHA-256 Ledger)         [Planned]
-Phase 08 : Findings, Risk Scoring & Remediation Engine           [Planned]
-Phase 09 : Real-time Drift Detection Subsystem                   [Planned]
-Phase 10 : Frontend API Client & Dual Mode (Demo vs Live)        [Planned]
-Phase 11 : Dashboard Real-Time Integration                       [Planned]
-Phase 12 : AI Explanation & Automated Remediation Layer          [Planned]
-Phase 13 : Executive & Auditor Attestation Reporting             [Planned]
-Phase 14 : AWS Infrastructure Connector                          [Planned]
-Phase 15 : Security Hardening, Automated Testing & Release       [Planned]
-```
+[![Milestone Progress](https://img.shields.io/github/milestones/progress/kab5DeR4/grc-engine/1?style=flat-square&color=2ea44f)](https://github.com/kab5DeR4/grc-engine/milestones)
 
 ---
 
