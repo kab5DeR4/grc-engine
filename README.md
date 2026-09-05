@@ -1,36 +1,49 @@
 # GRC Engine
 
-> Continuous, Automated Governance, Risk & Compliance (GRC) platform powered by deterministic infrastructure evaluation & tamper-evident evidence.
+Privacy-first compliance discovery and policy auditing platform.
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
-[![SQLAlchemy 2.0](https://img.shields.io/badge/SQLAlchemy-2.0+-D71F00.svg?style=flat&logo=sqlalchemy)](https://www.sqlalchemy.org)
-[![React](https://img.shields.io/badge/React-19-61DAFB.svg?style=flat&logo=react)](https://react.dev)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4+-38B2AC.svg?style=flat&logo=tailwind-css)](https://tailwindcss.com)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[ [Live Demo](https://grc-engine.vercel.app) ] [ [Documentation](https://github.com/kab5DeR4/grc-engine/blob/main/DEVELOPMENT_MASTER_PLAN.md) ] [ [Architecture](#architecture) ]
 
-GRC Engine transitions security compliance from manual annual PDF audits to **continuous infrastructure verification**. It programmatically connects to cloud environments, source control, and developer tooling to prove security controls with cryptographic evidence.
+```
+   ██████╗ ██████╗  ██████╗    ███████╗███╗   ██╗ ██████╗ ██╗███╗   ██╗███████╗
+  ██╔════╝ ██╔══██╗██╔════╝    ██╔════╝████╗  ██║██╔════╝ ██║████╗  ██║██╔════╝
+  ██║  ███╗██████╔╝██║         █████╗  ██╔██╗ ██║██║  ███╗██║██╔██╗ ██║█████╗  
+  ██║   ██║██╔══██╗██║         ██╔══╝  ██║╚██╗██║██║   ██║██║██║╚██╗██║██╔══╝  
+  ╚██████╔╝██║  ██║╚██████╗    ███████╗██║ ╚████║╚██████╔╝██║██║ ╚████║███████╗
+   ╚═════╝ ╚═╝  ╚═╝ ╚═════╝    ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝╚══════╝
+```
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-grc--engine.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://grc-engine.vercel.app)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![SQLAlchemy 2.0](https://img.shields.io/badge/SQLAlchemy-2.0+-D71F00.svg?style=for-the-badge&logo=sqlalchemy&logoColor=white)](https://www.sqlalchemy.org)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB.svg?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4+-38B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 ---
 
-## Key Features
+**GRC Engine** analyzes security policies against structured compliance controls and produces:
 
-* **Continuous Infrastructure Evaluation:** Scan real-world resources (GitHub repositories, cloud configs) against security controls.
-* **Deterministic Compliance Engine:** 100% reproducible pass/fail verdicts and risk calculation across **SOC 2, ISO/IEC 27001, NIST CSF 2.0, CIS v8, and GDPR**.
-* **Cryptographic Evidence Vault:** Every audit artifact is captured with an immutable SHA-256 cryptographic digest.
-* **Modern Database Architecture:** SQLAlchemy 2.0 async engine with Alembic schema migrations and auto-seeding for compliance baselines.
-* **Studio Editorial Brutalist UI:** Highly responsive, themeable React interface with live RBAC persona preview, posture metrics, and remediation guides.
-* **Legacy PDF Security Auditing:** Preserved local-first PDF policy text analyzer with 19-control regex matrix under `/api/legacy/audit`.
+- 🔍 **Control detection** across source control and infrastructure configurations
+- 📦 **Evidence extraction** with immutable SHA-256 cryptographic digests
+- 🎯 **Risk scoring** (0–100) with weighted severity formulas
+- 📋 **Framework mapping** across **SOC 2 Type II, ISO/IEC 27001:2022, NIST CSF 2.0, CIS v8, and GDPR**
+- ⚠️ **Compliance gaps** and drift detection
+- 💡 **Remediation recommendations** (copy-paste Terraform & CLI commands)
+- 📄 **HTML / JSON reports** for auditor attestation packages
 
 ---
 
 ## Architecture
 
+GRC Engine turns traditional compliance upside down: **Infrastructure is the single source of truth.**
+
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
 │                          PRESENTATION LAYER                            │
-│           React 19 + Vite + Tailwind CSS + Zustand Telemetry           │
+│   React 19 + Vite + Tailwind + Zustand (Demo Mode / Live API Toggle)   │
 └───────────────────────────────────┬────────────────────────────────────┘
-                                    │ REST API (FastAPI)
+                                    │ REST API / WebSockets
 ┌───────────────────────────────────▼────────────────────────────────────┐
 │                             API GATEWAY                                │
 │        FastAPI Application Server + JWT Auth + RBAC Middleware         │
@@ -55,6 +68,93 @@ GRC Engine transitions security compliance from manual annual PDF audits to **co
 
 ---
 
+## Demo
+
+> Experience the live dashboard with real-time persona switching (Platform Admin, Security Engineer, External Auditor) and theme selector.
+
+```text
++-------------------------------------------------------------------------------+
+| GRC ENGINE  [● LIVE TELEMETRY]                    [Persona: Security Engineer]|
++-------------------------------------------------------------------------------+
+| OVERALL POSTURE      SOC 2 TYPE II     ISO 27001:2022      NIST CSF 2.0       |
+|      92%                 88%                94%                90%            |
+|  [HEALTHY]         (Change Mgmt)      (Access Control)   (Protect PR.DS)      |
++-------------------------------------------------------------------------------+
+| DISCOVERED ASSETS    OPEN FINDINGS     EVIDENCE VAULT     DRIFT DETECTED      |
+|     14 Repos            3 Gaps          42 SHA-256 Proofs     0 Critical      |
++-------------------------------------------------------------------------------+
+| RECENT FINDINGS & AUTOMATED REMEDIATIONS                                      |
+| 🔴 CTL-GH-01 | Main branch missing protection rule (Require 2 reviewers)     |
+|    Remediation: gh api -X PUT /repos/org/repo/branches/main/protection        |
+| 🟢 CTL-GH-03 | Secret scanning & push protection active (Verified SHA-256)   |
++-------------------------------------------------------------------------------+
+```
+
+🚀 **Try the interactive app:** [https://grc-engine.vercel.app](https://grc-engine.vercel.app)
+
+---
+
+## How It Works
+
+```text
+[ Infrastructure ] ➔ [ Asset Discovery ] ➔ [ Control Normalizer ] ➔ [ Deterministic Rules ] ➔ [ Cryptographic Proof ]
+   (GitHub, AWS)        (Repos, S3, IAM)     (Canonical State)         (PASS / FAIL)          (SHA-256 Ledger)
+```
+
+1. **Connect Infrastructure:** Link source control (GitHub) or cloud providers via read-only tokens.
+2. **Discover Assets & Collect State:** Auto-discover repositories, branch protection rules, secret scanning, and IAM configurations.
+3. **Normalize Technical Controls:** Transform vendor-specific JSON into unified canonical security controls (e.g. `CANONICAL_CODE_REVIEW_APPROVALS`).
+4. **Deterministic Evaluation:** Mathematical, 100% reproducible compliance pass/fail scoring against SOC 2, ISO 27001, and NIST CSF. Zero hallucinations.
+5. **Cryptographic Proofs & Attestation:** Evidence payloads are hashed with SHA-256 to create tamper-evident audit logs.
+6. **Remediation & Monitoring:** Generate copy-paste fix scripts and monitor for continuous compliance drift.
+
+---
+
+## Tech Stack
+
+| Layer | Technology | Description |
+|---|---|---|
+| **Frontend** | React 19, Vite, Tailwind CSS | Studio brutalist design system (`#E7E3DA` bone, `#1A1917` ink) |
+| **State Management** | Zustand 5 | Reactive client-side store with Dual Mode (Demo vs Live API) |
+| **API Gateway** | FastAPI, Uvicorn, Pydantic v2 | High-performance async REST API with OpenAPI & JWT auth |
+| **Database & ORM** | SQLAlchemy 2.0, Alembic, aiosqlite | Async relational engine supporting SQLite & PostgreSQL |
+| **Security & Hashing** | `python-jose`, `passlib`, `hashlib` | SHA-256 evidence integrity proofs & bcrypt password hashing |
+| **AI / Remediation** | LiteLLM, OpenAI / Anthropic *(WIP)* | Remediation code generation and executive risk summaries |
+| **Legacy Engine** | `pypdf`, Python regex | 19-control text matrix for static policy documents |
+
+---
+
+## Limitations
+
+- **Infrastructure Provider Scope:** Current live connector focuses on GitHub; AWS and GCP connectors are queued in roadmap.
+- **Agentless Discovery:** Collects posture via provider APIs and webhooks; does not run daemon agents inside virtual machines.
+- **AI Boundaries:** LLM models are strictly restricted to root-cause explanations and remediation script generation—AI **never** decides pass/fail compliance verdicts.
+
+---
+
+## Roadmap
+
+```text
+Phase 00 : Project Reset & Code Hygiene                          [Completed]
+Phase 01 : Database Architecture & Core Domain Models            [Completed]
+Phase 02 : Backend Application Core & Modular API v1             [Completed]
+Phase 03 : Connector Engine & Live GitHub Integration            [In Progress]
+Phase 04 : Asset Discovery Subsystem                             [Planned]
+Phase 05 : Technical Control Normalization Subsystem             [Planned]
+Phase 06 : Compliance Framework Matrix & Deterministic Rules     [Planned]
+Phase 07 : Cryptographic Evidence Vault (SHA-256 Ledger)         [Planned]
+Phase 08 : Findings, Risk Scoring & Remediation Engine           [Planned]
+Phase 09 : Real-time Drift Detection Subsystem                   [Planned]
+Phase 10 : Frontend API Client & Dual Mode (Demo vs Live)        [Planned]
+Phase 11 : Dashboard Real-Time Integration                       [Planned]
+Phase 12 : AI Explanation & Automated Remediation Layer          [Planned]
+Phase 13 : Executive & Auditor Attestation Reporting             [Planned]
+Phase 14 : AWS Infrastructure Connector                          [Planned]
+Phase 15 : Security Hardening, Automated Testing & Release       [Planned]
+```
+
+---
+
 ## Quick Start
 
 ### 1. Backend Setup
@@ -72,61 +172,26 @@ source .venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Run migrations & seed baseline frameworks (SOC 2, ISO 27001, NIST, CIS)
+# Run migrations & seed baseline frameworks (SOC 2, ISO 27001, NIST)
 alembic upgrade head
 python scripts/seed_db.py
 
-# Start backend server
+# Start server
 python server.py
 ```
-
-Backend API will be live at `http://127.0.0.1:8000` (Swagger docs at `/docs`).
+> Server runs on `http://127.0.0.1:8000` (API documentation at `/docs`).
 
 ### 2. Frontend Setup
 
 ```bash
 cd frontend
-
-# Install packages
 npm install
-
-# Start Vite development server
 npm run dev
 ```
-
-Frontend will be running at `http://localhost:5173`.
-
----
-
-## Tech Stack
-
-| Layer | Technology | Purpose |
-|---|---|---|
-| **Frontend** | React 19, Vite, Tailwind CSS | High-performance responsive UI & Studio design system |
-| **State Management** | Zustand 5 | Client-side reactive telemetry & mock offline preview |
-| **Backend Framework** | FastAPI, Uvicorn | Async REST API gateway & OpenAPI specs |
-| **Database & ORM** | SQLAlchemy 2.0, Alembic, SQLite / PostgreSQL | Async ORM models & version-controlled schema migrations |
-| **Parsing & Auditing** | `pypdf`, Python regex | Legacy policy parsing & rule verification |
-
----
-
-## Roadmap
-
-- [x] **Phase 00:** Project reset, UI cleanup, navigation streamlining & environment templates.
-- [x] **Phase 01:** Async database layer, 11 ORM models, Alembic migrations & baseline compliance seeds.
-- [ ] **Phase 02:** Modular FastAPI v1 REST API gateway, JWT auth & Pydantic settings.
-- [ ] **Phase 03:** Live GitHub REST API connector for repository posture & branch protection inspection.
-- [ ] **Phase 04:** Asset discovery engine for auto-cataloging infrastructure inventory.
-- [ ] **Phase 05:** Technical control normalization layer.
-- [ ] **Phase 06:** Deterministic evaluation engine & continuous posture scoring.
-- [ ] **Phase 07:** Cryptographic Evidence Vault (SHA-256 tamper-evident logs).
-- [ ] **Phase 08:** End-to-end frontend integration & live scanning mode.
+> Frontend runs on `http://localhost:5173`.
 
 ---
 
 ## License
 
-MIT License.
-
-*Built with passion, late night coding & coffee.*
-
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
