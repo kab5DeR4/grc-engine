@@ -63,3 +63,8 @@ htmlcov/
 *.njsproj
 *.sln
 *.sw?
+
+# Internal Docs & Master Plan
+DEVELOPMENT_MASTER_PLAN.md
+instructions.md
+
