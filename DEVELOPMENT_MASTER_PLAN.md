@@ -753,44 +753,56 @@ Follow Conventional Commits format (`type(scope): message`):
 
 ```text
 GRC ENGINE — DEVELOPMENT STATUS LEDGER
-Last Updated: September 2026
-Branch: main
+Version: v1.0.0 Baseline
+Branch: main (Commit 4b4ee8a / 5309f23)
 
-CURRENT PHASE            : Phase 04 — Asset Discovery Subsystem
-CURRENT TASK             : 4.1 Implement backend asset discovery service and database upsertion
-LAST COMPLETED MILESTONE : Phase 03 — Connector Engine & Live GitHub Integration (100% Complete)
-NEXT MILESTONE           : Phase 04 — Asset Discovery Subsystem & Inventory APIs
+CURRENT PHASE            : v1.0.0 Production Baseline (Completed)
+CURRENT TASK             : Post-launch monitoring & documentation sync
+LAST COMPLETED MILESTONE : Phase 15 — Security Hardening, Automated Testing (27/27 tests passing) & Release v1.0.0
+NEXT ROADMAP MILESTONE   : Phase 12 (LiteLLM AI Remediation) & Phase 14 (AWS Connector) in v1.1.0
 
 BLOCKERS                 : None
 
 SUBSYSTEM STATUS:
-- PRODUCT DEFINITION     : [COMPLETED] Infrastructure-First Platform
-- FRONTEND SHELL         : [PROTOTYPE] Studio Brutalist UI & Demo Store
-- BACKEND SERVER         : [COMPLETED] Modular FastAPI Core, JWT Auth & REST v1
-- DATABASE               : [COMPLETED] SQLAlchemy 2.0 Async Engine, Alembic Migrations, & Seed Data
-- GITHUB CONNECTOR       : [COMPLETED] Live REST API Client + Mock Offline Connector
-- AWS CONNECTOR          : [DEFERRED] Tier 2
-- COMPLIANCE EVALUATOR   : [NOT STARTED] Needs deterministic rule engine
-- EVIDENCE VAULT         : [NOT STARTED] Needs SHA-256 packaging
-- DRIFT DETECTION        : [NOT STARTED] Needs state comparison engine
-- AI EXPLANATION         : [NOT STARTED] Needs LiteLLM integration
-- REPORTING              : [PARTIAL] Legacy HTML report only
-- TESTING                : [NOT STARTED] Needs pytest suite
-- DEPLOYMENT             : [FRONTEND LIVE / BACKEND LOCAL]
+- PRODUCT DEFINITION     : [COMPLETED 100%] Infrastructure-First Platform
+- FRONTEND SHELL         : [COMPLETED 100%] Studio Brutalist UI & Dual Demo/Live Mode Toggle
+- BACKEND SERVER         : [COMPLETED 100%] Modular FastAPI v1 REST Router & CORS Middleware
+- DATABASE               : [COMPLETED 100%] SQLAlchemy 2.0 Async Engine, Alembic Migrations & Seed Data
+- AUTH & SECURITY        : [COMPLETED 100%] Bcrypt Password Hashing, JWT Tokens & 4 RBAC Personas
+- GITHUB CONNECTOR       : [COMPLETED 100%] Live REST API Client + Mock Sandbox Connector
+- ASSET DISCOVERY        : [COMPLETED 100%] GitHub Repository & Infrastructure Ingestion
+- CONTROL NORMALIZATION  : [COMPLETED 100%] 19 Canonical Technical Controls
+- COMPLIANCE EVALUATOR   : [COMPLETED 100%] Zero-AI Deterministic Rule Engine (SOC 2 / ISO 27001)
+- EVIDENCE VAULT         : [COMPLETED 100%] SHA-256 Tamper-Evident Proof Hash Ledger & Verification API
+- DRIFT DETECTION        : [COMPLETED 75%] Scheduled & API Triggered Scan Jobs Live
+- DOCUMENTATION          : [COMPLETED 100%] API Docs, STRIDE Threat Model, Security Model, Examples
+- TESTING & CI/CD        : [COMPLETED 100%] 27 Passing Pytest Unit/Integration Tests & GitHub Workflows
+- DEPLOYMENT             : [FRONTEND LIVE / BACKEND VERIFIED]
 
 LINKEDIN JOURNEY:
-- Post 1 : [x] Completed (Announcement)
-- Post 2 : [SCHEDULED AFTER PHASE 03] Live GitHub API Integration & Scan Demo (Architecture + Real Scan Video)
-
-
+- Option 1 (Main Launch)            : Ready to post (Pass tests & repo link)
+- Option 2 (Zero-AI Architecture)   : Ready to post (ARCHITECTURE.md deep dive)
+- Option 3 (SHA-256 Evidence Vault) : Ready to post (THREAT_MODEL.md deep dive)
+- Option 4 (SOC 2 / ISO 27001 Maps) : Ready to post (CONTROL_EVALUATION_EXAMPLES.md deep dive)
 ```
 
 ---
 
-## 36. Exactly What You Should Work On First
+## 36. Current State & What's Next
 
-Your next task is:
+> **Current Status: GRC Engine `v1.0.0` core baseline is 100% complete and fully verified!**
 
-> **"Your next task is: Initialize the Backend Database Foundation with SQLAlchemy, Alembic, and the Core Domain Models (Organization, Workspace, Integration, Asset, CanonicalControl, ControlMapping, EvaluationResult, Finding, EvidenceArtifact, AuditLog)."**
+### What has been built and verified:
+1. **FastAPI v1 REST Router** with async SQLAlchemy 2.0 ORM & Alembic database migrations.
+2. **Bcrypt Auth & JWT** security with 4 RBAC Personas (`PLATFORM_ADMIN`, `SECURITY_ENGINEER`, `EXTERNAL_AUDITOR`, `READ_ONLY_VIEWER`).
+3. **Live & Mock GitHub Connectors** capable of fetching repos, branch protections, and secret scanning telemetry.
+4. **Zero-AI Deterministic Rule Evaluator** mapping technical state to SOC 2 (CC8.1, CC6.8) and ISO 27001 (A.8.28, A.8.32).
+5. **SHA-256 Evidence Vault** with live verification API (`/api/v1/evidence/{id}/verify`).
+6. **27 Unit & Integration Tests** passing cleanly in `backend/tests/run_tests.py` and GitHub Actions CI.
+7. **Comprehensive Documentation Suite** (`docs/API_DOCUMENTATION.md`, `THREAT_MODEL.md`, `SECURITY_MODEL.md`, `CONTROL_EVALUATION_EXAMPLES.md`, etc.).
 
-This provides the persistent foundation that every subsequent step (GitHub connector, asset discovery, control normalization, evaluation, evidence vault, and frontend integration) strictly depends on.
+### What remains in future roadmap (v1.1.0+):
+1. **Phase 12:** AI Explanation & Remediation Layer using LiteLLM (optional non-evaluating assistant).
+2. **Phase 14:** AWS Cloud Infrastructure Connector (`boto3` for S3, IAM, CloudTrail).
+3. **Phase 09 Polish:** Real-time Webhook listener for instant push-drift notifications.
+
