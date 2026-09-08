@@ -1,0 +1,124 @@
+[
+  {
+    "id": "ev-9901-89ab-42c1",
+    "evidence_code": "EVD-GH-001",
+    "title": "GitHub Production Branch Protection State",
+    "control_code": "CTL-GH-01",
+    "asset_identifier": "acme-corp/payments-service",
+    "provider_type": "github",
+    "source_uri": "https://api.github.com/repos/acme-corp/payments-service/branches/main/protection",
+    "collected_at": "2026-09-08T14:30:00Z",
+    "status": "VERIFIED_IMMUTABLE",
+    "sha256_hash": "a819b104928f09d18e7c10b48a01f94c8e718b90192a837482910fa8bc123456",
+    "raw_payload_json": {
+      "allow_deletions": false,
+      "allow_force_pushes": false,
+      "branch": "main",
+      "enforce_admins": true,
+      "repository": "acme-corp/payments-service",
+      "required_linear_history": true,
+      "required_pull_request_reviews": {
+        "dismiss_stale_reviews": true,
+        "require_code_owner_reviews": true,
+        "required_approving_review_count": 2
+      }
+    },
+    "framework_mappings": [
+      {
+        "framework": "SOC 2 Type II",
+        "clause": "CC8.1"
+      },
+      {
+        "framework": "ISO/IEC 27001:2022",
+        "clause": "A.8.28"
+      },
+      {
+        "framework": "CIS Controls v8",
+        "clause": "16.2"
+      }
+    ],
+    "evaluation_verdict": {
+      "verdict": "PASS",
+      "score_weight": 15,
+      "evaluated_by": "GRC-Deterministic-Rule-Engine-v1.0"
+    }
+  },
+  {
+    "id": "ev-9902-12bc-89ef",
+    "evidence_code": "EVD-GH-002",
+    "title": "Automated Secret Scanning & Push Protection Telemetry",
+    "control_code": "CTL-GH-03",
+    "asset_identifier": "acme-corp/auth-core",
+    "provider_type": "github",
+    "source_uri": "https://api.github.com/repos/acme-corp/auth-core/secret-scanning/alerts",
+    "collected_at": "2026-09-08T14:30:00Z",
+    "status": "VERIFIED_IMMUTABLE",
+    "sha256_hash": "4f2910ab38c1092e478b0129a8f902c38190e87291a0c764839201bc89104fa2",
+    "raw_payload_json": {
+      "dependabot_security_updates": {
+        "status": "enabled"
+      },
+      "repository": "acme-corp/auth-core",
+      "secret_scanning": {
+        "status": "enabled"
+      },
+      "secret_scanning_push_protection": {
+        "status": "enabled"
+      }
+    },
+    "framework_mappings": [
+      {
+        "framework": "SOC 2 Type II",
+        "clause": "CC6.8"
+      },
+      {
+        "framework": "ISO/IEC 27001:2022",
+        "clause": "A.5.17"
+      },
+      {
+        "framework": "NIST CSF 2.0",
+        "clause": "PR.AA-01"
+      }
+    ],
+    "evaluation_verdict": {
+      "verdict": "PASS",
+      "score_weight": 10,
+      "evaluated_by": "GRC-Deterministic-Rule-Engine-v1.0"
+    }
+  },
+  {
+    "id": "ev-9903-55de-11aa",
+    "evidence_code": "EVD-AWS-001",
+    "title": "AWS KMS Envelope Key Derivation & Rotation Configuration",
+    "control_code": "CTL-KMS-01",
+    "asset_identifier": "arn:aws:kms:us-east-1:123456789012:key/b8192a01",
+    "provider_type": "aws",
+    "source_uri": "https://kms.us-east-1.amazonaws.com/?Action=DescribeKey",
+    "collected_at": "2026-09-08T14:30:00Z",
+    "status": "VERIFIED_IMMUTABLE",
+    "sha256_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "raw_payload_json": {
+      "encryption_algorithm": "AES-256-GCM",
+      "hsm_compliance": "FIPS 140-3 Level 3",
+      "key_arn": "arn:aws:kms:us-east-1:123456789012:key/b8192a01",
+      "key_manager": "CUSTOMER",
+      "key_rotation_active": true,
+      "rotation_period_days": 90
+    },
+    "framework_mappings": [
+      {
+        "framework": "ISO/IEC 27001:2022",
+        "clause": "A.8.24"
+      },
+      {
+        "framework": "NIST CSF 2.0",
+        "clause": "PR.DS-01"
+      }
+    ],
+    "evaluation_verdict": {
+      "verdict": "PASS",
+      "score_weight": 15,
+      "evaluated_by": "GRC-Deterministic-Rule-Engine-v1.0"
+    }
+  }
+]
