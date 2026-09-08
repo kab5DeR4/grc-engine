@@ -1,6 +1,6 @@
 # GRC Engine
 
-Privacy-first compliance discovery and policy auditing platform.
+Privacy-first compliance discovery and policy auditing platform. 
 Prototype / research-oriented GRC platform
 
 [ [Live Demo](https://grc-engine.vercel.app) ] [ [Documentation](https://github.com/kab5DeR4/grc-engine/blob/main/DEVELOPMENT_MASTER_PLAN.md) ] [ [Architecture](#architecture) ]
