@@ -55,10 +55,10 @@ async def list_evidence(
             organization_id=a.organization_id,
             scan_id=a.scan_id,
             asset_id=a.asset_id,
-            control_definition_id=a.control_definition_id,
+            control_definition_id=a.canonical_control_id,
             sha256_hash=a.sha256_hash,
             source_uri=a.source_uri,
-            created_at=a.created_at
+            created_at=a.collected_at
         )
         for a in artifacts
     ]

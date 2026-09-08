@@ -51,10 +51,10 @@ async def list_scans(
             id=s.id,
             organization_id=s.organization_id,
             status=s.status,
-            target_scope=s.target_scope,
-            assets_scanned_count=s.assets_scanned_count,
-            controls_evaluated_count=s.controls_evaluated_count,
-            findings_count=s.findings_count,
+            target_scope=s.trigger_type,
+            assets_scanned_count=s.total_assets,
+            controls_evaluated_count=s.total_evaluations,
+            findings_count=s.failed_evaluations,
             started_at=s.started_at,
             completed_at=s.completed_at
         )
@@ -81,11 +81,12 @@ async def trigger_scan(
 
     scan = ScanJob(
         organization_id=org_id,
+        trigger_type=payload.target_scope,
         status="PENDING",
-        target_scope=payload.target_scope,
-        assets_scanned_count=0,
-        controls_evaluated_count=0,
-        findings_count=0
+        total_assets=0,
+        total_evaluations=0,
+        passed_evaluations=0,
+        failed_evaluations=0
     )
     db.add(scan)
     await db.commit()
@@ -95,10 +96,10 @@ async def trigger_scan(
         id=scan.id,
         organization_id=scan.organization_id,
         status=scan.status,
-        target_scope=scan.target_scope,
-        assets_scanned_count=scan.assets_scanned_count,
-        controls_evaluated_count=scan.controls_evaluated_count,
-        findings_count=scan.findings_count,
+        target_scope=scan.trigger_type,
+        assets_scanned_count=scan.total_assets,
+        controls_evaluated_count=scan.total_evaluations,
+        findings_count=scan.failed_evaluations,
         started_at=scan.started_at,
         completed_at=scan.completed_at
     )
