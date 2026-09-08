@@ -11,7 +11,7 @@
 - **Data Models (`models/`):** 11 core domain entities:
   - `Organization` & `Workspace`
   - `User` & `ApiKey`
-  - `Integration` (GitHub, AWS, GCP connectors)
+  - `Integration` (GitHub live PAT + mock sandbox active; AWS & GCP schemas defined for v1.1 roadmap)
   - `Asset` (discovered repositories, cloud resources)
   - `Control`, `Framework`, `FrameworkRequirement`, `ControlMapping`
   - `Evidence`, `Finding`, `ScanJob`, `AuditLog`

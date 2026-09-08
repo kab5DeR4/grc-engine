@@ -123,7 +123,6 @@ Explore the live app or local server with pre-configured role personas:
 | ⚠️ [**Known Limitations**](docs/KNOWN_LIMITATIONS.md) | Honest engineering trade-offs regarding API rate limits, database concurrency, and scale. |
 | 🗺️ [**Engineering Roadmap**](docs/ROADMAP.md) | Milestone release plans for AWS connectors, OPA / Rego engine, and real-time webhooks. |
 | 🏷️ [**Release Notes v1.0.0**](RELEASE_NOTES.md) | Version 1.0.0 release notes and git tag instructions. |
-| 📝 [**Changelog**](CHANGELOG.md) | Chronological log of all additions and improvements. |
 
 ---
 

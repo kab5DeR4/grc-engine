@@ -9,7 +9,7 @@
 - **Studio Editorial Brutalist Design System:** Custom theme engine with 4 curated palettes (*Bone, Obsidian, Blueprint, Auditor*) and interactive density modes (*Editorial vs. Compact*).
 - **Live RBAC Persona Simulator:** Real-time role switching between *Security Lead, Compliance Auditor, DevOps Engineer, and Read-Only Executive* with instant UI adaptation.
 - **Posture Overview Dashboard:** High-level compliance health metrics, framework adherence percentages, and risk scores across SOC 2, ISO 27001, NIST CSF 2.0, and CIS v8.
-- **Integrations Hub:** Connection management & ping telemetry for cloud providers and dev tools (GitHub, AWS, GCP, Azure, Kubernetes, Okta).
+- **Integrations Hub:** Connection management & ping telemetry for cloud providers and dev tools (Live API connectivity for GitHub; interactive simulation for AWS, GCP, Azure, Kubernetes, Okta).
 - **Controls Registry & Catalogue:** Comprehensive inventory of compliance controls mapped directly to framework requirements.
 - **Findings & Vulnerability Console:** Security gaps detection, severity classification, and simulated step-by-step remediation flows.
 - **Evidence Locker & Vault:** Cryptographic proof inspector with SHA-256 hash chains for tamper-evident auditor verification.
