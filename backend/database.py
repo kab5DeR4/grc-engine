@@ -13,8 +13,10 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase
 
-# default to local sqlite async database for simple local development
-DEFAULT_DB_URL = "sqlite+aiosqlite:///./grc_engine.db"
+# resolve absolute path for local sqlite file so it works from any cwd fr
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_DB_PATH = os.path.join(BASE_DIR, "grc_engine.db").replace("\\", "/")
+DEFAULT_DB_URL = f"sqlite+aiosqlite:///{DEFAULT_DB_PATH}"
 DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DB_URL)
 
 # fix postgres:// prefix if provided by older cloud hosts
