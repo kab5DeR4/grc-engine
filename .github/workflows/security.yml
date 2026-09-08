@@ -1,0 +1,49 @@
+name: Security & Vulnerability Audit
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 4 * * 1' # Run every Monday at 04:00 UTC
+
+jobs:
+  secret-scan:
+    name: Secret & Credential Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks Secret Scanner
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+  dependency-audit:
+    name: Python & Node Security Audits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Python Safety Audit
+        run: |
+          pip install pip-audit
+          pip-audit -r backend/requirements.txt || echo "Audit completed with warnings"
+        continue-on-error: true
+
+      - name: Node Audit
+        working-directory: ./frontend
+        run: |
+          npm audit --audit-level=high || echo "Node audit completed"
+        continue-on-error: true
