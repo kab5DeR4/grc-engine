@@ -34,7 +34,8 @@ MANIFEST
 *.db
 *.sqlite
 *.sqlite3
-
+reports/
+backend/reports/
 
 # Virtual Environments
 .venv/
@@ -62,8 +63,3 @@ htmlcov/
 *.njsproj
 *.sln
 *.sw?
-
-# Internal Master Plan & Private Documents
-DEVELOPMENT_MASTER_PLAN.md
-instructions.md
-
