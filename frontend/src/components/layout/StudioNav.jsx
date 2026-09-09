@@ -126,7 +126,7 @@ const StudioNav = memo(function StudioNav() {
         {
           name: 'Pricing & Plans',
           desc: 'Transparent tiers for scaling teams',
-          href: '/pricing',
+          href: '/features',
         },
       ],
     },
@@ -163,7 +163,7 @@ const StudioNav = memo(function StudioNav() {
     {
       category: 'Company & Plans',
       items: [
-        { name: 'Pricing & Tiers', desc: 'Transparent enterprise & team plans', href: '/pricing' },
+        { name: 'Pricing & Tiers', desc: 'Transparent enterprise & team plans', href: '/features' },
         { name: 'Schedule Consultation', desc: 'Talk with our compliance engineering team', href: '/contact' },
         { name: 'Live App Demo', desc: 'Jump directly into the live studio workspace', href: '/dashboard' },
       ],
@@ -286,7 +286,7 @@ const StudioNav = memo(function StudioNav() {
 
           {/* PRICING Link */}
           <Link
-            to="/pricing"
+            to="/features"
             className="px-3 h-full flex items-center text-[13.5px] font-medium text-[#1A1917]/80 dark:text-[#E7E3DA]/80 hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors"
             onMouseEnter={() => setActiveDropdown(null)}
           >
@@ -497,7 +497,7 @@ const StudioNav = memo(function StudioNav() {
             <Link to="/reports" onClick={() => setMobileMenuOpen(false)} className="text-[14px] text-[#1A1917] dark:text-[#E7E3DA] py-1">Audit Reports</Link>
             <Link to="/architecture" onClick={() => setMobileMenuOpen(false)} className="text-[14px] text-[#1A1917] dark:text-[#E7E3DA] py-1">Architecture Topology</Link>
             <Link to="/integrations" onClick={() => setMobileMenuOpen(false)} className="text-[14px] text-[#1A1917] dark:text-[#E7E3DA] py-1">Integrations</Link>
-            <Link to="/pricing" onClick={() => setMobileMenuOpen(false)} className="text-[14px] text-[#1A1917] dark:text-[#E7E3DA] py-1">Pricing</Link>
+            <Link to="/features" onClick={() => setMobileMenuOpen(false)} className="text-[14px] text-[#1A1917] dark:text-[#E7E3DA] py-1">Pricing</Link>
             <Link to="/docs" onClick={() => setMobileMenuOpen(false)} className="text-[14px] text-[#1A1917] dark:text-[#E7E3DA] py-1">Documentation</Link>
             <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-[14px] text-[#1A1917] dark:text-[#E7E3DA] py-1">Contact Sales</Link>
           </div>

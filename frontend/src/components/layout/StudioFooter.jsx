@@ -42,7 +42,7 @@ const StudioFooter = memo(function StudioFooter() {
               </div>
               <ul className="space-y-2.5 text-[13.5px]">
                 <li><Link to="/features" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Features</Link></li>
-                <li><Link to="/pricing" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Pricing & Plans</Link></li>
+                <li><Link to="/features" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Platform Scope</Link></li>
                 <li><Link to="/docs" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Documentation</Link></li>
                 <li><Link to="/integrations" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Integrations</Link></li>
               </ul>
