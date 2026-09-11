@@ -16,6 +16,7 @@ import FeaturesPage from './pages/FeaturesPage';
 import DocsPage from './pages/DocsPage';
 import IntegrationsPage from './pages/IntegrationsPage';
 import DashboardIntegrations from './pages/DashboardIntegrations';
+import AssetsPage from './pages/AssetsPage';
 import PageTransition from './components/layout/PageTransition';
 
 import { useDemoStore } from './store/demoStore';
@@ -49,6 +50,7 @@ function App() {
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/integrations" element={<DashboardIntegrations />} />
+          <Route path="/assets" element={<AssetsPage />} />
           <Route path="/architecture" element={<Architecture />} />
           <Route path="/controls" element={<ControlsPage />} />
           <Route path="/archive" element={<ArchivePage />} />
