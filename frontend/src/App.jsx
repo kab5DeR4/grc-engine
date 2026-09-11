@@ -34,7 +34,7 @@ function ScrollToTop() {
 function App() {
   const { theme, density } = useDemoStore();
 
-  // Asignación directa de clases en documentElement para simplificar la sincronización visual
+  // Synchronize active theme and density CSS variables on the root document element for instant application-wide styling updates
   useEffect(() => {
     const isDark = theme === 'obsidian' || theme === 'blueprint';
     document.documentElement.className = `theme-${theme || 'bone'} density-${density || 'editorial'} ${isDark ? 'dark' : ''}`;
