@@ -1,5 +1,4 @@
 import { useDemoStore } from '../store/demoStore';
-import { ROLES } from '../data/demo/rbac';
 import RbacPermissionBanner from '../components/settings/RbacPermissionBanner';
 
 export default function ReportsPage() {
