@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { 
   LayoutDashboard, Shield, Files, AlertTriangle, 
-  Activity, FileText, Code, Network, Sliders 
+  Activity, FileText, Code, Network, Sliders, Server 
 } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 import { ROLE_DETAILS } from '../../data/demo/rbac';
@@ -10,13 +10,14 @@ import { ROLE_DETAILS } from '../../data/demo/rbac';
 const navigation = [
   { code: '01', name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { code: '02', name: 'Integrations', href: '/dashboard/integrations', icon: Network },
-  { code: '03', name: 'Architecture', href: '/architecture', icon: Code },
-  { code: '04', name: 'Controls Matrix', href: '/controls', icon: Shield },
-  { code: '05', name: 'Evidence Vault', href: '/archive', icon: Files },
-  { code: '06', name: 'Findings & Gaps', href: '/findings', icon: AlertTriangle },
-  { code: '07', name: 'Telemetry Scans', href: '/scans', icon: Activity },
-  { code: '08', name: 'Attestation Reports', href: '/reports', icon: FileText },
-  { code: '09', name: 'Settings & RBAC', href: '/settings/profile', icon: Sliders },
+  { code: '03', name: 'Assets Inventory', href: '/assets', icon: Server },
+  { code: '04', name: 'Architecture', href: '/architecture', icon: Code },
+  { code: '05', name: 'Controls Matrix', href: '/controls', icon: Shield },
+  { code: '06', name: 'Evidence Vault', href: '/archive', icon: Files },
+  { code: '07', name: 'Findings & Gaps', href: '/findings', icon: AlertTriangle },
+  { code: '08', name: 'Telemetry Scans', href: '/scans', icon: Activity },
+  { code: '09', name: 'Attestation Reports', href: '/reports', icon: FileText },
+  { code: '10', name: 'Settings & RBAC', href: '/settings/profile', icon: Sliders },
 ];
 
 
@@ -31,7 +32,7 @@ const Sidebar = memo(function Sidebar({ collapsed, onToggle }) {
       <div>
         {/* Header */}
         <div className="p-4 hairline-b">
-          <Link to="/" className="flex items-center gap-2 mb-3 cursor-pointer group select-none text-decoration-none">
+          <Link to="/" className="flex items-center gap-2 mb-3 cursor-pointer group select-none text-decoration-none" title="Return to Landing Page">
             <span className="w-2.5 h-2.5 bg-[#9B3418] inline-block group-hover:scale-110 transition-transform"></span>
             {!collapsed && (
               <span className="font-serif font-bold text-[16px] text-[#1A1917] tracking-tight group-hover:text-[#9B3418] transition-colors">
