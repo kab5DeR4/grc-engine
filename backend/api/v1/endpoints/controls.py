@@ -78,6 +78,7 @@ async def list_frameworks(db: AsyncSession = Depends(get_db)):
     return output
 
 
+@router.get("/canonical", response_model=List[CanonicalControlResponse])
 @router.get("/definitions", response_model=List[CanonicalControlResponse])
 async def list_control_definitions(db: AsyncSession = Depends(get_db)):
     """List canonical control definitions in catalogue."""
