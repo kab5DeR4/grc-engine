@@ -1,6 +1,6 @@
 import StudioNav from '../components/layout/StudioNav';
 import StudioFooter from '../components/layout/StudioFooter';
-import { Search, ChevronRight, Terminal, FileCode2, Link as LinkIcon, ShieldAlert, Lock } from 'lucide-react';
+import { Search, ChevronRight, Terminal, FileCode2, ShieldAlert, Lock } from 'lucide-react';
 
 export default function DocsPage() {
   const sidebarLinks = [
