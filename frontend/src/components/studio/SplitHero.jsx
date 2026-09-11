@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 
+const SEQUENCE = ['soc2', 'aws', 'control', 'evidence', 'state'];
+
 // Studio SplitHero Component — handles interactive diagram and hero buttons
 export default function SplitHero() {
   const navigate = useNavigate();
@@ -11,17 +13,14 @@ export default function SplitHero() {
   const [activeElement, setActiveElement] = useState('soc2');
   const autoPlayRef = useRef(null);
 
-  // Auto-play sequence array
-  const sequence = ['soc2', 'aws', 'control', 'evidence', 'state'];
-
   // Start auto-play when expanded
   useEffect(() => {
     if (isEngineExpanded) {
       setActiveElement('soc2'); // Start at beginning
       let currentIndex = 0;
       autoPlayRef.current = setInterval(() => {
-        currentIndex = (currentIndex + 1) % sequence.length;
-        setActiveElement(sequence[currentIndex]);
+        currentIndex = (currentIndex + 1) % SEQUENCE.length;
+        setActiveElement(SEQUENCE[currentIndex]);
       }, 2500); // Change step every 2.5s
     } else {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
