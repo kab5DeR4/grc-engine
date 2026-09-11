@@ -8,10 +8,7 @@ import {
   Zap,
   ArrowRight,
   Sparkles,
-  CheckCircle2,
-  TrendingUp,
-  Clock,
-  Lock
+  CheckCircle2
 } from 'lucide-react';
 
 export default function MaterialPractice() {

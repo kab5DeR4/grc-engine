@@ -6,11 +6,8 @@ import {
   FileCheck2,
   ArrowRight,
   CheckCircle2,
-  AlertCircle,
   Lock,
-  Sparkles,
-  Layers,
-  Cpu
+  Sparkles
 } from 'lucide-react';
 
 export default function SectionDrawing() {

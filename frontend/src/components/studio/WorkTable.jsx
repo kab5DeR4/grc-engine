@@ -5,8 +5,7 @@ import {
   CheckCircle2,
   Cloud,
   Lock,
-  Server,
-  ShieldCheck
+  Server
 } from 'lucide-react';
 
 function GithubIcon(props) {

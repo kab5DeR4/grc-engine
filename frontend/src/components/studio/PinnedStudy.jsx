@@ -8,10 +8,8 @@ import {
   CheckCircle2,
   ArrowRight,
   Sparkles,
-  Clock,
   Lock,
-  RefreshCw,
-  FileCode
+  RefreshCw
 } from 'lucide-react';
 
 function GithubIcon(props) {
