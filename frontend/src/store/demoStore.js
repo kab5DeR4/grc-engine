@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { api } from '../services/api';
 import { initialOrganization } from '../data/demo/organization';
 import { initialInfrastructure } from '../data/demo/infrastructure';
 import { initialControls } from '../data/demo/controls';
@@ -93,8 +94,16 @@ export const useDemoStore = create((set, get) => ({
     }
     set({ theme: nextTheme, isDarkMode: val });
   },
-  setDemoMode: (val) => set({ isDemoMode: val }),
-  toggleDemoMode: () => set({ isDemoMode: true }),
+  setDemoMode: (val) => set({ isDemoMode: val, isLiveMode: !val }),
+  toggleDemoMode: () => set((state) => ({ isDemoMode: !state.isDemoMode, isLiveMode: state.isDemoMode })),
+
+  // Dual mode and live backend connectivity state
+  isLiveMode: false,
+  backendOnline: false,
+  backendStatusMessage: '',
+  discoveredAssets: [],
+  liveScanJobs: [],
+  liveIntegrations: [],
 
   // core demo telemetry data
   organization: initialOrganization,
@@ -694,8 +703,174 @@ export const useDemoStore = create((set, get) => ({
       apiKeys: initialApiKeys,
       notifications: initialNotificationChannels,
       auditTrail: initialAuditTrail,
+      isLiveMode: false,
+      isDemoMode: true,
     });
   },
 
   resetFilters: () => set({ scanRunning: false }),
+
+  // Health check for FastAPI backend server
+  checkBackendHealth: async () => {
+    const health = await api.checkHealth();
+    set({
+      backendOnline: health.online,
+      backendStatusMessage: health.online
+        ? `FastAPI Backend Online (${health.version || 'v1.0.0'})`
+        : 'FastAPI Backend Unreachable (Falling back to offline sandbox)',
+    });
+    return health.online;
+  },
+
+  // Toggle Live Mode vs Demo Sandbox
+  setLiveMode: async (enabled) => {
+    if (enabled) {
+      const isHealthy = await get().checkBackendHealth();
+      if (isHealthy) {
+        set({ isLiveMode: true, isDemoMode: false });
+        await get().fetchLiveTelemetry();
+        get().appendAuditLog(
+          'LIVE_API_MODE_ENGAGED',
+          'FASTAPI_V1_GATEWAY',
+          'INFO',
+          'Connected to live FastAPI backend at http://localhost:8000/api/v1'
+        );
+        return true;
+      } else {
+        set({
+          isLiveMode: false,
+          isDemoMode: true,
+          backendStatusMessage: 'Backend offline. Please start FastAPI on port 8000.',
+        });
+        return false;
+      }
+    } else {
+      set({ isLiveMode: false, isDemoMode: true });
+      return true;
+    }
+  },
+
+  // Fetch live telemetry from FastAPI backend into store
+  fetchLiveTelemetry: async () => {
+    try {
+      const [assetsData, findingsData, evidenceData, scansData, controlsData, integrationsData] = await Promise.allSettled([
+        api.getAssets(),
+        api.getFindings(),
+        api.getEvidence(),
+        api.getScans(),
+        api.getCanonicalControls(),
+        api.getIntegrations(),
+      ]);
+
+      const updates = {};
+      if (assetsData.status === 'fulfilled' && Array.isArray(assetsData.value)) {
+        updates.discoveredAssets = assetsData.value;
+      }
+      if (findingsData.status === 'fulfilled' && Array.isArray(findingsData.value)) {
+        updates.liveFindings = findingsData.value;
+      }
+      if (evidenceData.status === 'fulfilled' && Array.isArray(evidenceData.value)) {
+        updates.liveEvidence = evidenceData.value;
+      }
+      if (scansData.status === 'fulfilled' && Array.isArray(scansData.value)) {
+        updates.liveScanJobs = scansData.value;
+      }
+      if (controlsData.status === 'fulfilled' && Array.isArray(controlsData.value)) {
+        updates.liveControls = controlsData.value;
+      }
+      if (integrationsData.status === 'fulfilled' && Array.isArray(integrationsData.value)) {
+        updates.liveIntegrations = integrationsData.value;
+      }
+
+      set(updates);
+    } catch (err) {
+      console.warn('[Zustand] Failed to fetch live telemetry:', err);
+    }
+  },
+
+  // Connect GitHub integration via live REST API
+  connectLiveGitHub: async (token, isMock = false) => {
+    const payload = {
+      integration_type: 'GITHUB',
+      name: isMock ? 'GitHub Sandbox (Mock)' : 'GitHub Production',
+      credentials: { personal_access_token: token },
+      is_mock: isMock,
+    };
+    const res = await api.connectGitHub(payload);
+    await get().fetchLiveTelemetry();
+    get().appendAuditLog(
+      'INTEGRATION_CONNECTED',
+      'GITHUB_VCS_PROVIDER',
+      'INFO',
+      `Registered integration ID ${res.id} (${isMock ? 'Mock AST Sandbox' : 'Live GitHub PAT'})`
+    );
+    return res;
+  },
+
+  // Trigger live compliance scan
+  triggerLiveScan: async (target_scope = 'ALL') => {
+    set({ scanRunning: true });
+    get().appendAuditLog(
+      'LIVE_SCAN_DISPATCHED',
+      'SCAN_COORDINATOR_V1',
+      'INFO',
+      `Dispatched compliance scan job (Scope: ${target_scope}) to FastAPI backend.`
+    );
+    try {
+      const scanRes = await api.triggerScan({ target_scope });
+      // Poll/refresh after scan starts
+      await new Promise((r) => setTimeout(r, 1500));
+      await get().fetchLiveTelemetry();
+      set({ scanRunning: false, lastScan: 'Just now' });
+      return scanRes;
+    } catch (err) {
+      set({ scanRunning: false });
+      throw err;
+    }
+  },
+
+  // Resolve live finding via REST API
+  resolveLiveFinding: async (findingId, notes = 'Resolved via GRC Engine console') => {
+    try {
+      const res = await api.resolveFinding(findingId, notes);
+      await get().fetchLiveTelemetry();
+      get().appendAuditLog(
+        'FINDING_RESOLVED_API',
+        `FINDING_${findingId}`,
+        'INFO',
+        `Finding resolved with status: ${res.status}`
+      );
+      return res;
+    } catch (err) {
+      get().appendAuditLog(
+        'FINDING_RESOLUTION_FAILED',
+        `FINDING_${findingId}`,
+        'CRITICAL',
+        `Failed to resolve finding: ${err.message}`
+      );
+      throw err;
+    }
+  },
+
+  // Verify live cryptographic evidence proof
+  verifyLiveEvidence: async (evidenceId) => {
+    try {
+      const res = await api.verifyEvidence(evidenceId);
+      get().appendAuditLog(
+        'EVIDENCE_CRYPTOGRAPHICALLY_VERIFIED',
+        `PROOF_${evidenceId}`,
+        res.is_valid ? 'INFO' : 'CRITICAL',
+        `SHA-256 Digest Verification: ${res.is_valid ? 'VALID (Matches Proof)' : 'TAMPERED (Hash Mismatch)'}`
+      );
+      return res;
+    } catch (err) {
+      get().appendAuditLog(
+        'EVIDENCE_VERIFICATION_ERROR',
+        `PROOF_${evidenceId}`,
+        'CRITICAL',
+        `Failed to verify evidence proof: ${err.message}`
+      );
+      throw err;
+    }
+  },
 }));
