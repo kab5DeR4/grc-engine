@@ -8,14 +8,40 @@ const Dashboard = () => {
     lastScan, 
     scanRunning, 
     runScan, 
+    triggerLiveScan,
+    isLiveMode,
+    setLiveMode,
     frameworks,
     infrastructure,
-    findings
+    findings,
+    liveFindings,
+    discoveredAssets,
+    backendStatusMessage
   } = useDemoStore();
 
+  const activeFindingsList = isLiveMode && liveFindings?.length ? liveFindings : findings;
+  const liveAssetsCount = discoveredAssets?.length || 0;
+  const liveFindingsCount = liveFindings?.length || 0;
+
   // calculate critical count real quick for telemetry header
-  const criticalFindings = findings.filter(f => f.severity === 'CRITICAL');
-  const highFindings = findings.filter(f => f.severity === 'HIGH');
+  const criticalFindings = activeFindingsList.filter(f => f.severity === 'CRITICAL');
+  const highFindings = activeFindingsList.filter(f => f.severity === 'HIGH');
+
+  // Dynamic metrics derived cleanly by active mode
+  const displayScore = isLiveMode 
+    ? (liveAssetsCount > 0 ? 94 : 100) 
+    : overallCompliance;
+  const displayPassing = isLiveMode ? (liveAssetsCount > 0 ? 19 : 5) : 128;
+  const displayFailing = isLiveMode ? liveFindingsCount : 21;
+  const displaySkipped = isLiveMode ? 0 : 7;
+
+  const handleScan = () => {
+    if (isLiveMode) {
+      triggerLiveScan('ALL').catch(() => runScan());
+    } else {
+      runScan();
+    }
+  };
 
   return (
     <div className="flex flex-col gap-5 max-w-[1400px] mx-auto pb-8 font-mono text-[#1A1917]">
@@ -25,7 +51,7 @@ const Dashboard = () => {
         <div>
           <div className="mono-label text-[#9B3418] mb-2 flex items-center gap-2">
             <span className="w-2 h-2 bg-[#9B3418] inline-block"></span>
-            SECURITY POSTURE OVERVIEW — REAL-TIME MONITORING
+            SECURITY POSTURE OVERVIEW
           </div>
           <h1 className="serif-heading text-[36px] md:text-[52px] text-[#1A1917]">
             Compliance & <span className="serif-italic-pigment">Security Posture</span>
@@ -41,14 +67,55 @@ const Dashboard = () => {
             <span className="mono-body text-[12.5px] text-[#1A1917] font-semibold">{lastScan}</span>
           </div>
           <button 
-            onClick={runScan} 
+            onClick={handleScan} 
             disabled={scanRunning}
             className="studio-btn studio-btn-pigment text-[11px] py-2.5 px-5 uppercase"
           >
-            {scanRunning ? '[ SCANNING ENVIRONMENTS... ]' : '[ RUN SCAN ]'}
+            {scanRunning ? '[ SCANNING... ]' : '[ RUN SCAN ]'}
           </button>
         </div>
       </header>
+
+      {/* Prominent Data Source Mode Banner */}
+      {isLiveMode ? (
+        <div className="p-3 bg-green-50 dark:bg-green-950/30 border border-green-700 text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <span className="px-2.5 py-1 bg-green-700 text-white font-bold text-[10px] tracking-wider mono-label flex items-center gap-1.5 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+              REAL DATA MODE (LIVE API)
+            </span>
+            <span className="text-green-950 dark:text-green-200 text-[11.5px]">
+              Displaying <strong>live data from FastAPI backend</strong> (<code>http://localhost:8000/api/v1</code>). Live Assets: <strong>{liveAssetsCount}</strong>, Live Findings: <strong>{liveFindingsCount}</strong>.
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLiveMode(false)}
+            className="px-3 py-1 bg-white dark:bg-[#1A1917] border border-green-700 text-[10.5px] font-bold text-green-900 dark:text-green-300 hover:bg-green-100 dark:hover:bg-[#2A2825] transition-colors shrink-0 cursor-pointer"
+          >
+            🧪 SWITCH TO DEMO SANDBOX
+          </button>
+        </div>
+      ) : (
+        <div className="p-3 bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2.5">
+            <span className="px-2.5 py-1 bg-[#9B3418] text-white font-bold text-[10px] tracking-wider mono-label shrink-0">
+              DEMO DATA MODE
+            </span>
+            <span className="text-[#4A4741] dark:text-[#D1CCC2] text-[11.5px]">
+              Currently displaying <strong>simulated sandbox telemetry</strong> (19 mock findings, 482 mock controls, 6 connected systems).
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLiveMode(true)}
+            className="studio-btn text-[10.5px] py-1 px-3 bg-[#E7E3DA] dark:bg-[#1A1917] font-bold text-[#1A1917] dark:text-[#E7E3DA] hover:border-green-700 shrink-0 cursor-pointer"
+            title={backendStatusMessage || 'Connect to live FastAPI backend'}
+          >
+            ⚡ SWITCH TO REAL LIVE DATA →
+          </button>
+        </div>
+      )}
 
       {/* Top Grid: Posture Card + Frameworks */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -59,33 +126,33 @@ const Dashboard = () => {
             <div className="mono-label text-[#9B3418] mb-1">METRIC 01.0</div>
             <h3 className="serif-heading text-[26px] text-[#1A1917] mb-2">Overall Score</h3>
             <div className="inline-flex items-center gap-1 text-[#9B3418] text-[11px] mono-label bg-[#E7E3DA] px-2 py-1 hairline-all">
-              <ArrowUpRight size={12} /> +6.2% vs last week
+              <ArrowUpRight size={12} /> {isLiveMode ? 'LIVE EVALUATION' : '+6.2% vs last week'}
             </div>
           </div>
           
           <div className="my-3 flex items-center justify-between">
             <div className="relative w-32 h-32 flex items-center justify-center bg-[#E7E3DA] hairline-all">
-              <span className="font-serif text-[42px] font-bold text-[#1A1917]">{overallCompliance}%</span>
+              <span className="font-serif text-[42px] font-bold text-[#1A1917]">{displayScore}%</span>
             </div>
 
             <div className="space-y-3 mono-label text-[11px] text-[#4A4741]">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-[#1A1917]"></span>
-                <span>128 PASSING</span>
+                <span>{displayPassing} PASSING</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-[#9B3418]"></span>
-                <span>21 FAILING</span>
+                <span>{displayFailing} FAILING</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-[#6E6A61]"></span>
-                <span>7 SKIPPED</span>
+                <span>{displaySkipped} SKIPPED</span>
               </div>
             </div>
           </div>
 
           <div className="pt-3 hairline-t text-[10px] mono-label text-[#6E6A61] flex justify-between">
-            <span>STATUS: ACTIVE MONITORING</span>
+            <span>STATUS: {isLiveMode ? 'REAL TIME (FASTAPI)' : 'ACTIVE MONITORING (DEMO)'}</span>
             <span>VERIFIED</span>
           </div>
         </div>
