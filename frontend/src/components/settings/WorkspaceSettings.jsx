@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { 
-  Building2, Globe, ShieldCheck, Layers, Lock, 
-  CheckCircle2, Sliders, Check, Activity, Cloud, Server 
+  Building2, Globe, Layers, Lock, 
+  CheckCircle2, Activity, Cloud, Server 
 } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 
