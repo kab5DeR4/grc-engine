@@ -1,14 +1,53 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useDemoStore } from '../store/demoStore';
 import RbacPermissionBanner from '../components/settings/RbacPermissionBanner';
 import { Wrench } from 'lucide-react';
 
 export default function FindingsPage() {
-  const { findings, simulateRemediation, hasPermission } = useDemoStore();
+  const { 
+    findings, 
+    liveFindings, 
+    isLiveMode, 
+    simulateRemediation, 
+    resolveLiveFinding, 
+    hasPermission 
+  } = useDemoStore();
   const [filter, setFilter] = useState('ALL');
   const canRemediate = hasPermission('simulate_remediation');
 
-  const filtered = findings.filter(f => filter === 'ALL' || f.status === filter);
+  const activeFindings = useMemo(() => {
+    if (isLiveMode && liveFindings && liveFindings.length > 0) {
+      return liveFindings.map(f => ({
+        id: f.finding_code || f.id,
+        rawId: f.id,
+        control: f.canonical_control_id || 'CTL-GH-01',
+        severity: f.severity || 'HIGH',
+        sla: '24h SLA',
+        status: f.status || 'OPEN',
+        title: f.title,
+        remediation: f.remediation_action || f.description,
+      }));
+    }
+    return findings;
+  }, [isLiveMode, liveFindings, findings]);
+
+  const filtered = activeFindings.filter(f => {
+    if (filter === 'ALL') return true;
+    const normalized = (f.status || '').toUpperCase();
+    return normalized === filter;
+  });
+
+  const handleRemediate = async (item) => {
+    try {
+      if (isLiveMode && item.rawId) {
+        await resolveLiveFinding(item.rawId, 'Remediation confirmed via console');
+      } else {
+        simulateRemediation(item.id, item.control || item.control_id);
+      }
+    } catch (err) {
+      alert(`Failed to apply remediation: ${err.message}`);
+    }
+  };
 
   return (
     <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
@@ -81,11 +120,11 @@ export default function FindingsPage() {
                   <div className="mt-4 pt-3 hairline-t flex justify-end">
                     {canRemediate ? (
                       <button
-                        onClick={() => simulateRemediation(item.id, item.control || item.control_id)}
+                        onClick={() => handleRemediate(item)}
                         className="studio-btn-primary studio-btn text-[10px] py-1.5 px-3 flex items-center gap-1.5"
                       >
                         <Wrench size={12} />
-                        <span>[ SIMULATE REMEDIATION ]</span>
+                        <span>[ {isLiveMode ? 'RESOLVE FINDING (API)' : 'SIMULATE REMEDIATION'} ]</span>
                       </button>
                     ) : (
                       <button
