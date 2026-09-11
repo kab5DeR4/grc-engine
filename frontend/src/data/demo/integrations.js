@@ -1,8 +1,7 @@
 import { 
-  Cloud, GitBranch, Bell, Settings, Search, 
-  CheckCircle2, Globe, Server, Boxes, GitPullRequest, 
-  Terminal, Zap, MessageSquare, CheckSquare, ShieldAlert, 
-  Workflow, RefreshCw, Check, ShieldCheck
+  Cloud, GitBranch, 
+  Globe, Server, Boxes, GitPullRequest, 
+  Terminal, MessageSquare, CheckSquare, ShieldAlert 
 } from 'lucide-react';
 
 export const integrationsData = [

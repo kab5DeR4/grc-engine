@@ -2,7 +2,7 @@ import { useState } from 'react';
 import StudioNav from '../components/layout/StudioNav';
 import StudioFooter from '../components/layout/StudioFooter';
 import { 
-  Cloud, GitBranch, Bell, Settings, Search, 
+  Cloud, GitBranch, Settings, Search, 
   Globe, Server, Boxes, GitPullRequest, Terminal, Zap, MessageSquare, 
   CheckSquare, ShieldAlert, Workflow, ChevronDown, ChevronUp, Network,
   ShieldCheck, FileCode
