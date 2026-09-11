@@ -1,22 +1,16 @@
 import { useState, useCallback } from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
-import { useDemoStore } from '../../store/demoStore';
+import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import PageTransition from './PageTransition';
 
 const AppShell = () => {
-  const { isDemoMode } = useDemoStore();
   const [collapsed, setCollapsed] = useState(false);
 
   // memoize sidebar toggle handler to prevent unnecessary re-renders fr
   const handleToggleSidebar = useCallback(() => {
     setCollapsed(prev => !prev);
   }, []);
-
-  if (!isDemoMode) {
-    return <Navigate to="/" replace />;
-  }
 
   return (
     <div className="flex h-screen bg-[#E7E3DA] text-[#1A1917] font-mono overflow-hidden">
