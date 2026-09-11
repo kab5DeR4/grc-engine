@@ -1,10 +1,11 @@
 import { useState, useEffect, memo } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import ThemeDensitySelector from '../ui/ThemeDensitySelector';
 
 const StudioNav = memo(function StudioNav() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -23,7 +24,7 @@ const StudioNav = memo(function StudioNav() {
     setActiveDropdown(null);
     setMobileMenuOpen(false);
     if (location.pathname !== '/') {
-      window.location.href = `/#${id}`;
+      navigate(`/#${id}`);
       return;
     }
     const el = document.getElementById(id);
