@@ -5,7 +5,6 @@ import {
   Shield, 
   ArrowRight, 
   CheckCircle2, 
-  Building2, 
   Sparkles, 
   Globe, 
   MessageSquare,
