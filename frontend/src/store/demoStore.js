@@ -16,26 +16,24 @@ import {
   initialAuditTrail 
 } from '../data/demo/rbac';
 
-// grab initial theme from localstorage or default to bone fr
+const VALID_THEMES = new Set(['bone', 'obsidian', 'blueprint', 'auditor']);
+const THEME_ALIAS_MAP = { dark: 'obsidian', light: 'bone' };
+const DEFAULT_THEME = 'bone';
+const DEFAULT_DENSITY = 'editorial';
+
+// Restore user theme preference from persistent storage while validating schema boundaries
 const getInitialTheme = () => {
-  if (typeof window === 'undefined') return 'bone';
+  if (typeof window === 'undefined') return DEFAULT_THEME;
   const stored = localStorage.getItem('grc_theme');
-  if (stored && ['bone', 'obsidian', 'blueprint', 'auditor'].includes(stored)) {
-    return stored;
-  }
-  if (stored === 'dark') return 'obsidian';
-  if (stored === 'light') return 'bone';
-  return 'bone';
+  if (stored && VALID_THEMES.has(stored)) return stored;
+  return THEME_ALIAS_MAP[stored] || DEFAULT_THEME;
 };
 
-// grab initial density preference from localstorage
+// Restore UI density layout preference for dense compliance auditing
 const getInitialDensity = () => {
-  if (typeof window === 'undefined') return 'editorial';
+  if (typeof window === 'undefined') return DEFAULT_DENSITY;
   const stored = localStorage.getItem('grc_density');
-  if (stored && ['editorial', 'compact'].includes(stored)) {
-    return stored;
-  }
-  return 'editorial';
+  return stored === 'compact' ? 'compact' : DEFAULT_DENSITY;
 };
 
 // generate pseudo-random sha256 hash for audit proof chaining
