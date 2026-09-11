@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { integrationsData } from '../data/demo/integrations';
+import { useDemoStore } from '../store/demoStore';
+import { api } from '../services/api';
 import IntegrationHeader from '../components/integrations/IntegrationHeader';
 import IntegrationFilterBar from '../components/integrations/IntegrationFilterBar';
 import IntegrationList from '../components/integrations/IntegrationList';
 import IntegrationDetails from '../components/integrations/IntegrationDetails';
 
 export default function DashboardIntegrations() {
+  const { isLiveMode, connectLiveGitHub, appendAuditLog } = useDemoStore();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('ALL');
   const [selectedIntegration, setSelectedIntegration] = useState(integrationsData[0]);
@@ -25,16 +28,40 @@ export default function DashboardIntegrations() {
     return matchesCategory && matchesSearch;
   });
 
-  const handleTestConnection = () => {
+  const handleTestConnection = async () => {
     setIsTesting(true);
     setTestResult(null);
+
+    if (isLiveMode && selectedIntegration.id === 'github') {
+      try {
+        const token = configState.github?.personal_access_token || '';
+        const res = await api.testGitHubConnection({
+          integration_type: 'GITHUB',
+          credentials: { personal_access_token: token },
+          is_mock: !token,
+        });
+        setTestResult({
+          success: res.connected,
+          message: `${res.message} (Scope: ${res.account_name || 'Sandbox'})`,
+        });
+      } catch (err) {
+        setTestResult({
+          success: false,
+          message: `Connection failed: ${err.message}`,
+        });
+      } finally {
+        setIsTesting(false);
+      }
+      return;
+    }
+
     setTimeout(() => {
       setIsTesting(false);
       setTestResult({
         success: true,
-        message: `Connection to ${selectedIntegration.name} OK (18ms).`
+        message: `Connection to ${selectedIntegration.name} verified OK (18ms latency).`,
       });
-    }, 1000);
+    }, 800);
   };
 
   const handleConfigChange = (key, value) => {
@@ -47,8 +74,25 @@ export default function DashboardIntegrations() {
     }));
   };
 
-  const handleSave = () => {
-    alert('Config saved successfully!');
+  const handleSave = async () => {
+    if (isLiveMode && selectedIntegration.id === 'github') {
+      try {
+        const token = configState.github?.personal_access_token;
+        await connectLiveGitHub(token, !token);
+        alert('GitHub integration synced & registered with FastAPI backend!');
+      } catch (err) {
+        alert(`Failed to save integration: ${err.message}`);
+      }
+      return;
+    }
+
+    appendAuditLog(
+      'INTEGRATION_CONFIG_UPDATED',
+      selectedIntegration.name,
+      'INFO',
+      `Updated configuration parameters for ${selectedIntegration.name}`
+    );
+    alert('Configuration profile saved successfully!');
   };
 
   const currentConfig = configState[selectedIntegration.id];
