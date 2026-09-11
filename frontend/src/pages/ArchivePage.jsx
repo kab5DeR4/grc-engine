@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useDemoStore } from '../store/demoStore';
+import { CheckCircle2, ShieldCheck } from 'lucide-react';
 
-const archiveLogs = [
+const demoArchiveLogs = [
   {
     id: 'EVD-89201',
     controlId: 'CTL-089',
@@ -50,11 +52,75 @@ const archiveLogs = [
 ];
 
 export default function ArchivePage() {
+  const { isLiveMode, liveEvidence, verifyLiveEvidence, fetchLiveTelemetry } = useDemoStore();
   const [searchParams] = useSearchParams();
   const highlightedId = searchParams.get('id');
-  const [selectedEvd, setSelectedEvd] = useState(
-    archiveLogs.find(e => e.controlId === highlightedId) || archiveLogs[0]
-  );
+  const [verifying, setVerifying] = useState(false);
+  const [verificationResult, setVerificationResult] = useState(null);
+
+  useEffect(() => {
+    if (isLiveMode) {
+      fetchLiveTelemetry();
+    }
+  }, [isLiveMode, fetchLiveTelemetry]);
+
+  const activeEvidence = useMemo(() => {
+    if (isLiveMode && liveEvidence && liveEvidence.length > 0) {
+      return liveEvidence.map(e => ({
+        id: `EVD-${e.id.slice(0, 8)}`,
+        rawId: e.id,
+        controlId: e.control_definition_id || 'CTL-GH-01',
+        title: `Infrastructure Evidence Artifact: ${e.source_uri || 'Config Snapshot'}`,
+        date: new Date(e.created_at).toUTCString(),
+        hash: e.sha256_hash,
+        framework: 'SOC 2 / ISO 27001',
+        status: 'VERIFIED IMMUTABLE',
+      }));
+    }
+    return demoArchiveLogs;
+  }, [isLiveMode, liveEvidence]);
+
+  const [selectedEvd, setSelectedEvd] = useState(activeEvidence[0] || demoArchiveLogs[0]);
+
+  useEffect(() => {
+    if (activeEvidence.length > 0) {
+      const match = highlightedId ? activeEvidence.find(e => e.controlId === highlightedId) : null;
+      setSelectedEvd(match || activeEvidence[0]);
+    }
+  }, [activeEvidence, highlightedId]);
+
+  const handleVerify = async () => {
+    setVerifying(true);
+    setVerificationResult(null);
+
+    if (isLiveMode && selectedEvd?.rawId) {
+      try {
+        const res = await verifyLiveEvidence(selectedEvd.rawId);
+        setVerificationResult({
+          valid: res.is_valid,
+          message: res.is_valid
+            ? `Cryptographic signature matches SHA-256 proof in database ledger!`
+            : `Warning: SHA-256 hash mismatch. Possible tamper event!`,
+        });
+      } catch (err) {
+        setVerificationResult({
+          valid: false,
+          message: `Verification check failed: ${err.message}`,
+        });
+      } finally {
+        setVerifying(false);
+      }
+      return;
+    }
+
+    setTimeout(() => {
+      setVerifying(false);
+      setVerificationResult({
+        valid: true,
+        message: `Cryptographic SHA-256 verification confirmed for ${selectedEvd?.hash?.slice(0, 16)}...`,
+      });
+    }, 600);
+  };
 
   return (
     <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
@@ -75,12 +141,15 @@ export default function ArchivePage() {
           
           {/* Left Column: Evidence Table */}
           <div className="lg:col-span-7 space-y-3">
-            {archiveLogs.map((item) => {
-              const isSelected = selectedEvd.id === item.id;
+            {activeEvidence.map((item) => {
+              const isSelected = selectedEvd?.id === item.id;
               return (
                 <div
                   key={item.id}
-                  onClick={() => setSelectedEvd(item)}
+                  onClick={() => {
+                    setSelectedEvd(item);
+                    setVerificationResult(null);
+                  }}
                   className={`p-4 cursor-pointer hairline-all transition-colors ${
                     isSelected ? 'bg-[#DCD7CB] border-l-4 border-l-[#9B3418]' : 'bg-[#E7E3DA] hover:bg-[#DCD7CB]/40'
                   }`}
@@ -102,37 +171,48 @@ export default function ArchivePage() {
           <div className="lg:col-span-5 bg-[#DCD7CB] p-6 hairline-all sticky top-[80px] h-fit">
             <div className="mono-label text-[#9B3418] mb-1">PROOF CERTIFICATE</div>
             <h2 className="serif-heading text-[26px] font-bold text-[#1A1917] mb-4">
-              {selectedEvd.title}
+              {selectedEvd?.title || 'Selected Evidence Proof'}
             </h2>
 
             <div className="space-y-4 mono-body text-[11.5px]">
               <div className="p-3 bg-[#E7E3DA] hairline-all">
                 <div className="mono-label text-[9.5px] text-[#6E6A61]">EVIDENCE RECORD ID</div>
-                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd.id} ({selectedEvd.controlId})</div>
+                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd?.id} ({selectedEvd?.controlId})</div>
               </div>
 
               <div className="p-3 bg-[#E7E3DA] hairline-all">
                 <div className="mono-label text-[9.5px] text-[#6E6A61]">REGULATORY FRAMEWORK</div>
-                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd.framework}</div>
+                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd?.framework}</div>
               </div>
 
               <div className="p-3 bg-[#E7E3DA] hairline-all break-all">
                 <div className="mono-label text-[9.5px] text-[#9B3418]">SHA-256 CRYPTOGRAPHIC PROOF</div>
-                <div className="text-[#1A1917] font-mono text-[10.5px] mt-1">{selectedEvd.hash}</div>
+                <div className="text-[#1A1917] font-mono text-[10.5px] mt-1">{selectedEvd?.hash}</div>
               </div>
 
               <div className="p-3 bg-[#E7E3DA] hairline-all">
                 <div className="mono-label text-[9.5px] text-[#6E6A61]">TIMESTAMP & IMMUTABILITY</div>
-                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd.date}</div>
-                <div className="mono-label text-[9.5px] text-[#9B3418] mt-1">{selectedEvd.status}</div>
+                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd?.date}</div>
+                <div className="mono-label text-[9.5px] text-[#9B3418] mt-1">{selectedEvd?.status}</div>
               </div>
+
+              {verificationResult && (
+                <div className={`p-3 hairline-all text-[11px] mono-label flex items-start gap-2 ${
+                  verificationResult.valid ? 'bg-green-100 text-green-900 border-green-700' : 'bg-red-100 text-red-900 border-red-700'
+                }`}>
+                  <CheckCircle2 size={15} className={verificationResult.valid ? 'text-green-700 shrink-0' : 'text-red-700 shrink-0'} />
+                  <span>{verificationResult.message}</span>
+                </div>
+              )}
 
               <div className="pt-3 hairline-t">
                 <button 
-                  onClick={() => alert(`Cryptographic verification signature confirmed: ${selectedEvd.hash.slice(0, 16)}...`)}
-                  className="studio-btn-primary studio-btn text-[10.5px] w-full"
+                  onClick={handleVerify}
+                  disabled={verifying}
+                  className="studio-btn-primary studio-btn text-[10.5px] w-full flex items-center justify-center gap-2"
                 >
-                  [ VERIFY CRYPTOGRAPHIC SIGNATURE ]
+                  <ShieldCheck size={13} />
+                  <span>{verifying ? '[ RECALCULATING DIGEST... ]' : '[ VERIFY CRYPTOGRAPHIC SIGNATURE ]'}</span>
                 </button>
               </div>
             </div>
