@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDemoStore } from '../store/demoStore';
 import RbacPermissionBanner from '../components/settings/RbacPermissionBanner';
+import { Activity, Play, Terminal, CheckCircle2 } from 'lucide-react';
 
 export default function ScansPage() {
   const { 
@@ -16,9 +17,9 @@ export default function ScansPage() {
   const [scanning, setScanning] = useState(false);
   const [progress, setProgress] = useState(100);
   const [logs, setLogs] = useState([
-    '[INIT] CONTINUOUS MONITORING RUNNER INITIALIZED',
-    '[OK] SHA-256 PROOF CHAIN VERIFIED AT GENESIS',
-    '[READY] READY FOR ON-DEMAND OR SCHEDULED COMPLIANCE SCAN',
+    '[INIT] Continuous monitoring runner initialized.',
+    '[OK] SHA-256 proof chain verified at genesis.',
+    '[READY] Ready for on-demand or scheduled compliance scan.',
   ]);
 
   useEffect(() => {
@@ -36,19 +37,19 @@ export default function ScansPage() {
 
     if (isLiveMode) {
       try {
-        setLogs(l => [...l, '[API] POST /api/v1/scans/trigger -> DISPATCHING SCAN JOB...']);
+        setLogs(l => [...l, '[API] POST /api/v1/scans/trigger -> Dispatching scan job...']);
         setProgress(45);
         const scanRes = await triggerLiveScan('ALL');
         setProgress(80);
         setLogs(l => [
           ...l,
-          `[OK] SCAN JOB ID: ${scanRes.id || 'SCAN-LATEST'}`,
-          `[EVAL] EVALUATED ${scanRes.assets_scanned_count || 4} ASSETS AGAINST CANONICAL CONTROLS`,
-          `[COMPLETE] COMPLIANCE VERIFICATION COMPLETE (STATUS: ${scanRes.status || 'COMPLETED'})`,
+          `[OK] Scan Job ID: ${scanRes.id || 'SCAN-LATEST'}`,
+          `[EVAL] Evaluated ${scanRes.assets_scanned_count || 4} assets against canonical controls.`,
+          `[COMPLETE] Compliance verification complete (Status: ${scanRes.status || 'COMPLETED'}).`,
         ]);
         setProgress(100);
       } catch (err) {
-        setLogs(l => [...l, `[ERROR] SCAN FAILED: ${err.message}`]);
+        setLogs(l => [...l, `[ERROR] Scan failed: ${err.message}`]);
       } finally {
         setScanning(false);
       }
@@ -67,87 +68,104 @@ export default function ScansPage() {
       current += 20;
       setProgress(current);
       if (current === 20) {
-        setLogs(l => [...l, '[SCANNING] INSPECTING EDGE PERIMETER NETWORK RULES...']);
+        setLogs(l => [...l, '[SCANNING] Inspecting edge perimeter and branch protection rules...']);
       } else if (current === 60) {
-        setLogs(l => [...l, '[SCANNING] EVALUATING S3 OBJECT WORM LOCK RETENTION...']);
+        setLogs(l => [...l, '[SCANNING] Evaluating S3 bucket encryption and KMS rotation status...']);
       } else if (current === 100) {
-        setLogs(l => [...l, '[COMPLETE] ALL 482 GRC CONTROLS VERIFIED OK. ZERO DRIFT.']);
+        setLogs(l => [...l, '[COMPLETE] All canonical GRC controls verified. Posture updated.']);
         setScanning(false);
         clearInterval(interval);
       }
-    }, 600);
+    }, 400);
   };
 
   return (
-    <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
+    <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-8">
       
-      <main className="py-12 px-6 md:px-12 space-y-8">
-        {/* Page Header */}
-        <div className="pb-6 hairline-b flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="mono-label text-[#9B3418] mb-2">POLICY & TELEMETRY SCANNER</div>
-            <h1 className="serif-heading text-[36px] md:text-[54px] text-[#1A1917]">
-              Real-Time Scan Console & <span className="serif-italic-pigment">Drift Probe</span>
-            </h1>
+      {/* Page Header */}
+      <div className="pb-6 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mb-2 uppercase tracking-wider">
+            Telemetry &amp; Policy Scanner
           </div>
-          {canRunScans ? (
-            <button 
-              onClick={runScan}
-              disabled={scanning}
-              className="studio-btn-primary studio-btn text-[11px]"
-            >
-              {scanning ? '[ SCANNING CLUSTER... ]' : '[ RUN LIVE SCAN NOW ]'}
-            </button>
-          ) : (
-            <button 
-              disabled
-              className="studio-btn opacity-50 cursor-not-allowed text-[10.5px] border-dashed"
-              title="Scan execution is restricted for External Auditors and Read-Only Viewers."
-            >
-              [ SCAN RESTRICTED: RBAC ]
-            </button>
-          )}
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Real-Time Scan Console &amp; <span className="text-sky-600 dark:text-sky-400">Drift Probe</span>
+          </h1>
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2 max-w-3xl leading-relaxed">
+            Execute automated evaluation jobs across connected cloud connectors and repositories to detect misconfigurations and update compliance scores.
+          </p>
         </div>
 
-        {/* RBAC restriction banner if non-privileged persona */}
-        {!canRunScans && (
-          <RbacPermissionBanner
-            actionName="initiating live cluster telemetry scans"
-            requiredRole="PLATFORM ADMIN or SECURITY ENGINEER"
-          />
+        {canRunScans ? (
+          <button 
+            type="button"
+            onClick={runScan}
+            disabled={scanning}
+            className="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 text-xs font-bold uppercase transition-all duration-150 active:scale-[0.98] cursor-pointer flex items-center gap-2 shadow-md border-none self-start md:self-auto shrink-0"
+          >
+            {scanning ? <Activity size={15} className="animate-spin" /> : <Play size={15} />}
+            <span>{scanning ? 'Evaluating Cluster...' : 'Run Live Scan Now'}</span>
+          </button>
+        ) : (
+          <button 
+            type="button"
+            disabled
+            className="px-4 py-2.5 rounded-xl opacity-50 cursor-not-allowed text-xs font-mono border border-dashed border-slate-300 dark:border-slate-700 text-slate-500 self-start md:self-auto shrink-0"
+            title="Scan execution is restricted for External Auditors and Read-Only Viewers."
+          >
+            Scan Restricted (RBAC)
+          </button>
         )}
+      </div>
 
-        {/* Scan Progress Bar */}
-        <div className="p-6 bg-[#DCD7CB] hairline-all">
-          <div className="flex justify-between items-center mb-2 mono-label text-[11px]">
-            <span>TELEMETRY SCAN PROGRESS</span>
-            <span className="text-[#9B3418] font-bold">{progress}%</span>
+      {/* RBAC restriction banner if non-privileged persona */}
+      {!canRunScans && (
+        <RbacPermissionBanner
+          actionName="initiating live cluster telemetry scans"
+          requiredRole="PLATFORM ADMIN or SECURITY ENGINEER"
+        />
+      )}
+
+      {/* Scan Progress Bar Card */}
+      <div className="p-6 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+        <div className="flex justify-between items-center text-xs font-mono">
+          <span className="font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider flex items-center gap-2">
+            <Activity size={14} className="text-sky-500" />
+            Telemetry Scan Progress
+          </span>
+          <span className="text-sky-600 dark:text-sky-400 font-bold text-sm">{progress}%</span>
+        </div>
+        <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden p-0.5">
+          <div 
+            className="bg-sky-600 dark:bg-sky-400 h-full rounded-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Console Log Terminal */}
+      <div className="bg-slate-900 text-slate-100 rounded-xl border border-slate-800 shadow-md overflow-hidden font-mono text-xs leading-relaxed">
+        <div className="px-5 py-3.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-slate-400">
+          <div className="flex items-center gap-2">
+            <Terminal size={14} className="text-sky-400" />
+            <span className="font-bold text-slate-200 text-xs">LIVE RUNNER OUTPUT &bull; PORT 8000</span>
           </div>
-          <div className="w-full bg-[#E7E3DA] h-4 hairline-all overflow-hidden p-0.5">
-            <div 
-              className="bg-[#9B3418] h-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
+          <span className="text-emerald-400 text-[11px] font-semibold flex items-center gap-1">
+            <CheckCircle2 size={13} />
+            Deterministic Engine Active
+          </span>
         </div>
 
-        {/* Console Log Terminal */}
-        <div className="bg-[#1A1917] text-[#E7E3DA] p-6 hairline-all min-h-[320px] font-mono text-[12px] leading-relaxed">
-          <div className="mono-label text-[#9B3418] mb-4 pb-2 border-b border-neutral-700 flex justify-between">
-            <span>LIVE CONSOLE STREAM — PORT 8080</span>
-            <span>SYSTEM VERIFIED</span>
-          </div>
-
-          <div className="space-y-2">
-            {logs.map((log, i) => (
-              <div key={i} className="flex gap-2">
-                <span className="text-[#9B3418] font-bold">&gt;</span>
-                <span>{log}</span>
-              </div>
-            ))}
-          </div>
+        <div className="p-6 space-y-2 min-h-[300px]">
+          {logs.map((log, i) => (
+            <div key={i} className="flex gap-2.5 items-start">
+              <span className="text-sky-400 select-none font-bold">&gt;</span>
+              <span className="text-slate-200">{log}</span>
+            </div>
+          ))}
         </div>
-      </main>
+      </div>
+
     </div>
   );
 }

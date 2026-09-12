@@ -101,7 +101,7 @@ export default function ControlsPage() {
             GRC CONTROLS CATALOGUE
           </div>
           <h1 className="serif-heading text-[34px] md:text-[48px] text-slate-900 dark:text-white font-bold">
-            Control Specifications & <span className="serif-italic-pigment text-sky-600 dark:text-sky-400">Policy Matrix</span>
+            Control Specifications & <span className="serif-italic-accent text-sky-600 dark:text-sky-400">Policy Matrix</span>
           </h1>
           <p className="mono-body text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 max-w-3xl">
             Complete inventory of technical governance controls enforcing posture integrity. Every control is continuously monitored via eBPF probes and cryptographic proof chains.
@@ -120,7 +120,7 @@ export default function ControlsPage() {
                 className={`text-[11px] font-bold px-3.5 py-1.5 rounded-xl border transition-all cursor-pointer ${
                   category === cat 
                     ? 'bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 border-slate-900 dark:border-sky-400 shadow-xs' 
-                    : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400'
+                    : 'bg-[var(--surface)] text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400'
                 }`}
               >
                 {cat}
@@ -135,7 +135,7 @@ export default function ControlsPage() {
               placeholder="SEARCH CONTROLS..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-sky-400 shadow-xs"
+              className="w-full bg-[var(--surface)] border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-sky-400 shadow-xs"
             />
           </div>
         </div>
@@ -151,10 +151,10 @@ export default function ControlsPage() {
                 <div
                   key={item.id}
                   onClick={() => setSelectedControl(item)}
-                  className={`p-5 rounded-2xl cursor-pointer border transition-all ${
+                  className={`p-5 rounded-xl cursor-pointer border transition-all ${
                     isSelected 
                       ? 'bg-slate-100 dark:bg-slate-800 border-slate-900 dark:border-sky-400 shadow-sm' 
-                      : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 hover:border-slate-400'
+                      : 'bg-[var(--surface)] border-slate-300 dark:border-slate-800 hover:border-slate-400'
                   }`}
                 >
                   <div className="flex justify-between items-center mb-2">
@@ -182,7 +182,7 @@ export default function ControlsPage() {
           </div>
 
           {/* Right Column: Selected Control Spec Drawer */}
-          <div className="lg:col-span-5 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-300 dark:border-slate-800 shadow-sm sticky top-[80px] h-fit">
+          <div className="lg:col-span-5 bg-[var(--surface)] p-6 rounded-xl border border-slate-300 dark:border-slate-800 shadow-sm sticky top-[80px] h-fit">
             <div className="text-[10.5px] font-bold text-sky-600 dark:text-sky-400 mb-1 uppercase tracking-wider">
               CONTROL SPECIFICATION SHEET
             </div>

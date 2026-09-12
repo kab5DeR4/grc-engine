@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import StudioNav from '../components/layout/StudioNav';
 import StudioFooter from '../components/layout/StudioFooter';
+import { Link } from 'react-router-dom';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -33,7 +34,7 @@ export default function ContactPage() {
     'NIST CSF v2.0',
     'HIPAA Security',
     'GDPR / Privacy',
-    'Custom Framework',
+    'CIS Benchmarks',
   ];
 
   const handleToggleFramework = (fw) => {
@@ -64,68 +65,68 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#E7E3DA] dark:bg-[#121110] text-[#1A1917] dark:text-[#E7E3DA] font-sans transition-colors duration-200">
+    <div className="w-full min-h-screen bg-[var(--ground)] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200 flex flex-col">
       <StudioNav />
 
-      <main className="mt-[60px] pt-12 pb-20 px-6 lg:px-12 max-w-[1400px] mx-auto">
+      <main className="mt-[60px] pt-12 pb-20 px-6 lg:px-12 max-w-6xl mx-auto flex-1 w-full">
         {/* Page Header */}
-        <div className="mb-14 pb-8 border-b border-[#1A1917]/10 dark:border-[#E7E3DA]/10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#9B3418]/10 dark:bg-[#FF6B4A]/10 text-[#9B3418] dark:text-[#FF6B4A] text-[12px] font-semibold tracking-wider uppercase mb-3">
+        <div className="mb-12 pb-8 border-b border-slate-200 dark:border-slate-800">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-mono font-semibold uppercase tracking-wider mb-3">
             <Sparkles size={13} />
-            <span>Connect With Our Solutions Team</span>
+            <span>CONNECT WITH OUR SOLUTIONS TEAM</span>
           </div>
-          <h1 className="text-[38px] md:text-[54px] font-bold text-[#1A1917] dark:text-[#E7E3DA] tracking-tight leading-[1.1] font-serif">
-            Talk with our <span className="italic font-normal text-[#9B3418] dark:text-[#FF6B4A]">GRC Engineering</span> team.
+          <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight">
+            Talk with our <span className="text-sky-600 dark:text-sky-400">GRC Engineering</span> team.
           </h1>
-          <p className="text-[15px] md:text-[17px] text-[#6E6A61] dark:text-[#9E988B] mt-4 max-w-2xl leading-relaxed">
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 mt-3 max-w-2xl leading-relaxed">
             Whether you need continuous SOC 2, ISO 27001 automation, or custom cloud infrastructure governance, our solutions architects are ready to help.
           </p>
         </div>
 
         {/* 2-Column Content Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
           
           {/* Left Column: Value Proposition & Direct Contact Channels */}
           <div className="lg:col-span-5 space-y-8">
             {/* Direct Contact Channels */}
-            <div className="bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-xl p-6 space-y-5 shadow-sm">
-              <h2 className="text-[14px] font-semibold tracking-wider uppercase text-[#9B3418] dark:text-[#FF6B4A] flex items-center gap-2">
-                <Globe size={16} /> Direct Channels
+            <div className="bg-[var(--surface)] border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-5 shadow-sm">
+              <h2 className="text-xs font-mono font-bold tracking-wider uppercase text-sky-600 dark:text-sky-400 flex items-center gap-2">
+                <Globe size={14} /> Direct Channels
               </h2>
               
               <div className="space-y-4">
                 <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-lg bg-[#E7E3DA] dark:bg-[#252422] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 flex items-center justify-center text-[#9B3418] dark:text-[#FF6B4A] shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sky-600 dark:text-sky-400 shrink-0">
                     <Mail size={16} />
                   </div>
                   <div>
-                    <div className="text-[13.5px] font-medium text-[#1A1917] dark:text-[#E7E3DA]">Sales & Enterprise Inquiries</div>
-                    <a href="mailto:sales@grcengine.io" className="text-[13px] text-[#6E6A61] dark:text-[#9E988B] hover:text-[#9B3418] dark:hover:text-[#FF6B4A] transition-colors">
+                    <div className="text-sm font-semibold text-slate-900 dark:text-white">Sales & Enterprise Inquiries</div>
+                    <a href="mailto:sales@grcengine.io" className="text-xs text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors font-mono">
                       sales@grcengine.io
                     </a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-lg bg-[#E7E3DA] dark:bg-[#252422] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 flex items-center justify-center text-[#9B3418] dark:text-[#FF6B4A] shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sky-600 dark:text-sky-400 shrink-0">
                     <MessageSquare size={16} />
                   </div>
                   <div>
-                    <div className="text-[13.5px] font-medium text-[#1A1917] dark:text-[#E7E3DA]">Technical Solutions Desk</div>
-                    <a href="mailto:support@grcengine.io" className="text-[13px] text-[#6E6A61] dark:text-[#9E988B] hover:text-[#9B3418] dark:hover:text-[#FF6B4A] transition-colors">
+                    <div className="text-sm font-semibold text-slate-900 dark:text-white">Technical Solutions Desk</div>
+                    <a href="mailto:support@grcengine.io" className="text-xs text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors font-mono">
                       support@grcengine.io
                     </a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-lg bg-[#E7E3DA] dark:bg-[#252422] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 flex items-center justify-center text-[#9B3418] dark:text-[#FF6B4A] shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sky-600 dark:text-sky-400 shrink-0">
                     <Clock size={16} />
                   </div>
                   <div>
-                    <div className="text-[13.5px] font-medium text-[#1A1917] dark:text-[#E7E3DA]">Guaranteed Response SLA</div>
-                    <div className="text-[13px] text-[#6E6A61] dark:text-[#9E988B]">
-                      Under 2 business hours for enterprise requests
+                    <div className="text-sm font-semibold text-slate-900 dark:text-white">Guaranteed Response SLA</div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                      Under 2 business hours for enterprise inquiries
                     </div>
                   </div>
                 </div>
@@ -134,8 +135,8 @@ export default function ContactPage() {
 
             {/* Why Teams Choose GRC Engine */}
             <div className="space-y-4">
-              <h3 className="text-[14px] font-semibold tracking-wider uppercase text-[#1A1917] dark:text-[#E7E3DA]">
-                What You Get With GRC Engine
+              <h3 className="text-xs font-mono font-bold tracking-wider uppercase text-slate-700 dark:text-slate-300">
+                WHAT YOU GET WITH GRC ENGINE
               </h3>
               
               <div className="space-y-3.5">
@@ -143,7 +144,7 @@ export default function ContactPage() {
                   {
                     icon: Shield,
                     title: 'Continuous Control Evaluation',
-                    desc: 'Real-time telemetry verification across AWS, Azure, GCP, and GitHub without manual audits.',
+                    desc: 'Real-time telemetry verification across AWS, Azure, GCP, and GitHub without manual audit spreadsheets.',
                   },
                   {
                     icon: Zap,
@@ -157,12 +158,12 @@ export default function ContactPage() {
                   },
                 ].map((item, idx) => (
                   <div key={idx} className="flex gap-3">
-                    <div className="mt-1 text-[#9B3418] dark:text-[#FF6B4A]">
+                    <div className="mt-0.5 text-sky-600 dark:text-sky-400 shrink-0">
                       <item.icon size={17} />
                     </div>
                     <div>
-                      <div className="text-[14px] font-semibold text-[#1A1917] dark:text-[#E7E3DA]">{item.title}</div>
-                      <div className="text-[13px] text-[#6E6A61] dark:text-[#9E988B] leading-relaxed">{item.desc}</div>
+                      <div className="text-sm font-semibold text-slate-900 dark:text-white">{item.title}</div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mt-0.5">{item.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -170,13 +171,13 @@ export default function ContactPage() {
             </div>
 
             {/* Framework Badges */}
-            <div className="pt-2 border-t border-[#1A1917]/10 dark:border-[#E7E3DA]/10">
-              <div className="text-[11px] font-semibold tracking-wider uppercase text-[#6E6A61] dark:text-[#9E988B] mb-2.5">
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-800">
+              <div className="text-[11px] font-mono font-bold tracking-wider uppercase text-slate-500 mb-2.5">
                 Supported Framework Standards
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {['SOC 2 Type II', 'ISO 27001', 'NIST CSF 2.0', 'HIPAA', 'GDPR', 'CIS Benchmarks'].map((tag, i) => (
-                  <span key={i} className="text-[11.5px] px-2.5 py-1 rounded bg-[#DCD7CB]/60 dark:bg-[#1E1D1A] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 font-medium">
+                  <span key={i} className="text-xs font-mono px-2.5 py-1 rounded bg-[var(--surface)] border border-slate-200 dark:border-slate-800 font-medium text-slate-700 dark:text-slate-300">
                     {tag}
                   </span>
                 ))}
@@ -184,45 +185,46 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right Column: High-Converting Enterprise Form */}
+          {/* Right Column: Enterprise Form */}
           <div className="lg:col-span-7">
             {submitted ? (
-              <div className="bg-[#DCD7CB]/50 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-2xl p-8 md:p-12 text-center shadow-lg animate-fade-up">
-                <div className="w-16 h-16 rounded-full bg-[#55B685]/15 text-[#55B685] flex items-center justify-center mx-auto mb-5">
+              <div className="bg-[var(--surface)] border border-slate-200 dark:border-slate-800 rounded-xl p-8 md:p-12 text-center shadow-lg animate-fade-up">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-5">
                   <CheckCircle2 size={32} />
                 </div>
-                <div className="inline-block px-3 py-1 rounded-full bg-[#55B685]/10 text-[#55B685] text-[11.5px] font-semibold uppercase tracking-wider mb-2">
+                <div className="inline-block px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-mono font-bold uppercase tracking-wider mb-2">
                   Inquiry Dispatched Successfully
                 </div>
-                <h2 className="text-[28px] md:text-[36px] font-bold text-[#1A1917] dark:text-[#E7E3DA] font-serif mb-3">
+                <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-3">
                   Thank you, {formData.firstName || 'there'}!
                 </h2>
-                <p className="text-[14px] text-[#6E6A61] dark:text-[#9E988B] max-w-md mx-auto mb-8 leading-relaxed">
-                  Our compliance engineering team has received your details for <strong className="text-[#1A1917] dark:text-[#E7E3DA]">{formData.companyName || 'your organization'}</strong>. We will review your framework requirements and follow up with a custom architecture proposal within 2 hours.
+                <p className="text-sm text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-8 leading-relaxed">
+                  Our compliance engineering team has received your details for <strong className="text-slate-900 dark:text-white">{formData.companyName || 'your organization'}</strong>. We will review your framework requirements and follow up with a custom architecture proposal within 2 hours.
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="px-5 py-2.5 rounded-lg border border-[#1A1917]/20 dark:border-[#E7E3DA]/20 text-[13.5px] font-medium hover:bg-[#1A1917]/5 dark:hover:bg-[#E7E3DA]/5 transition-colors"
+                    className="px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-mono font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                   >
                     Submit Another Inquiry
                   </button>
-                  <a
-                    href="/dashboard"
-                    className="px-5 py-2.5 rounded-lg bg-[#1A1917] dark:bg-[#E7E3DA] text-[#E7E3DA] dark:text-[#1A1917] text-[13.5px] font-medium hover:bg-[#9B3418] dark:hover:bg-[#FF6B4A] dark:hover:text-white transition-colors inline-flex items-center gap-1.5"
+                  <Link
+                    to="/dashboard"
+                    className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 text-xs font-mono font-bold transition-all shadow-xs inline-flex items-center gap-1.5"
                   >
-                    Explore Live Workspace <ArrowRight size={14} />
-                  </a>
+                    <span>Explore Live Workspace</span>
+                    <ArrowRight size={14} />
+                  </Link>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-2xl p-7 md:p-10 shadow-sm space-y-6">
+              <form onSubmit={handleSubmit} className="bg-[var(--surface)] border border-slate-200 dark:border-slate-800 rounded-xl p-7 md:p-10 shadow-sm space-y-6">
                 
                 {/* Form Section: Name */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[13px] font-medium text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">
-                      First Name <span className="text-[#9B3418] dark:text-[#FF6B4A]">*</span>
+                    <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase">
+                      First Name <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -231,12 +233,12 @@ export default function ContactPage() {
                       value={formData.firstName}
                       onChange={handleChange}
                       placeholder="Jane"
-                      className="w-full bg-[#E7E3DA] dark:bg-[#121110] border border-[#1A1917]/20 dark:border-[#E7E3DA]/20 rounded-lg px-3.5 py-2.5 text-[13.5px] text-[#1A1917] dark:text-[#E7E3DA] outline-none focus:border-[#9B3418] dark:focus:border-[#FF6B4A] transition-colors"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-[13px] font-medium text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">
-                      Last Name <span className="text-[#9B3418] dark:text-[#FF6B4A]">*</span>
+                    <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase">
+                      Last Name <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -245,7 +247,7 @@ export default function ContactPage() {
                       value={formData.lastName}
                       onChange={handleChange}
                       placeholder="Doe"
-                      className="w-full bg-[#E7E3DA] dark:bg-[#121110] border border-[#1A1917]/20 dark:border-[#E7E3DA]/20 rounded-lg px-3.5 py-2.5 text-[13.5px] text-[#1A1917] dark:text-[#E7E3DA] outline-none focus:border-[#9B3418] dark:focus:border-[#FF6B4A] transition-colors"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
                     />
                   </div>
                 </div>
@@ -253,8 +255,8 @@ export default function ContactPage() {
                 {/* Form Section: Email & Company */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[13px] font-medium text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">
-                      Work Email <span className="text-[#9B3418] dark:text-[#FF6B4A]">*</span>
+                    <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase">
+                      Work Email <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="email"
@@ -263,12 +265,12 @@ export default function ContactPage() {
                       value={formData.workEmail}
                       onChange={handleChange}
                       placeholder="jane@company.com"
-                      className="w-full bg-[#E7E3DA] dark:bg-[#121110] border border-[#1A1917]/20 dark:border-[#E7E3DA]/20 rounded-lg px-3.5 py-2.5 text-[13.5px] text-[#1A1917] dark:text-[#E7E3DA] outline-none focus:border-[#9B3418] dark:focus:border-[#FF6B4A] transition-colors"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-[13px] font-medium text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">
-                      Company Name <span className="text-[#9B3418] dark:text-[#FF6B4A]">*</span>
+                    <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase">
+                      Company Name <span className="text-rose-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -277,34 +279,32 @@ export default function ContactPage() {
                       value={formData.companyName}
                       onChange={handleChange}
                       placeholder="Acme Technologies"
-                      className="w-full bg-[#E7E3DA] dark:bg-[#121110] border border-[#1A1917]/20 dark:border-[#E7E3DA]/20 rounded-lg px-3.5 py-2.5 text-[13.5px] text-[#1A1917] dark:text-[#E7E3DA] outline-none focus:border-[#9B3418] dark:focus:border-[#FF6B4A] transition-colors"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
                     />
                   </div>
                 </div>
 
                 {/* Form Section: Organization Scale */}
                 <div>
-                  <label className="block text-[13px] font-medium text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">
+                  <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase">
                     Organization / Node Scale
                   </label>
-                  <div className="relative">
-                    <select
-                      name="companySize"
-                      value={formData.companySize}
-                      onChange={handleChange}
-                      className="w-full bg-[#E7E3DA] dark:bg-[#121110] border border-[#1A1917]/20 dark:border-[#E7E3DA]/20 rounded-lg px-3.5 py-2.5 text-[13.5px] text-[#1A1917] dark:text-[#E7E3DA] outline-none focus:border-[#9B3418] dark:focus:border-[#FF6B4A] transition-colors cursor-pointer"
-                    >
-                      <option value="1-50">1 - 50 employees (Early Growth)</option>
-                      <option value="51-200">51 - 200 employees (Scale-up)</option>
-                      <option value="201-1000">201 - 1,000 employees (Mid-Market)</option>
-                      <option value="1000+">1,000+ employees (Enterprise Grade)</option>
-                    </select>
-                  </div>
+                  <select
+                    name="companySize"
+                    value={formData.companySize}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all cursor-pointer"
+                  >
+                    <option value="1-50">1 - 50 employees (Early Growth)</option>
+                    <option value="51-200">51 - 200 employees (Scale-up)</option>
+                    <option value="201-1000">201 - 1,000 employees (Mid-Market)</option>
+                    <option value="1000+">1,000+ employees (Enterprise Grade)</option>
+                  </select>
                 </div>
 
                 {/* Form Section: Target Frameworks Selection */}
                 <div>
-                  <label className="block text-[13px] font-medium text-[#1A1917] dark:text-[#E7E3DA] mb-2">
+                  <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-2 uppercase">
                     Primary Compliance Framework(s) of Interest
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -315,14 +315,14 @@ export default function ContactPage() {
                           type="button"
                           key={fw}
                           onClick={() => handleToggleFramework(fw)}
-                          className={`px-3 py-2 rounded-lg text-[12.5px] font-medium text-left transition-all flex items-center justify-between border cursor-pointer ${
+                          className={`px-3 py-2 rounded-xl text-xs font-mono font-semibold text-left transition-all flex items-center justify-between border cursor-pointer ${
                             selected
-                              ? 'bg-[#1A1917] text-[#E7E3DA] border-[#1A1917] dark:bg-[#E7E3DA] dark:text-[#1A1917] dark:border-[#E7E3DA] shadow-sm'
-                              : 'bg-[#E7E3DA] dark:bg-[#121110] text-[#6E6A61] dark:text-[#9E988B] border-[#1A1917]/15 dark:border-[#E7E3DA]/15 hover:border-[#1A1917]/40 dark:hover:border-[#E7E3DA]/40'
+                              ? 'bg-slate-900 text-white border-slate-900 dark:bg-sky-500 dark:text-slate-950 dark:border-sky-500 shadow-xs'
+                              : 'bg-slate-50 dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                           }`}
                         >
                           <span>{fw}</span>
-                          {selected && <CheckCircle2 size={13} className="shrink-0 ml-1 text-[#9B3418] dark:text-[#FF6B4A]" />}
+                          {selected && <CheckCircle2 size={13} className="shrink-0 ml-1 text-white dark:text-slate-950" />}
                         </button>
                       );
                     })}
@@ -331,8 +331,8 @@ export default function ContactPage() {
 
                 {/* Form Section: Project Details */}
                 <div>
-                  <label className="block text-[13px] font-medium text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">
-                    Project Details or Specific Questions (Optional)
+                  <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase">
+                    Project Details or Questions (Optional)
                   </label>
                   <textarea
                     rows={3}
@@ -340,7 +340,7 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Tell us about your cloud setup (AWS/GCP/Azure), audit timeline, or particular compliance pain points..."
-                    className="w-full bg-[#E7E3DA] dark:bg-[#121110] border border-[#1A1917]/20 dark:border-[#E7E3DA]/20 rounded-lg p-3 text-[13.5px] text-[#1A1917] dark:text-[#E7E3DA] outline-none focus:border-[#9B3418] dark:focus:border-[#FF6B4A] transition-colors resize-y"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-3 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all resize-y"
                   ></textarea>
                 </div>
 
@@ -348,20 +348,20 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 px-6 rounded-lg bg-[#1A1917] hover:bg-[#9B3418] dark:bg-[#E7E3DA] dark:text-[#1A1917] dark:hover:bg-[#FF6B4A] dark:hover:text-white text-[#E7E3DA] text-[14px] font-semibold tracking-wide transition-all duration-200 flex items-center justify-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
+                  className="w-full py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 text-xs font-mono font-bold tracking-wide transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
                 >
                   {loading ? (
                     <span>Submitting Inquiry...</span>
                   ) : (
                     <>
                       <span>Submit Architecture Inquiry</span>
-                      <ArrowRight size={16} />
+                      <ArrowRight size={15} />
                     </>
                   )}
                 </button>
 
-                <p className="text-[11.5px] text-[#6E6A61] dark:text-[#9E988B] text-center">
-                  By submitting, you agree to our privacy policy. We will never share or sell your contact information.
+                <p className="text-[11px] text-slate-500 text-center">
+                  By submitting, you agree to our privacy policy. We never share or sell your contact information.
                 </p>
               </form>
             )}
@@ -370,37 +370,37 @@ export default function ContactPage() {
         </div>
 
         {/* Process Timeline: What Happens Next? */}
-        <div className="mt-20 pt-12 border-t border-[#1A1917]/10 dark:border-[#E7E3DA]/10">
+        <div className="mt-20 pt-12 border-t border-slate-200 dark:border-slate-800">
           <div className="text-center max-w-xl mx-auto mb-10">
-            <h3 className="text-[24px] md:text-[28px] font-bold text-[#1A1917] dark:text-[#E7E3DA] font-serif">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white">
               What Happens Next?
             </h3>
-            <p className="text-[13.5px] text-[#6E6A61] dark:text-[#9E988B] mt-2">
+            <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400 mt-2">
               Our structured onboarding process gets your organization from initial assessment to continuous compliance proofs in days.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-[#DCD7CB]/30 dark:bg-[#1A1917]/50 border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-xl p-6 relative">
-              <div className="text-[28px] font-serif font-bold text-[#9B3418] dark:text-[#FF6B4A] mb-2">01</div>
-              <h4 className="text-[15px] font-semibold text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">Architecture Discovery</h4>
-              <p className="text-[13px] text-[#6E6A61] dark:text-[#9E988B] leading-relaxed">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-[var(--surface)] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xs relative">
+              <div className="text-2xl font-mono font-bold text-sky-600 dark:text-sky-400 mb-2">01</div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Architecture Discovery</h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 A 30-minute deep dive with a dedicated compliance architect to inspect your infrastructure boundaries and framework requirements.
               </p>
             </div>
 
-            <div className="bg-[#DCD7CB]/30 dark:bg-[#1A1917]/50 border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-xl p-6 relative">
-              <div className="text-[28px] font-serif font-bold text-[#9B3418] dark:text-[#FF6B4A] mb-2">02</div>
-              <h4 className="text-[15px] font-semibold text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">Custom Live Demo</h4>
-              <p className="text-[13px] text-[#6E6A61] dark:text-[#9E988B] leading-relaxed">
+            <div className="bg-[var(--surface)] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xs relative">
+              <div className="text-2xl font-mono font-bold text-sky-600 dark:text-sky-400 mb-2">02</div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Custom Live Demo</h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 See GRC Engine connect to sample repositories and cloud environments to generate real-time control matrices and evidence proofs.
               </p>
             </div>
 
-            <div className="bg-[#DCD7CB]/30 dark:bg-[#1A1917]/50 border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-xl p-6 relative">
-              <div className="text-[28px] font-serif font-bold text-[#9B3418] dark:text-[#FF6B4A] mb-2">03</div>
-              <h4 className="text-[15px] font-semibold text-[#1A1917] dark:text-[#E7E3DA] mb-1.5">Tailored Deployment Pilot</h4>
-              <p className="text-[13px] text-[#6E6A61] dark:text-[#9E988B] leading-relaxed">
+            <div className="bg-[var(--surface)] border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xs relative">
+              <div className="text-2xl font-mono font-bold text-sky-600 dark:text-sky-400 mb-2">03</div>
+              <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Tailored Deployment Pilot</h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Launch a 14-day assisted pilot with full telemetry ingestion, auditor exports, and automated gap study reports.
               </p>
             </div>

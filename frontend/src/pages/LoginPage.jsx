@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Lock } from 'lucide-react';
+import { ArrowRight, Lock, Shield, UserCheck } from 'lucide-react';
 import { useDemoStore } from '../store/demoStore';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('admin@grcengine.com');
+  const [password, setPassword] = useState('••••••••••••');
   const navigate = useNavigate();
   const { setDemoMode } = useDemoStore();
 
@@ -21,92 +21,94 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-[#DCD7CB] text-[#1A1917] font-mono flex items-center justify-center p-6 isolate relative overflow-hidden">
+    <div className="w-full min-h-screen bg-[var(--ground)] text-slate-900 dark:text-slate-100 font-sans flex items-center justify-center p-6 isolate relative overflow-hidden transition-colors">
       
-      {/* Background graphic elements */}
-      <div className="absolute top-0 right-0 pointer-events-none opacity-20">
-        <svg width="600" height="600" viewBox="0 0 600 600" fill="none">
-          <circle cx="300" cy="300" r="280" stroke="#1A1917" strokeWidth="1" strokeDasharray="4 4" />
-          <line x1="0" y1="300" x2="600" y2="300" stroke="#1A1917" strokeWidth="1" strokeDasharray="4 4" />
-          <line x1="300" y1="0" x2="300" y2="600" stroke="#1A1917" strokeWidth="1" strokeDasharray="4 4" />
-        </svg>
-      </div>
+      {/* Background architectural grid pattern */}
+      <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20 [background-image:linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:[background-image:linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
 
-      <div className="relative z-10 w-full max-w-[440px] bg-[#E7E3DA] hairline-all p-8 md:p-12 shadow-[12px_12px_0px_0px_rgba(26,25,23,0.1)]">
+      <div className="relative z-10 w-full max-w-[440px] bg-[var(--surface)] rounded-3xl border border-slate-200 dark:border-slate-800 p-8 md:p-10 shadow-md">
+        
+        {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 bg-[#9B3418] inline-block"></span>
-            <span className="mono-label text-[#9B3418]">SECURE GATEWAY</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-mono font-semibold uppercase tracking-wider mb-3">
+            <Shield size={13} />
+            <span>SECURE SOVEREIGN GATEWAY</span>
           </div>
-          <h1 className="serif-heading text-[32px] md:text-[38px] text-[#1A1917]">
-            Authentication <span className="serif-italic-pigment">Required</span>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+            Authentication Required
           </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+            Enter your operator identity or launch instant sandbox mode.
+          </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block mono-label text-[10.5px] text-[#4A4741] mb-2" htmlFor="email">
-              OPERATOR ID / EMAIL
+            <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase" htmlFor="email">
+              Operator ID / Email
             </label>
             <input 
               type="email" 
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-[#DCD7CB] hairline-all px-4 py-3 text-[13px] mono-body focus:outline-none focus:border-[#9B3418] transition-colors"
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all font-mono"
               placeholder="Enter your email"
             />
           </div>
 
           <div>
-            <label className="block mono-label text-[10.5px] text-[#4A4741] mb-2" htmlFor="password">
-              ACCESS KEY / PASSWORD
+            <label className="block text-xs font-mono font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase" htmlFor="password">
+              Access Key / Passkey
             </label>
             <input 
               type="password" 
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#DCD7CB] hairline-all px-4 py-3 text-[13px] mono-body focus:outline-none focus:border-[#9B3418] transition-colors"
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all font-mono"
               placeholder="Enter your password"
             />
           </div>
 
-          {/* remember me state for convenience */}
-          <div className="flex items-center gap-2 text-[11px] mono-body text-[#4A4741]">
-            <input type="checkbox" id="remember" className="accent-[#9B3418]" defaultChecked />
-            <label htmlFor="remember" className="cursor-pointer">Remember session on this device</label>
+          <div className="flex items-center justify-between text-xs font-mono text-slate-500 pt-1">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="remember" className="accent-sky-500 rounded" defaultChecked />
+              <span>Remember session</span>
+            </label>
+            <span className="text-sky-600 dark:text-sky-400 font-semibold cursor-pointer hover:underline">FIDO2 WebAuthn</span>
           </div>
 
           <button 
             type="submit" 
-            className="w-full studio-btn-primary studio-btn text-[11.5px] py-3.5 flex items-center justify-center gap-2"
+            className="w-full mt-2 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 text-xs font-mono font-bold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer"
           >
             <Lock size={14} />
-            [ INITIATE SESSION ]
+            <span>INITIATE SESSION</span>
           </button>
         </form>
 
-        <div className="mt-8 pt-8 hairline-t">
-          <div className="mb-4">
-            <p className="mono-label text-[10px] text-[#6E6A61] mb-2">DEMO CREDENTIALS (FOR DEV TEAM)</p>
-            <div className="bg-[#DCD7CB] hairline-all p-3 text-[11px] mono-body flex flex-col gap-1 text-[#4A4741]">
-              <div><strong>Email:</strong> admin@grcengine.com</div>
-              <div><strong>Pass:</strong> demo123</div>
+        <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 space-y-3">
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-600 dark:text-slate-400 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <UserCheck size={14} className="text-sky-500" />
+              <span>Demo Persona: <strong>Platform Admin</strong></span>
             </div>
+            <span className="text-[10.5px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-bold">READY</span>
           </div>
           
           <button 
             onClick={handleDemo}
-            className="w-full studio-btn-pigment studio-btn text-[11.5px] py-3.5 flex items-center justify-center gap-2"
+            className="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs font-mono font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
-            [ TRY DEMO WITHOUT LOGIN ] <ArrowRight size={14} />
+            <span>TRY DEMO WITHOUT CREDENTIALS</span>
+            <ArrowRight size={14} />
           </button>
         </div>
         
-        <div className="mt-8 text-center">
-          <Link to="/" className="mono-label text-[10px] text-[#4A4741] hover:text-[#9B3418] transition-colors inline-flex items-center gap-1">
-            <ArrowRight size={10} className="rotate-180" /> RETURN TO PORTAL
+        <div className="mt-6 text-center">
+          <Link to="/" className="text-xs font-mono text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors inline-flex items-center gap-1.5">
+            <ArrowRight size={11} className="rotate-180" /> RETURN TO PORTAL
           </Link>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDemoStore } from '../store/demoStore';
-import { CheckCircle2, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, Database, Copy, Check, Hash } from 'lucide-react';
 
 const demoArchiveLogs = [
   {
@@ -57,6 +57,7 @@ export default function ArchivePage() {
   const highlightedId = searchParams.get('id');
   const [verifying, setVerifying] = useState(false);
   const [verificationResult, setVerificationResult] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (isLiveMode) {
@@ -89,6 +90,13 @@ export default function ArchivePage() {
     }
   }, [activeEvidence, highlightedId]);
 
+  const handleCopyHash = () => {
+    if (!selectedEvd?.hash) return;
+    navigator.clipboard.writeText(selectedEvd.hash);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const handleVerify = async () => {
     setVerifying(true);
     setVerificationResult(null);
@@ -119,108 +127,138 @@ export default function ArchivePage() {
         valid: true,
         message: `Cryptographic SHA-256 verification confirmed for ${selectedEvd?.hash?.slice(0, 16)}...`,
       });
-    }, 600);
+    }, 400);
   };
 
   return (
-    <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
+    <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-8">
       
-      <main className="py-12 px-6 md:px-12">
-        {/* Page Header */}
-        <div className="mb-12 pb-6 hairline-b">
-          <div className="mono-label text-[#9B3418] mb-2">IMMUTABLE EVIDENCE VAULT</div>
-          <h1 className="serif-heading text-[36px] md:text-[54px] text-[#1A1917]">
-            Audit Records & <span className="serif-italic-pigment">Cryptographic Proofs</span>
-          </h1>
-          <p className="mono-body text-[13px] text-[#4A4741] mt-3 max-w-3xl">
-            Append-only proof ledger storing tamper-evident cryptographic hashes for every verified security control. All proofs are hardware signed by FIPS 140-3 HSM modules.
-          </p>
+      {/* Page Header */}
+      <div className="pb-6 border-b border-slate-200 dark:border-slate-800">
+        <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mb-2 uppercase tracking-wider">
+          Immutable Evidence Vault
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Audit Records &amp; <span className="text-sky-600 dark:text-sky-400">Cryptographic Proofs</span>
+        </h1>
+        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2 max-w-3xl leading-relaxed">
+          Append-only proof ledger storing tamper-evident cryptographic hashes for every verified security control. All proofs are hashed at capture time for independent auditor verification.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* Left Column: Evidence Table */}
+        <div className="lg:col-span-7 space-y-3">
+          {activeEvidence.map((item) => {
+            const isSelected = selectedEvd?.id === item.id;
+            return (
+              <div
+                key={item.id}
+                onClick={() => {
+                  setSelectedEvd(item);
+                  setVerificationResult(null);
+                }}
+                className={`p-5 rounded-xl cursor-pointer border transition-all duration-150 active:scale-[0.99] ${
+                  isSelected 
+                    ? 'bg-white dark:bg-slate-850 border-slate-900 dark:border-sky-400 shadow-md ring-1 ring-slate-900/10 dark:ring-sky-400/20' 
+                    : 'bg-[var(--surface)] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs'
+                }`}
+              >
+                <div className="flex justify-between items-center mb-1.5 text-xs font-mono">
+                  <span className="font-bold text-sky-600 dark:text-sky-400 flex items-center gap-1.5">
+                    <Database size={13} />
+                    {item.id} &bull; {item.controlId}
+                  </span>
+                  <span className="text-slate-500 text-[11px]">{item.date}</span>
+                </div>
+                
+                <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 mb-2">
+                  {item.title}
+                </h3>
+                
+                <div className="text-xs text-slate-500 font-mono truncate pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center gap-1.5">
+                  <Hash size={12} className="text-slate-400 shrink-0" />
+                  <span className="truncate">{item.hash}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          {/* Left Column: Evidence Table */}
-          <div className="lg:col-span-7 space-y-3">
-            {activeEvidence.map((item) => {
-              const isSelected = selectedEvd?.id === item.id;
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    setSelectedEvd(item);
-                    setVerificationResult(null);
-                  }}
-                  className={`p-4 cursor-pointer hairline-all transition-colors ${
-                    isSelected ? 'bg-[#DCD7CB] border-l-4 border-l-[#9B3418]' : 'bg-[#E7E3DA] hover:bg-[#DCD7CB]/40'
-                  }`}
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="mono-label text-[#9B3418] text-[10.5px]">{item.id} // {item.controlId}</span>
-                    <span className="mono-label text-[10px] text-[#6E6A61]">{item.date}</span>
-                  </div>
-                  <div className="font-serif text-[20px] font-bold text-[#1A1917]">{item.title}</div>
-                  <div className="mono-body text-[10.5px] text-[#6E6A61] truncate mt-1">
-                    HASH: {item.hash}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Right Column: Selected Proof Detail */}
-          <div className="lg:col-span-5 bg-[#DCD7CB] p-6 hairline-all sticky top-[80px] h-fit">
-            <div className="mono-label text-[#9B3418] mb-1">PROOF CERTIFICATE</div>
-            <h2 className="serif-heading text-[26px] font-bold text-[#1A1917] mb-4">
+        {/* Right Column: Selected Proof Detail Certificate */}
+        <div className="lg:col-span-5 bg-[var(--surface)] p-6 sm:p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-lg sticky top-[80px] h-fit space-y-5">
+          <div>
+            <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider mb-1">
+              Proof Certificate
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
               {selectedEvd?.title || 'Selected Evidence Proof'}
             </h2>
+          </div>
 
-            <div className="space-y-4 mono-body text-[11.5px]">
-              <div className="p-3 bg-[#E7E3DA] hairline-all">
-                <div className="mono-label text-[9.5px] text-[#6E6A61]">EVIDENCE RECORD ID</div>
-                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd?.id} ({selectedEvd?.controlId})</div>
-              </div>
+          <div className="space-y-3.5 text-xs">
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800">
+              <div className="text-[10.5px] font-mono font-bold text-slate-500 uppercase">Evidence Record ID</div>
+              <div className="text-slate-900 dark:text-white font-bold mt-0.5 text-sm">{selectedEvd?.id} ({selectedEvd?.controlId})</div>
+            </div>
 
-              <div className="p-3 bg-[#E7E3DA] hairline-all">
-                <div className="mono-label text-[9.5px] text-[#6E6A61]">REGULATORY FRAMEWORK</div>
-                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd?.framework}</div>
-              </div>
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800">
+              <div className="text-[10.5px] font-mono font-bold text-slate-500 uppercase">Regulatory Standard Mapping</div>
+              <div className="text-slate-900 dark:text-white font-bold mt-0.5">{selectedEvd?.framework}</div>
+            </div>
 
-              <div className="p-3 bg-[#E7E3DA] hairline-all break-all">
-                <div className="mono-label text-[9.5px] text-[#9B3418]">SHA-256 CRYPTOGRAPHIC PROOF</div>
-                <div className="text-[#1A1917] font-mono text-[10.5px] mt-1">{selectedEvd?.hash}</div>
-              </div>
-
-              <div className="p-3 bg-[#E7E3DA] hairline-all">
-                <div className="mono-label text-[9.5px] text-[#6E6A61]">TIMESTAMP & IMMUTABILITY</div>
-                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedEvd?.date}</div>
-                <div className="mono-label text-[9.5px] text-[#9B3418] mt-1">{selectedEvd?.status}</div>
-              </div>
-
-              {verificationResult && (
-                <div className={`p-3 hairline-all text-[11px] mono-label flex items-start gap-2 ${
-                  verificationResult.valid ? 'bg-green-100 text-green-900 border-green-700' : 'bg-red-100 text-red-900 border-red-700'
-                }`}>
-                  <CheckCircle2 size={15} className={verificationResult.valid ? 'text-green-700 shrink-0' : 'text-red-700 shrink-0'} />
-                  <span>{verificationResult.message}</span>
-                </div>
-              )}
-
-              <div className="pt-3 hairline-t">
-                <button 
-                  onClick={handleVerify}
-                  disabled={verifying}
-                  className="studio-btn-primary studio-btn text-[10.5px] w-full flex items-center justify-center gap-2"
+            <div className="p-3.5 bg-slate-900 text-slate-100 rounded-xl border border-slate-800 space-y-1.5">
+              <div className="flex items-center justify-between text-[10.5px] font-mono font-bold text-slate-400 uppercase">
+                <span>SHA-256 Cryptographic Digest</span>
+                <button
+                  type="button"
+                  onClick={handleCopyHash}
+                  className="text-sky-400 hover:text-sky-300 flex items-center gap-1 cursor-pointer bg-transparent border-none text-[10.5px]"
                 >
-                  <ShieldCheck size={13} />
-                  <span>{verifying ? '[ RECALCULATING DIGEST... ]' : '[ VERIFY CRYPTOGRAPHIC SIGNATURE ]'}</span>
+                  {copied ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
+                  <span>{copied ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
+              <div className="text-sky-400 font-mono text-xs break-all leading-relaxed">{selectedEvd?.hash}</div>
+            </div>
+
+            <div className="p-3.5 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 flex justify-between items-center">
+              <div>
+                <div className="text-[10.5px] font-mono font-bold text-slate-500 uppercase">Timestamp</div>
+                <div className="text-slate-900 dark:text-white font-semibold mt-0.5">{selectedEvd?.date}</div>
+              </div>
+              <span className="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold">
+                {selectedEvd?.status}
+              </span>
+            </div>
+
+            {verificationResult && (
+              <div className={`p-3.5 rounded-xl text-xs font-mono flex items-start gap-2.5 border ${
+                verificationResult.valid 
+                  ? 'bg-emerald-500/10 text-emerald-900 dark:text-emerald-300 border-emerald-500/40' 
+                  : 'bg-rose-500/10 text-rose-900 dark:text-rose-300 border-rose-500/40'
+              }`}>
+                <CheckCircle2 size={16} className={verificationResult.valid ? 'text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5' : 'text-rose-600 dark:text-rose-400 shrink-0 mt-0.5'} />
+                <span className="leading-snug">{verificationResult.message}</span>
+              </div>
+            )}
+
+            <div className="pt-2">
+              <button 
+                type="button"
+                onClick={handleVerify}
+                disabled={verifying}
+                className="w-full py-3 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 text-xs font-bold transition-all duration-150 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2 shadow-md border-none"
+              >
+                <ShieldCheck size={15} />
+                <span>{verifying ? 'Recalculating Digest...' : 'Verify Cryptographic Signature'}</span>
+              </button>
             </div>
           </div>
-
         </div>
-      </main>
 
-          </div>
+      </div>
+    </div>
   );
 }

@@ -140,7 +140,7 @@ export default function SectionDrawing() {
           </div>
 
           {/* Right Column: Live Interactive Product Visual */}
-          <div className="lg:col-span-7 bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-2xl p-5 sm:p-6 md:p-8 relative overflow-hidden shadow-lg flex flex-col justify-between min-h-[380px] lg:min-h-[440px] h-auto">
+          <div className="lg:col-span-7 bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-xl p-5 sm:p-6 md:p-8 relative overflow-hidden shadow-lg flex flex-col justify-between min-h-[380px] lg:min-h-[440px] h-auto">
 
             {/* Window Top Bar */}
             <div className="flex items-center justify-between pb-4 border-b border-[#1A1917]/10 dark:border-[#E7E3DA]/10 mb-6">

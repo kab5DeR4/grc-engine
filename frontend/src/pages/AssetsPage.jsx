@@ -177,68 +177,65 @@ export default function AssetsPage() {
   };
 
   return (
-    <div className="space-y-6 font-mono text-[#1A1917] dark:text-[#E7E3DA]">
+    <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-8">
+      
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 hairline-b pb-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2.5 h-2.5 bg-[#9B3418]"></span>
-            <span className="text-[10px] mono-label text-[#9B3418] uppercase">
-              {isLiveMode ? 'LIVE API DISCOVERY' : 'OFFLINE DEMO TELEMETRY'}
-            </span>
+          <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mb-2 uppercase tracking-wider">
+            {isLiveMode ? 'Live API Discovery' : 'Discovered Inventory'}
           </div>
-          <h1 className="font-serif text-2xl md:text-3xl font-bold tracking-tight text-[#1A1917] dark:text-[#E7E3DA]">
-            DISCOVERED ASSETS INVENTORY<span className="text-[#9B3418]">.</span>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Infrastructure Asset <span className="text-sky-600 dark:text-sky-400">Inventory</span>
           </h1>
-          <p className="text-xs text-[#6E6A61] dark:text-[#A8A49C] mt-1">
-            Infrastructure-as-Source-of-Truth: Discovered repositories, identity pools, and cloud storage buckets parsed deterministically.
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2 max-w-3xl leading-relaxed">
+            Continuously discovered repositories, identity pools, and cloud storage buckets parsed into canonical asset definitions.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleRefresh}
-            disabled={scanRunning}
-            className="studio-btn text-[11px] py-2 px-3 flex items-center gap-2"
-          >
-            <RefreshCw size={13} className={scanRunning ? 'animate-spin text-[#9B3418]' : ''} />
-            <span>{scanRunning ? 'SCANNING ASSETS...' : 'REFRESH ASSETS'}</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={handleRefresh}
+          disabled={scanRunning}
+          className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 text-xs font-bold transition-all duration-150 active:scale-[0.98] cursor-pointer flex items-center gap-2 shadow-xs border-none self-start md:self-auto shrink-0"
+        >
+          <RefreshCw size={13} className={scanRunning ? 'animate-spin' : ''} />
+          <span>{scanRunning ? 'Scanning Assets...' : 'Refresh Assets'}</span>
+        </button>
       </div>
 
       {/* KPI Stats Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all">
-          <div className="text-[10px] mono-label text-[#6E6A61] dark:text-[#A8A49C]">TOTAL DISCOVERED ASSETS</div>
-          <div className="text-2xl font-bold font-mono text-[#1A1917] dark:text-[#E7E3DA] mt-1">
-            {stats.total} <span className="text-xs font-normal text-[#9B3418]">NODES</span>
+        <div className="p-5 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div className="text-xs font-mono font-bold text-slate-500 uppercase">Total Discovered Assets</div>
+          <div className="text-2xl font-extrabold text-slate-900 dark:text-white">
+            {stats.total} <span className="text-xs font-normal text-slate-500">Nodes</span>
           </div>
         </div>
-        <div className="p-4 bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all">
-          <div className="text-[10px] mono-label text-[#6E6A61] dark:text-[#A8A49C]">PROTECTED ASSETS (BRANCH/ENCRYPTION)</div>
-          <div className="text-2xl font-bold font-mono text-[#1A1917] dark:text-[#E7E3DA] mt-1">
+        <div className="p-5 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div className="text-xs font-mono font-bold text-slate-500 uppercase">Protected Infrastructure</div>
+          <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
             {stats.protectedCount} / {stats.total}
           </div>
         </div>
-        <div className="p-4 bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all">
-          <div className="text-[10px] mono-label text-[#6E6A61] dark:text-[#A8A49C]">AVERAGE ASSET COMPLIANCE</div>
-          <div className="text-2xl font-bold font-mono text-[#1A1917] dark:text-[#E7E3DA] mt-1">
+        <div className="p-5 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div className="text-xs font-mono font-bold text-slate-500 uppercase">Average Asset Health</div>
+          <div className="text-2xl font-extrabold text-sky-600 dark:text-sky-400">
             {stats.avgCompliance}%
           </div>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="relative w-full sm:w-80">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6E6A61]" />
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             placeholder="Search assets by name or URI..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 bg-[#E7E3DA] dark:bg-[#1A1917] hairline-all text-xs font-mono placeholder-[#6E6A61] focus:outline-none focus:border-[#9B3418]"
+            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-mono placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
           />
         </div>
 
@@ -246,11 +243,12 @@ export default function AssetsPage() {
           {['ALL', 'GITHUB', 'AWS'].map((prov) => (
             <button
               key={prov}
+              type="button"
               onClick={() => setProviderFilter(prov)}
-              className={`px-3 py-1 text-[10px] font-mono hairline-all transition-colors ${
+              className={`px-3.5 py-1.5 text-xs font-mono font-bold rounded-xl border transition-all cursor-pointer ${
                 providerFilter === prov
-                  ? 'bg-[#1A1917] text-[#E7E3DA] dark:bg-[#E7E3DA] dark:text-[#1A1917] font-bold'
-                  : 'bg-[#E7E3DA] dark:bg-[#1A1917] hover:border-[#9B3418]'
+                  ? 'bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 border-transparent shadow-xs'
+                  : 'bg-slate-50 dark:bg-slate-850 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400'
               }`}
             >
               {prov}
@@ -260,81 +258,82 @@ export default function AssetsPage() {
       </div>
 
       {/* Assets Inventory Table */}
-      <div className="overflow-x-auto bg-[#E7E3DA] dark:bg-[#1A1917] hairline-all">
+      <div className="overflow-x-auto bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
         <table className="w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="bg-[#DCD7CB] dark:bg-[#2A2825] hairline-b text-[10px] mono-label text-[#4A4741] dark:text-[#A8A49C]">
-              <th className="p-3">IDENTIFIER / ASSET</th>
-              <th className="p-3">PROVIDER</th>
-              <th className="p-3">TYPE</th>
-              <th className="p-3">DEFAULT SCOPE</th>
-              <th className="p-3">BRANCH PROTECTION</th>
-              <th className="p-3">COMPLIANCE</th>
-              <th className="p-3 text-right">INSPECT</th>
+            <tr className="bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-800 text-[11px] font-mono font-bold text-slate-500 uppercase tracking-wider">
+              <th className="p-4">Identifier / Asset</th>
+              <th className="p-4">Provider</th>
+              <th className="p-4">Type</th>
+              <th className="p-4">Scope</th>
+              <th className="p-4">Protection</th>
+              <th className="p-4">Compliance</th>
+              <th className="p-4 text-right">Inspect</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#DCD7CB] dark:divide-[#2A2825]">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
             {filteredAssets.length === 0 ? (
               <tr>
-                <td colSpan={7} className="p-6 text-center text-xs text-[#6E6A61]">
-                  No discovered infrastructure assets match query.
+                <td colSpan={7} className="p-8 text-center text-xs text-slate-500 font-mono">
+                  No discovered infrastructure assets match your query.
                 </td>
               </tr>
             ) : (
               filteredAssets.map((asset) => (
-                <tr key={asset.id} className="hover:bg-[#DCD7CB]/40 dark:hover:bg-[#2A2825]/40 transition-colors">
-                  <td className="p-3 font-bold">
-                    <div className="flex items-center gap-2">
-                      <Server size={14} className="text-[#9B3418] shrink-0" />
+                <tr key={asset.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-850/50 transition-colors">
+                  <td className="p-4 font-bold">
+                    <div className="flex items-center gap-2.5">
+                      <Server size={15} className="text-sky-500 shrink-0" />
                       <div>
-                        <div className="text-[#1A1917] dark:text-[#E7E3DA]">{asset.name}</div>
-                        <div className="text-[10px] text-[#6E6A61] font-normal">{asset.identifier}</div>
+                        <div className="text-slate-900 dark:text-slate-100 font-semibold">{asset.name}</div>
+                        <div className="text-[11px] text-slate-500 font-mono font-normal">{asset.identifier}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="p-3">
-                    <span className="px-2 py-0.5 text-[9.5px] bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all font-bold">
+                  <td className="p-4">
+                    <span className="px-2.5 py-0.5 text-[10.5px] bg-slate-100 dark:bg-slate-800 rounded-md font-mono font-bold text-slate-700 dark:text-slate-300">
                       {asset.provider}
                     </span>
                   </td>
-                  <td className="p-3 text-[10.5px] text-[#6E6A61] dark:text-[#A8A49C]">
+                  <td className="p-4 text-slate-600 dark:text-slate-400 font-mono text-[11px]">
                     {asset.type}
                   </td>
-                  <td className="p-3 font-mono text-[10.5px]">
+                  <td className="p-4 font-mono text-slate-600 dark:text-slate-400">
                     <span className="flex items-center gap-1">
-                      <GitBranch size={11} className="text-[#9B3418]" />
+                      <GitBranch size={12} className="text-sky-500" />
                       {asset.defaultBranch}
                     </span>
                   </td>
-                  <td className="p-3">
+                  <td className="p-4">
                     {asset.branchProtection ? (
-                      <span className="inline-flex items-center gap-1 text-[10px] text-green-700 dark:text-green-400 font-bold">
-                        <CheckCircle2 size={12} /> ENFORCED
+                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-bold font-mono">
+                        <CheckCircle2 size={13} /> ENFORCED
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[10px] text-[#9B3418] font-bold">
-                        <AlertTriangle size={12} /> DISABLED
+                      <span className="inline-flex items-center gap-1 text-[11px] text-rose-600 dark:text-rose-400 font-bold font-mono">
+                        <AlertTriangle size={13} /> DISABLED
                       </span>
                     )}
                   </td>
-                  <td className="p-3">
+                  <td className="p-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-16 bg-[#DCD7CB] dark:bg-[#2A2825] h-1.5 overflow-hidden">
+                      <div className="w-16 bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                         <div
-                          className="bg-[#9B3418] h-full"
+                          className="bg-emerald-500 h-full rounded-full"
                           style={{ width: `${asset.complianceScore}%` }}
-                        ></div>
+                        />
                       </div>
-                      <span className="text-[10px] font-bold">{asset.complianceScore}%</span>
+                      <span className="text-xs font-bold font-mono text-slate-800 dark:text-slate-200">{asset.complianceScore}%</span>
                     </div>
                   </td>
-                  <td className="p-3 text-right">
+                  <td className="p-4 text-right">
                     <button
+                      type="button"
                       onClick={() => handleInspectAst(asset)}
-                      className="px-2.5 py-1 text-[10px] bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all hover:border-[#9B3418] transition-colors"
+                      className="px-3 py-1 text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-300 transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
                       title="Inspect Raw AST Payload"
                     >
-                      [ RAW AST ]
+                      Inspect AST
                     </button>
                   </td>
                 </tr>
@@ -348,28 +347,29 @@ export default function AssetsPage() {
       <Drawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        title={`ASSET AST // ${selectedAsset?.name || ''}`}
+        title={`Asset Payload // ${selectedAsset?.name || ''}`}
       >
         {selectedAsset && (
           <div className="space-y-4 font-mono text-xs">
-            <div className="p-3 bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all space-y-1">
-              <div className="text-[10px] mono-label text-[#6E6A61]">ASSET IDENTIFIER</div>
-              <div className="font-bold text-[#1A1917] dark:text-[#E7E3DA]">{selectedAsset.identifier}</div>
-              <div className="text-[10px] text-[#9B3418]">PROVIDER: {selectedAsset.provider} ({selectedAsset.type})</div>
+            <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-xl space-y-1">
+              <div className="text-[10.5px] font-bold text-slate-500 uppercase">Asset Identifier</div>
+              <div className="font-bold text-slate-900 dark:text-white break-all">{selectedAsset.identifier}</div>
+              <div className="text-[11px] text-sky-600 dark:text-sky-400">PROVIDER: {selectedAsset.provider} ({selectedAsset.type})</div>
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="mono-label text-[10px]">RAW PARSED METADATA TREE</span>
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Raw Discovered Metadata:</span>
               <button
+                type="button"
                 onClick={handleCopyAst}
-                className="studio-btn text-[10px] py-1 px-2.5 flex items-center gap-1.5"
+                className="px-3 py-1 rounded-lg bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer border-none"
               >
-                {copiedAst ? <Check size={12} className="text-green-600" /> : <Copy size={12} />}
-                <span>{copiedAst ? 'COPIED AST' : 'COPY JSON'}</span>
+                {copiedAst ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                <span>{copiedAst ? 'Copied' : 'Copy JSON'}</span>
               </button>
             </div>
 
-            <pre className="p-3 bg-[#1A1917] text-[#E7E3DA] dark:bg-[#0D0C0B] hairline-all text-[11px] overflow-x-auto max-h-[400px] leading-relaxed">
+            <pre className="p-4 bg-slate-900 text-slate-100 rounded-xl text-xs overflow-x-auto max-h-[420px] leading-relaxed border border-slate-800">
               {JSON.stringify(selectedAsset.metadata, null, 2)}
             </pre>
           </div>

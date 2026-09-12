@@ -142,7 +142,7 @@ export default function PinnedStudy() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 mb-8 sm:mb-12">
 
           {/* Left Side: Connected Infrastructure Nodes */}
-          <div className="lg:col-span-6 bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-2xl p-5 sm:p-6 md:p-8 flex flex-col justify-between shadow-sm">
+          <div className="lg:col-span-6 bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-xl p-5 sm:p-6 md:p-8 flex flex-col justify-between shadow-sm">
             <div>
               <div className="flex items-center justify-between mb-5 sm:mb-6 pb-3 border-b border-[#1A1917]/10 dark:border-[#E7E3DA]/10">
                 <span className="text-[11.5px] sm:text-[12px] font-semibold text-[#6E6A61] dark:text-[#9E988B] uppercase tracking-wider">
@@ -196,7 +196,7 @@ export default function PinnedStudy() {
           </div>
 
           {/* Right Side: Live Inspection & Audit Stream */}
-          <div className="lg:col-span-6 bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-2xl p-6 md:p-8 flex flex-col justify-between shadow-sm">
+          <div className="lg:col-span-6 bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-xl p-6 md:p-8 flex flex-col justify-between shadow-sm">
             <div>
               <div className="flex items-center justify-between mb-6 pb-3 border-b border-[#1A1917]/10 dark:border-[#E7E3DA]/10">
                 <div className="flex items-center gap-2">

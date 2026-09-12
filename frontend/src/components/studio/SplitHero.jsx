@@ -261,7 +261,7 @@ export default function SplitHero() {
               }
             }}
           >
-            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#1A1917] text-[#E7E3DA] text-[11px] font-semibold px-4 py-2 rounded-lg transition-opacity duration-300 z-50 flex items-center gap-2 whitespace-nowrap shadow-xl pointer-events-none ${!isEngineExpanded ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`}>
+            <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#1A1917] text-[#E7E3DA] text-[11px] font-semibold px-4 py-2 rounded-lg transition-opacity duration-300 z-50 flex items-center gap-2 whitespace-nowrap shadow-md pointer-events-none ${!isEngineExpanded ? 'opacity-0 group-hover:opacity-100' : 'opacity-0'}`}>
               <span className="w-1.5 h-1.5 bg-[#9B3418] rounded-full animate-pulse"></span>
               EXPLORE ENGINE
             </div>

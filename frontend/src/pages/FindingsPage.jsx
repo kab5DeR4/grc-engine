@@ -50,98 +50,122 @@ export default function FindingsPage() {
   };
 
   return (
-    <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
+    <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-8">
       
-      <main className="py-12 px-6 md:px-12 space-y-8">
-        {/* Page Header */}
-        <div className="pb-6 hairline-b flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="mono-label text-[#9B3418] mb-2">RISK & DRIFT FINDINGS</div>
-            <h1 className="serif-heading text-[36px] md:text-[54px] text-[#1A1917]">
-              Active Findings & <span className="serif-italic-pigment">Remediation SLA</span>
-            </h1>
+      {/* Page Header */}
+      <div className="pb-6 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mb-2 uppercase tracking-wider">
+            Risk &amp; Drift Management
           </div>
-
-          <div className="flex gap-2">
-            {['ALL', 'OPEN', 'RESOLVED'].map(st => (
-              <button
-                key={st}
-                onClick={() => setFilter(st)}
-                className={`mono-label text-[10.5px] px-3 py-1.5 border cursor-pointer transition-colors ${
-                  filter === st ? 'bg-[#1A1917] text-[#E7E3DA] border-[#1A1917]' : 'bg-transparent text-[#1A1917] border-[#1A1917]'
-                }`}
-              >
-                [ {st} ]
-              </button>
-            ))}
-          </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Active Findings &amp; <span className="text-sky-600 dark:text-sky-400">Remediation SLA</span>
+          </h1>
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2 max-w-3xl leading-relaxed">
+            Prioritized inventory of security findings and control failures requiring engineering remediation to preserve audit readiness.
+          </p>
         </div>
 
-        {/* RBAC restriction banner */}
-        {!canRemediate && (
-          <RbacPermissionBanner
-            actionName="simulating automated control remediation"
-            requiredRole="PLATFORM ADMIN or SECURITY ENGINEER"
-          />
-        )}
+        {/* Filter Pills */}
+        <div className="flex gap-2 self-start md:self-auto">
+          {['ALL', 'OPEN', 'RESOLVED'].map(st => (
+            <button
+              key={st}
+              type="button"
+              onClick={() => setFilter(st)}
+              className={`text-xs font-mono font-bold px-3.5 py-1.5 rounded-xl border transition-all duration-150 cursor-pointer ${
+                filter === st 
+                  ? 'bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 border-transparent shadow-xs' 
+                  : 'bg-[var(--surface)] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400'
+              }`}
+            >
+              {st}
+            </button>
+          ))}
+        </div>
+      </div>
 
-        {/* Findings List */}
-        <div className="space-y-4">
-          {filtered.map(item => {
-            const isResolved = item.status === 'Resolved' || item.status === 'RESOLVED';
-            return (
-              <div key={item.id} className="p-6 bg-[#DCD7CB] hairline-all">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
-                  <div className="flex items-center space-x-3">
-                    <span className="mono-label text-[#9B3418] font-bold">{item.id}</span>
-                    <span className="mono-label text-[10px] text-[#6E6A61]">{item.control || item.control_id}</span>
-                    <span className="mono-label text-[9.5px] px-2 py-0.5 border border-[#9B3418] text-[#9B3418]">
-                      {item.severity}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="mono-label text-[10px] text-[#1A1917] font-semibold">{item.sla}</span>
-                    <span className={`mono-label text-[9px] px-2 py-0.5 ${
-                      isResolved ? 'bg-[#1A1917] text-[#E7E3DA]' : 'bg-[#9B3418] text-[#FFFFFF]'
-                    }`}>
-                      {item.status.toUpperCase()}
-                    </span>
-                  </div>
+      {/* RBAC restriction banner */}
+      {!canRemediate && (
+        <RbacPermissionBanner
+          actionName="simulating automated control remediation"
+          requiredRole="PLATFORM ADMIN or SECURITY ENGINEER"
+        />
+      )}
+
+      {/* Findings List */}
+      <div className="space-y-4">
+        {filtered.map(item => {
+          const isResolved = item.status === 'Resolved' || item.status === 'RESOLVED';
+          return (
+            <div 
+              key={item.id} 
+              className="p-6 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5 text-xs font-mono">
+                  <span className="font-bold text-sky-600 dark:text-sky-400">{item.id}</span>
+                  <span className="text-slate-400">&bull;</span>
+                  <span className="text-slate-500 font-semibold">{item.control || item.control_id}</span>
+                  <span className={`px-2 py-0.5 rounded text-[10.5px] font-bold ${
+                    item.severity === 'CRITICAL' 
+                      ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' 
+                      : 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
+                  }`}>
+                    {item.severity}
+                  </span>
                 </div>
-
-                <h2 className="serif-heading text-[22px] font-bold text-[#1A1917] mb-3">{item.title}</h2>
-
-                <div className="p-4 bg-[#E7E3DA] hairline-all mono-body text-[11.5px] text-[#4A4741]">
-                  <span className="mono-label text-[10px] text-[#9B3418] block mb-1">REMEDIATION ACTION:</span>
-                  {item.remediation}
+                
+                <div className="flex items-center gap-3 text-xs font-mono">
+                  <span className="text-slate-500">{item.sla}</span>
+                  <span className={`px-2.5 py-0.5 rounded-md font-bold text-[11px] ${
+                    isResolved 
+                      ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' 
+                      : 'bg-rose-500/15 text-rose-600 dark:text-rose-400'
+                  }`}>
+                    {item.status.toUpperCase()}
+                  </span>
                 </div>
-
-                {!isResolved && (
-                  <div className="mt-4 pt-3 hairline-t flex justify-end">
-                    {canRemediate ? (
-                      <button
-                        onClick={() => handleRemediate(item)}
-                        className="studio-btn-primary studio-btn text-[10px] py-1.5 px-3 flex items-center gap-1.5"
-                      >
-                        <Wrench size={12} />
-                        <span>[ {isLiveMode ? 'RESOLVE FINDING (API)' : 'SIMULATE REMEDIATION'} ]</span>
-                      </button>
-                    ) : (
-                      <button
-                        disabled
-                        className="studio-btn opacity-50 cursor-not-allowed text-[10px] py-1.5 px-3 border-dashed"
-                        title="Remediation simulation restricted for External Auditors and Read-Only Viewers."
-                      >
-                        [ REMEDIATION RESTRICTED: RBAC ]
-                      </button>
-                    )}
-                  </div>
-                )}
               </div>
-            );
-          })}
-        </div>
-      </main>
+
+              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                {item.title}
+              </h2>
+
+              <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+                <span className="text-[10.5px] font-mono font-bold text-sky-600 dark:text-sky-400 block uppercase">
+                  Automated Remediation Guidance:
+                </span>
+                <p className="leading-relaxed font-mono text-[11.5px]">{item.remediation}</p>
+              </div>
+
+              {!isResolved && (
+                <div className="pt-2 flex justify-end">
+                  {canRemediate ? (
+                    <button
+                      type="button"
+                      onClick={() => handleRemediate(item)}
+                      className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 rounded-xl text-xs font-bold transition-all duration-150 active:scale-[0.98] cursor-pointer flex items-center gap-1.5 shadow-xs border-none"
+                    >
+                      <Wrench size={13} />
+                      <span>{isLiveMode ? 'Resolve Finding (API)' : 'Simulate Remediation'}</span>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled
+                      className="px-3.5 py-1.5 rounded-xl opacity-50 cursor-not-allowed text-xs font-mono border border-dashed border-slate-300 dark:border-slate-700 text-slate-500"
+                      title="Remediation simulation restricted for External Auditors."
+                    >
+                      Remediation Restricted (RBAC)
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

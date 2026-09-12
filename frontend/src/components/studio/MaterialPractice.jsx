@@ -102,7 +102,7 @@ export default function MaterialPractice() {
               <Link
                 key={idx}
                 to={targetRoute}
-                className="bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-2xl p-5 sm:p-6 md:p-7 hover:border-[#9B3418]/40 dark:hover:border-[#FF6B4A]/40 transition-all duration-300 flex flex-col justify-between group shadow-sm hover:shadow-md hover:-translate-y-1 text-decoration-none"
+                className="bg-[#DCD7CB]/40 dark:bg-[#1A1917] border border-[#1A1917]/10 dark:border-[#E7E3DA]/10 rounded-xl p-5 sm:p-6 md:p-7 hover:border-[#9B3418]/40 dark:hover:border-[#FF6B4A]/40 transition-all duration-300 flex flex-col justify-between group shadow-sm hover:shadow-md hover:-translate-y-1 text-decoration-none"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4 sm:mb-5">
