@@ -17,9 +17,15 @@ import {
   initialAuditTrail 
 } from '../data/demo/rbac';
 
-const VALID_THEMES = new Set(['bone', 'obsidian', 'blueprint', 'auditor']);
-const THEME_ALIAS_MAP = { dark: 'obsidian', light: 'bone' };
-const DEFAULT_THEME = 'bone';
+const VALID_THEMES = new Set(['auditor', 'blueprint']);
+const THEME_ALIAS_MAP = { 
+  dark: 'blueprint', 
+  light: 'auditor', 
+  bone: 'auditor', 
+  obsidian: 'blueprint',
+  geometric: 'auditor'
+};
+const DEFAULT_THEME = 'auditor';
 const DEFAULT_DENSITY = 'editorial';
 
 // Restore user theme preference from persistent storage while validating schema boundaries
@@ -51,15 +57,16 @@ export const useDemoStore = create((set, get) => ({
   isDemoMode: true,
   theme: getInitialTheme(),
   density: getInitialDensity(),
-  isDarkMode: ['obsidian', 'blueprint'].includes(getInitialTheme()),
+  isDarkMode: getInitialTheme() === 'blueprint',
 
   // theme setter with storage sync
   setTheme: (val) => {
+    const validatedTheme = VALID_THEMES.has(val) ? val : (THEME_ALIAS_MAP[val] || DEFAULT_THEME);
     if (typeof document !== 'undefined') {
-      localStorage.setItem('grc_theme', val);
+      localStorage.setItem('grc_theme', validatedTheme);
     }
-    const isDark = ['obsidian', 'blueprint'].includes(val);
-    set({ theme: val, isDarkMode: isDark });
+    const isDark = validatedTheme === 'blueprint';
+    set({ theme: validatedTheme, isDarkMode: isDark });
   },
 
   // layout density switch for dense secops views
@@ -79,16 +86,15 @@ export const useDemoStore = create((set, get) => ({
   }),
 
   toggleDarkMode: () => set((state) => {
-    const nextTheme = state.theme === 'bone' ? 'obsidian' : 'bone';
+    const nextTheme = state.theme === 'blueprint' ? 'auditor' : 'blueprint';
     if (typeof document !== 'undefined') {
       localStorage.setItem('grc_theme', nextTheme);
     }
-    const isDark = ['obsidian', 'blueprint'].includes(nextTheme);
-    return { theme: nextTheme, isDarkMode: isDark };
+    return { theme: nextTheme, isDarkMode: nextTheme === 'blueprint' };
   }),
 
   setDarkMode: (val) => {
-    const nextTheme = val ? 'obsidian' : 'bone';
+    const nextTheme = val ? 'blueprint' : 'auditor';
     if (typeof document !== 'undefined') {
       localStorage.setItem('grc_theme', nextTheme);
     }
