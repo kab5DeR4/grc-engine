@@ -40,30 +40,31 @@ export const QuickStatStrip = memo(function QuickStatStrip({
   ];
 
   return (
+    // stat strip hitting different fr
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 font-mono">
       {stats.map((stat, i) => {
         const Icon = stat.icon;
         return (
           <div 
             key={i}
-            className="p-5 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-300 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-slate-500 dark:hover:border-slate-500 transition-all flex flex-col justify-between group"
+            className="p-5 sm:p-6 bg-[var(--surface)] rounded-xl border border-[var(--hairline)] shadow-sm hover:shadow-md hover:border-[var(--ink-muted)] transition-all flex flex-col justify-between group"
           >
             <div className="flex items-center justify-between gap-2 mb-3">
-              <span className="text-[10.5px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                0{i + 1}. {stat.label}
+              <span className="text-[10.5px] font-bold text-[var(--ink-muted)] uppercase tracking-wider">
+                <span className="tabular-nums">0{i + 1}</span>. {stat.label}
               </span>
-              <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                <Icon size={16} className="text-slate-900 dark:text-sky-400" />
+              <div className="p-2 rounded-xl bg-[var(--surface-raised)] border border-[var(--hairline)]">
+                <Icon size={16} className="text-[var(--ink)] dark:text-[var(--accent)]" />
               </div>
             </div>
 
             <div className="my-1">
-              <span className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white block tracking-tight">
+              <span className="text-2xl sm:text-3xl font-bold text-[var(--ink)] block tracking-tight tabular-nums">
                 {stat.value}
               </span>
             </div>
 
-            <div className="text-[11.5px] text-slate-500 dark:text-slate-400 mt-1">
+            <div className="text-[11.5px] text-[var(--ink-muted)] mt-1">
               {stat.sub}
             </div>
           </div>

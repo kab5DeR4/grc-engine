@@ -11,26 +11,27 @@ export const TelemetryPulseBanner = memo(function TelemetryPulseBanner({
   scanRunning = false,
 }) {
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-300 dark:border-slate-700/80 p-4 sm:p-5 font-mono text-slate-900 dark:text-slate-100 shadow-sm transition-colors">
+    // telemetry banner looking clean fr fr
+    <div className="bg-[var(--surface)] rounded-xl border border-[var(--hairline)] p-4 sm:p-5 font-mono text-[var(--ink)] shadow-sm transition-colors">
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         
         {/* Left Telemetry Eyebrow & Status */}
         <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2 border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">
-            <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></span>
-            <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
+          <div className="flex items-center gap-2 border border-[var(--hairline)] bg-[var(--surface-raised)] px-3 py-1 rounded-lg">
+            <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-[var(--pass)] animate-pulse' : 'bg-[var(--ink-muted)]'}`}></span>
+            <span className="text-[11px] font-bold text-[var(--ink)] uppercase tracking-wider">
               {isLive ? 'RUNTIME: FASTAPI STREAM' : 'RUNTIME: TELEMETRY ENGINE'}
             </span>
           </div>
 
-          <div className="text-xs text-slate-600 dark:text-slate-400">
+          <div className="text-xs text-[var(--ink-muted)]">
             {isLive ? (
               <span>
-                Continuous telemetry from endpoint <code className="text-slate-900 dark:text-white font-bold bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700">127.0.0.1:8000/api/v1</code> • Discovered: <strong className="text-slate-900 dark:text-white">{liveAssetsCount} assets</strong> • Active gaps: <strong className="text-rose-600 dark:text-rose-400">{liveFindingsCount} findings</strong>.
+                Continuous telemetry from endpoint <code className="text-[var(--code-ink)] font-bold bg-[var(--code-surface)] px-1.5 py-0.5 rounded border border-[var(--hairline)]">127.0.0.1:8000/api/v1</code> • Discovered: <strong className="text-[var(--ink)]"><span className="tabular-nums">{liveAssetsCount}</span> assets</strong> • Active gaps: <strong className="text-[var(--fail)]"><span className="tabular-nums">{liveFindingsCount}</span> findings</strong>.
               </span>
             ) : (
               <span>
-                Deterministic multi-cloud verification environment • 172 monitored assets • 482 canonical controls • 19 open SLA items.
+                Deterministic multi-cloud verification environment • <span className="tabular-nums">172</span> monitored assets • <span className="tabular-nums">482</span> canonical controls • <span className="tabular-nums">19</span> open SLA items.
               </span>
             )}
           </div>
@@ -42,22 +43,22 @@ export const TelemetryPulseBanner = memo(function TelemetryPulseBanner({
             type="button"
             onClick={onTriggerScan}
             disabled={scanRunning}
-            className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="px-3.5 py-1.5 bg-[var(--surface-raised)] hover:opacity-90 border border-[var(--hairline)] rounded-xl text-xs font-bold text-[var(--ink)] transition-colors flex items-center gap-1.5 active:scale-[0.97] cursor-pointer"
             title="Execute on-demand deterministic compliance scan"
           >
-            <RefreshCw size={12} className={scanRunning ? 'animate-spin text-sky-600' : ''} />
+            <RefreshCw size={12} className={scanRunning ? 'animate-spin text-[var(--accent)]' : ''} />
             <span>{scanRunning ? 'Evaluating...' : 'Audit Run'}</span>
           </button>
 
           {/* Mode Switcher */}
-          <div className="flex items-center border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-xl">
+          <div className="flex items-center border border-[var(--hairline)] bg-[var(--surface-raised)] p-1 rounded-xl">
             <button
               type="button"
               onClick={() => onToggleMode(false)}
               className={`px-3 py-1 text-xs rounded-lg font-semibold transition-all cursor-pointer ${
                 !isLive
-                  ? 'bg-white dark:bg-slate-700 text-slate-950 dark:text-white shadow-xs font-bold'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[var(--surface)] text-[var(--ink)] shadow-sm font-bold'
+                  : 'text-[var(--ink-muted)] hover:text-[var(--ink)]'
               }`}
             >
               Sandbox
@@ -68,8 +69,8 @@ export const TelemetryPulseBanner = memo(function TelemetryPulseBanner({
               onClick={() => onToggleMode(true)}
               className={`px-3 py-1 text-xs rounded-lg font-semibold transition-all cursor-pointer ${
                 isLive
-                  ? 'bg-white dark:bg-slate-700 text-slate-950 dark:text-white shadow-xs font-bold'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[var(--surface)] text-[var(--ink)] shadow-sm font-bold'
+                  : 'text-[var(--ink-muted)] hover:text-[var(--ink)]'
               }`}
               title={backendStatusMessage || 'Connect to FastAPI live backend'}
             >

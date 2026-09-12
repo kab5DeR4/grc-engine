@@ -98,15 +98,15 @@ const Dashboard = () => {
   const userName = currentUser?.name?.split(' ')[0] || 'Salung';
 
   return (
-    <div className="flex flex-col gap-8 max-w-[1520px] mx-auto pb-16 font-mono text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col gap-8 max-w-[1520px] mx-auto pb-16 font-mono text-slate-900 dark:text-slate-100">
       
       {/* Top Greeting Headline */}
       <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-        <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
           Welcome back, {userName}
         </h1>
-        <span className="text-xs text-gray-400">
-          LAST DRIFT EVALUATION: <strong className="text-gray-700 dark:text-gray-300">{lastScan}</strong>
+        <span className="text-xs text-slate-400">
+          LAST DRIFT EVALUATION: <strong className="text-slate-700 dark:text-slate-300">{lastScan}</strong>
         </span>
       </div>
 

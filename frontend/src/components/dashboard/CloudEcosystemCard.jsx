@@ -47,21 +47,22 @@ export const CloudEcosystemCard = memo(function CloudEcosystemCard({
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-300 dark:border-slate-700/80 p-6 md:p-8 shadow-sm font-mono text-slate-900 dark:text-slate-100 flex flex-col justify-between h-full">
+    // token refresh goes hard fr fr
+    <div className="bg-[var(--surface)] rounded-xl border border-[var(--hairline)] p-6 md:p-8 shadow-sm font-mono text-[var(--ink)] flex flex-col justify-between h-full">
       
       <div>
-        <div className="flex items-center justify-between gap-3 pb-5 border-b border-slate-200 dark:border-slate-700">
+        <div className="flex items-center justify-between gap-3 pb-5 border-b border-[var(--hairline)]">
           <div>
-            <span className="text-[10.5px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
+            <span className="text-[10.5px] font-bold text-[var(--ink-muted)] uppercase tracking-wider block">
               INFRASTRUCTURE CONNECTIVITY
             </span>
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">
+            <h3 className="text-xl sm:text-2xl font-bold text-[var(--ink)] mt-1">
               Connected Telemetry
             </h3>
           </div>
           <Link
             to="/dashboard/integrations"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-slate-500 text-xs font-bold text-slate-800 dark:text-slate-200 transition-colors bg-slate-50 dark:bg-slate-800"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-[var(--hairline)] hover:border-[var(--ink-muted)] text-xs font-bold text-[var(--ink)] transition-colors bg-[var(--surface-raised)] active:scale-[0.97]"
           >
             <span>MANAGE</span>
             <ArrowUpRight size={13} />
@@ -69,39 +70,40 @@ export const CloudEcosystemCard = memo(function CloudEcosystemCard({
         </div>
 
         {/* Rows */}
-        <div className="mt-4 divide-y divide-slate-200 dark:divide-slate-800">
+        <div className="mt-4 divide-y divide-[var(--hairline)]">
           {environments.map((env) => {
             const Icon = env.icon;
             const _isConnected = env.status === 'Connected';
             return (
               <div 
                 key={env.id}
-                className="py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl px-2 transition-colors group"
+                className="py-4 hover:bg-[var(--surface-raised)] rounded-xl px-2 transition-colors group"
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                      <Icon size={16} className="text-slate-900 dark:text-sky-400" />
+                    <div className="p-2 rounded-xl bg-[var(--surface-raised)] border border-[var(--hairline)]">
+                      <Icon size={16} className="text-[var(--ink)] dark:text-[var(--accent)]" />
                     </div>
                     <div>
-                      <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white block leading-tight">
+                      <span className="text-xs sm:text-sm font-bold text-[var(--ink)] block leading-tight">
                         {env.name}
                       </span>
-                      <span className="text-[10.5px] text-slate-500 dark:text-slate-400 block mt-0.5">
+                      <span className="text-[10.5px] text-[var(--ink-muted)] block mt-0.5">
                         {env.type}
                       </span>
                     </div>
                   </div>
 
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold bg-[var(--pass-surface)] text-[var(--pass)] border border-[var(--pass)]/30">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--pass)]"></span>
                     <span>ONLINE</span>
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-600 dark:text-slate-400 pl-11 pt-1 font-medium">
-                  <span>{env.metrics[0].label}: <strong className="text-slate-900 dark:text-white font-bold">{env.metrics[0].value}</strong></span>
-                  <span>{env.metrics[1].label}: <strong className="text-slate-900 dark:text-white font-bold">{env.metrics[1].value}</strong></span>
+                <div className="flex items-center justify-between text-[11px] text-[var(--ink-secondary)] pl-11 pt-1 font-medium">
+                  {/* tabular nums for the stats fr */}
+                  <span>{env.metrics[0].label}: <strong className="text-[var(--ink)] font-bold tabular-nums">{env.metrics[0].value}</strong></span>
+                  <span>{env.metrics[1].label}: <strong className="text-[var(--ink)] font-bold tabular-nums">{env.metrics[1].value}</strong></span>
                 </div>
               </div>
             );
@@ -110,9 +112,9 @@ export const CloudEcosystemCard = memo(function CloudEcosystemCard({
       </div>
 
       {/* Footer */}
-      <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div className="mt-5 pt-4 border-t border-[var(--hairline)] flex items-center justify-between text-xs text-[var(--ink-muted)]">
         <span>INGESTION: AST & POLLING</span>
-        <Link to="/assets" className="font-bold text-slate-900 dark:text-white hover:underline flex items-center gap-1">
+        <Link to="/assets" className="font-bold text-[var(--ink)] hover:underline flex items-center gap-1">
           <span>ASSETS INVENTORY</span>
           <span>→</span>
         </Link>

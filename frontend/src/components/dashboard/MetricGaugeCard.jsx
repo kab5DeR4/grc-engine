@@ -25,25 +25,26 @@ export const MetricGaugeCard = memo(function MetricGaugeCard({
   const markerY = 60 + radius * Math.sin(angleRad);
 
   return (
-    <div className="bg-[#E7E3DA] dark:bg-[#1E1D1A] hairline-all p-5 sm:p-6 flex flex-col justify-between h-full font-mono text-[#1A1917] dark:text-[#F5F3EF]">
+    // gauge card locked and loaded
+    <div className="bg-[var(--surface)] rounded-xl border border-[var(--hairline)] p-5 sm:p-6 flex flex-col justify-between h-full font-sans text-[var(--ink)] shadow-sm">
       
       {/* Top Header */}
       <div>
         <div className="flex items-center justify-between gap-2 mb-2">
-          <span className="mono-label text-[10px] text-[#9B3418] dark:text-[#FF6B4A] flex items-center gap-1.5 font-bold">
-            <span className="w-2 h-2 bg-[#9B3418] dark:bg-[#FF6B4A] inline-block"></span>
-            SECTION 01 — POSTURE ANALYSIS
+          <span className="text-[11px] font-mono font-bold text-[var(--accent)] flex items-center gap-1.5 uppercase tracking-wider">
+            <span className="w-1.5 h-1.5 bg-[var(--accent)] rounded-full animate-pulse"></span>
+            POSTURE ANALYSIS & DRIFT
           </span>
-          <span className="text-[10.5px] font-mono text-[#1A1917] dark:text-[#F5F3EF] flex items-center gap-1 border border-[#1A1917]/20 dark:border-[#F5F3EF]/20 px-2 py-0.5">
-            <ArrowUpRight size={12} className="text-[#9B3418] dark:text-[#FF6B4A]" />
-            <span>{isLive ? 'FASTAPI REAL' : `${trend} 7D DRIFT`}</span>
+          <span className="text-[11px] font-mono text-[var(--ink-secondary)] flex items-center gap-1 border border-[var(--hairline)] px-2 py-0.5 rounded-md bg-[var(--surface-raised)]">
+            <ArrowUpRight size={12} className="text-[var(--pass)]" />
+            <span>{isLive ? 'FASTAPI REAL' : <><span className="tabular-nums">{trend}</span> 7D DRIFT</>}</span>
           </span>
         </div>
 
-        <h3 className="font-serif text-2xl sm:text-3xl text-[#1A1917] dark:text-[#F5F3EF] tracking-tight leading-tight">
-          Deterministic <span className="serif-italic-pigment">System Posture</span>
+        <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--ink)]">
+          Deterministic System Posture
         </h3>
-        <p className="mono-body text-[12.5px] text-[#4A4741] dark:text-[#D1CCC0] mt-1">
+        <p className="text-xs text-[var(--ink-muted)] mt-1 leading-relaxed">
           Real-time mathematical evaluation across all canonical security controls and active infrastructure nodes.
         </p>
       </div>
@@ -57,7 +58,7 @@ export const MetricGaugeCard = memo(function MetricGaugeCard({
               cx="60"
               cy="60"
               r={radius + 6}
-              className="stroke-[#1A1917]/10 dark:stroke-[#F5F3EF]/10"
+              className="stroke-[var(--hairline)]"
               strokeWidth="1"
               strokeDasharray="2 3"
               fill="transparent"
@@ -66,110 +67,109 @@ export const MetricGaugeCard = memo(function MetricGaugeCard({
               cx="60"
               cy="60"
               r={radius}
-              className="stroke-[#1A1917]/15 dark:stroke-[#F5F3EF]/15"
+              className="stroke-[var(--hairline)]"
               strokeWidth="2"
               fill="transparent"
             />
             {/* Quadrant Ticks */}
-            <line x1="60" y1="6" x2="60" y2="12" className="stroke-[#1A1917]/40 dark:stroke-[#F5F3EF]/40" strokeWidth="1" />
-            <line x1="60" y1="108" x2="60" y2="114" className="stroke-[#1A1917]/40 dark:stroke-[#F5F3EF]/40" strokeWidth="1" />
-            <line x1="6" y1="60" x2="12" y2="60" className="stroke-[#1A1917]/40 dark:stroke-[#F5F3EF]/40" strokeWidth="1" />
-            <line x1="108" y1="60" x2="114" y2="60" className="stroke-[#1A1917]/40 dark:stroke-[#F5F3EF]/40" strokeWidth="1" />
+            <line x1="60" y1="6" x2="60" y2="12" className="stroke-[var(--hairline)]" strokeWidth="1" />
+            <line x1="60" y1="108" x2="60" y2="114" className="stroke-[var(--hairline)]" strokeWidth="1" />
+            <line x1="6" y1="60" x2="12" y2="60" className="stroke-[var(--hairline)]" strokeWidth="1" />
+            <line x1="108" y1="60" x2="114" y2="60" className="stroke-[var(--hairline)]" strokeWidth="1" />
 
-            {/* Main Score Line (Heavier stroke for distinction) */}
+            {/* Main Score Line */}
             <circle
               cx="60"
               cy="60"
               r={radius}
-              className="stroke-[#1A1917] dark:stroke-[#F5F3EF]"
+              className="stroke-[var(--accent)]"
               strokeWidth="4"
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
-              strokeLinecap="square"
+              strokeLinecap="round"
               fill="transparent"
               transform="rotate(-90 60 60)"
             />
 
-            {/* Pigment Marker at Current Angle */}
-            <rect
-              x={markerX - 2.5}
-              y={markerY - 2.5}
-              width="5"
-              height="5"
-              className="fill-[#9B3418] dark:fill-[#FF6B4A]"
+            {/* Indicator Marker */}
+            <circle
+              cx={markerX}
+              cy={markerY}
+              r={3}
+              className="fill-[var(--accent)]"
             />
           </svg>
 
           {/* Center Readout */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
-            <span className="font-serif text-3xl sm:text-4xl font-normal text-[#1A1917] dark:text-[#F5F3EF] leading-none">
+            <span className="text-3xl sm:text-4xl font-bold font-mono text-[var(--ink)] leading-none tabular-nums">
               {score}%
             </span>
-            <span className="mono-label text-[8px] text-[#9B3418] dark:text-[#FF6B4A] mt-1 font-bold">
+            <span className="text-[9px] font-mono text-[var(--accent)] mt-1 font-bold">
               {score >= 85 ? 'AUDIT READY' : 'DRIFT ACTION'}
             </span>
           </div>
         </div>
 
         {/* Scaled Construction Summary */}
-        <div className="flex-1 w-full space-y-1.5 text-xs">
-          <div className="flex justify-between items-center text-[10.5px] mono-label text-[#5E5A52] dark:text-[#9E988B] pb-1 hairline-b">
+        <div className="flex-1 w-full space-y-1.5 text-xs font-mono">
+          <div className="flex justify-between items-center text-[10.5px] text-[var(--ink-muted)] pb-1 border-b border-[var(--hairline)]">
             <span>VERIFICATION MODEL</span>
-            <span className="text-[#1A1917] dark:text-[#F5F3EF]">{totalControls} CONTROLS</span>
+            <span className="text-[var(--ink)] font-bold"><span className="tabular-nums">{totalControls}</span> CONTROLS</span>
           </div>
 
           <div className="flex justify-between items-center text-[11px] py-0.5">
-            <span className="text-[#4A4741] dark:text-[#D1CCC0]">EVALUATION METHOD:</span>
-            <span className="font-bold text-[#1A1917] dark:text-[#F5F3EF]">DETERMINISTIC AST</span>
+            <span className="text-[var(--ink-muted)]">EVALUATION METHOD:</span>
+            <span className="font-bold text-[var(--ink)]">DETERMINISTIC AST</span>
           </div>
           <div className="flex justify-between items-center text-[11px] py-0.5">
-            <span className="text-[#4A4741] dark:text-[#D1CCC0]">ATTRIBUTES SCANNED:</span>
-            <span className="text-[#1A1917] dark:text-[#F5F3EF]">IAM / S3 / KMS / REPOS</span>
+            <span className="text-[var(--ink-muted)]">ATTRIBUTES SCANNED:</span>
+            <span className="text-[var(--ink)]">IAM / S3 / KMS / REPOS</span>
           </div>
           <div className="flex justify-between items-center text-[11px] py-0.5">
-            <span className="text-[#4A4741] dark:text-[#D1CCC0]">AUDIT REPETITION:</span>
-            <span className="text-[#1A1917] dark:text-[#F5F3EF]">CONTINUOUS (24/7)</span>
+            <span className="text-[var(--ink-muted)]">AUDIT REPETITION:</span>
+            <span className="text-[var(--ink)]">CONTINUOUS (24/7)</span>
           </div>
         </div>
       </div>
 
       {/* Hairline-Ruled Definition List */}
-      <div className="hairline-t hairline-b divide-y divide-[#1A1917]/15 dark:divide-[#F5F3EF]/15 text-xs font-mono">
-        <div className="py-2 flex items-center justify-between">
+      <div className="border-t border-b border-[var(--hairline)] divide-y divide-[var(--hairline)] text-xs font-mono">
+        <div className="py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="mono-label text-[10px] text-[#9B3418] dark:text-[#FF6B4A]">PASS</span>
-            <span className="text-[#4A4741] dark:text-[#D1CCC0]">Verified Canonical Controls</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--pass-surface)] text-[var(--pass)]">PASS</span>
+            <span className="text-[var(--ink-secondary)] font-sans">Verified Canonical Controls</span>
           </div>
-          <div className="font-bold text-[#1A1917] dark:text-[#F5F3EF]">
-            {passing} <span className="text-[#6E6A61] font-normal">({passPercent}%)</span>
+          <div className="font-bold text-[var(--ink)] tabular-nums">
+            {passing} <span className="text-[var(--ink-muted)] font-normal">({passPercent}%)</span>
           </div>
         </div>
 
-        <div className="py-2 flex items-center justify-between">
+        <div className="py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="mono-label text-[10px] text-[#9B3418] dark:text-[#FF6B4A]">FAIL</span>
-            <span className="text-[#4A4741] dark:text-[#D1CCC0]">Non-Compliant Policy Drift</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--fail-surface)] text-[var(--fail)]">FAIL</span>
+            <span className="text-[var(--ink-secondary)] font-sans">Non-Compliant Policy Drift</span>
           </div>
-          <div className="font-bold text-[#9B3418] dark:text-[#FF6B4A]">
-            {failing} <span className="text-[#6E6A61] font-normal">({failPercent}%)</span>
+          <div className="font-bold text-[var(--fail)] tabular-nums">
+            {failing} <span className="text-[var(--ink-muted)] font-normal">({failPercent}%)</span>
           </div>
         </div>
 
-        <div className="py-2 flex items-center justify-between">
+        <div className="py-2.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="mono-label text-[10px] text-[#6E6A61]">SKIP</span>
-            <span className="text-[#4A4741] dark:text-[#D1CCC0]">Compensating Controls & Exceptions</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[var(--surface-raised)] text-[var(--ink-secondary)]">SKIP</span>
+            <span className="text-[var(--ink-secondary)] font-sans">Compensating Controls & Exceptions</span>
           </div>
-          <div className="text-[#1A1917] dark:text-[#F5F3EF]">
-            {skipped} <span className="text-[#6E6A61]">({skipPercent}%)</span>
+          <div className="text-[var(--ink-secondary)] tabular-nums">
+            {skipped} <span className="text-[var(--ink-muted)]">({skipPercent}%)</span>
           </div>
         </div>
       </div>
 
       {/* Footer Readout */}
-      <div className="pt-3 flex items-center justify-between text-[10px] font-mono text-[#5E5A52] dark:text-[#9E988B]">
+      <div className="pt-3 flex items-center justify-between text-[10.5px] font-mono text-[var(--ink-muted)]">
         <span>LEDGER: SHA-256 DIGEST VERIFIED</span>
-        <span>LAST DRIFT EVALUATION: {lastScan}</span>
+        <span>LAST DRIFT EVAL: {lastScan}</span>
       </div>
 
     </div>
