@@ -66,10 +66,5 @@ Drive the study from scroll progress through the section and derive every displa
 
 How copy arrives.
 
-Reveal blocks from {opacity:0, translateY(18-22px)} with .07s steps between siblings, scoped to a class added only when prefers-reduced-motion is not set. Anything already on screen at load — the wordmark lines and the subject — must reveal on requestAnimationFrame and must NOT be observed, because on a short viewport they can sit inside a negative root margin, never intersect, and stay invisible permanently. Keep a scroll-position-bound layer as well so the page still moves when the reader scrolls back up.
+Reveal blocks from {opacity:0, translateY(18-22px)} with .07s steps between siblings, scoped to a class added only when prefers-reduced-motion is not set. Anything already on screen at load — the wordmark lines and the subject — must reveal on requestAnimationFrame and must NOT be observed, because on a short viewport they can sit inside a negative root margin, never intersect, and stay invisible permanently. Keep a scroll-position-bound layer as well so the%dasurable facts. DO NOT invent awards, press quotes, client logos or testimonials. Anything drawn to scale must actually be to scale.
 
-## Evidence rules
-
-What the page may claim.
-
-Only the studio's own work and measurable facts. DO NOT invent awards, press quotes, client logos or testimonials. Anything drawn to scale must actually be to scale.
