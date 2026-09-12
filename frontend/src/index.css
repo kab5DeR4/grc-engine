@@ -3,50 +3,61 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   ENTERPRISE GRC MULTI-THEME SYSTEM (Clean White & Blueprint SecOps)
+   GRC ENGINE — ENTERPRISE DESIGN TOKEN SYSTEM v2.0
+   Two themes: Clean White (light) + Deep Naval (dark)
+   Three accents max: Sky (brand), Emerald (pass), Rose (fail)
    ========================================================================== */
 
-/* 1. Clean White (Default Light - WCAG AAA Compliant Enterprise Palette) */
-:root, .theme-auditor, .theme-light {
+/* --- Light Mode (default) ------------------------------------------------ */
+:root {
   --ground: #F8FAFC;
-  --ground-sub: #FFFFFF;
-  --panel: #FFFFFF;
-  --panel-elevated: #F1F5F9;
+  --surface: #FFFFFF;
+  --surface-raised: #F1F5F9;
   --ink: #0F172A;
-  --ink-sub: #334155;
-  --muted: #64748B;
-  --pigment: #0284C7;
-  --pigment-subtle: rgba(2, 132, 199, 0.08);
+  --ink-secondary: #334155;
+  --ink-muted: #64748B;
   --hairline: #CBD5E1;
   --hairline-subtle: #E2E8F0;
-  --grid-line: rgba(15, 23, 42, 0.03);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --accent: #0369A1;
+  --accent-hover: #0284C7;
+  --accent-subtle: rgba(3, 105, 161, 0.08);
+  --pass: #059669;
+  --pass-surface: rgba(5, 150, 105, 0.08);
+  --fail: #E11D48;
+  --fail-surface: rgba(225, 29, 72, 0.08);
+  --warn: #D97706;
+  --warn-surface: rgba(217, 119, 6, 0.06);
+  --code-surface: #020617;
+  --code-ink: #E2E8F0;
   color-scheme: light;
 }
 
-/* 2. Blueprint SecOps (Dark - High Contrast Deep Naval Slate) */
-.theme-blueprint, .dark {
-  --ground: #0B132B;
-  --ground-sub: #111D42;
-  --panel: #16223F;
-  --panel-elevated: #1E293B;
-  --ink: #F8FAFC;
-  --ink-sub: #CBD5E1;
-  --muted: #94A3B8;
-  --pigment: #38BDF8;
-  --pigment-subtle: rgba(56, 189, 248, 0.14);
-  --hairline: #334155;
-  --hairline-subtle: #1E293B;
-  --grid-line: rgba(56, 189, 248, 0.06);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+/* --- Dark Mode ----------------------------------------------------------- */
+.dark {
+  --ground: #0B0F17;
+  --surface: #111827;
+  --surface-raised: #1E293B;
+  --ink: #F1F5F9;
+  --ink-secondary: #CBD5E1;
+  --ink-muted: #94A3B8;
+  --hairline: #1E293B;
+  --hairline-subtle: #334155;
+  --accent: #38BDF8;
+  --accent-hover: #7DD3FC;
+  --accent-subtle: rgba(56, 189, 248, 0.12);
+  --pass: #34D399;
+  --pass-surface: rgba(52, 211, 153, 0.12);
+  --fail: #FB7185;
+  --fail-surface: rgba(251, 113, 133, 0.12);
+  --warn: #FBBF24;
+  --warn-surface: rgba(251, 191, 36, 0.10);
+  --code-surface: #020617;
+  --code-ink: #E2E8F0;
   color-scheme: dark;
 }
 
-* {
+/* --- Reset --------------------------------------------------------------- */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -55,12 +66,13 @@
 html, body {
   background-color: var(--ground);
   color: var(--ink);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.15s ease-out, color 0.15s ease-out;
 }
 
 #root {
@@ -70,14 +82,14 @@ html, body {
   color: var(--ink);
 }
 
-/* Typography Helpers */
+/* --- Typography Utilities ------------------------------------------------ */
 .font-serif {
   font-family: 'Instrument Serif', Georgia, serif;
   letter-spacing: -0.015em;
 }
 
 .font-mono {
-  font-family: 'Azeret Mono', 'SF Mono', Consolas, monospace;
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
 }
 
 .serif-heading {
@@ -87,78 +99,73 @@ html, body {
   line-height: 1.1;
 }
 
-.serif-italic-pigment {
+.serif-italic-accent {
   font-family: 'Instrument Serif', Georgia, serif;
   font-style: italic;
-  color: var(--pigment);
+  color: var(--accent);
 }
 
 .mono-label {
-  font-family: 'Azeret Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(0.625rem, 0.7vw, 0.6875rem);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   font-weight: 600;
 }
 
 .mono-body {
-  font-family: 'Azeret Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   line-height: 1.6;
-  color: var(--ink-sub);
+  color: var(--ink-secondary);
 }
 
-/* Structural Border Utilities (Visible, Crisp Boundaries) */
-.hairline-b {
-  border-bottom: 1px solid var(--hairline);
+/* tabular nums — use on all data/metrics */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
-.hairline-t {
-  border-top: 1px solid var(--hairline);
-}
+/* --- Hairline Border Utilities ------------------------------------------- */
+.hairline-b { border-bottom: 1px solid var(--hairline); }
+.hairline-t { border-top: 1px solid var(--hairline); }
+.hairline-l { border-left: 1px solid var(--hairline); }
+.hairline-r { border-right: 1px solid var(--hairline); }
+.hairline-all { border: 1px solid var(--hairline); }
 
-.hairline-l {
-  border-left: 1px solid var(--hairline);
-}
-
-.hairline-r {
-  border-right: 1px solid var(--hairline);
-}
-
-.hairline-all {
-  border: 1px solid var(--hairline);
-}
-
-/* Interactive elements */
+/* --- Interactive Defaults ------------------------------------------------ */
 button, a {
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
 }
 
-/* Studio Button System with WCAG High Contrast */
+/* --- Studio Button System ------------------------------------------------ */
 .studio-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Azeret Mono', monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 8px 16px;
-  background-color: var(--ground-sub);
+  background-color: var(--surface);
   color: var(--ink);
   border: 1px solid var(--hairline);
-  border-radius: 10px;
-  transition: all 0.15s ease-in-out;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .studio-btn:hover:not(:disabled) {
-  background-color: var(--panel-elevated);
-  border-color: var(--ink);
+  background-color: var(--surface-raised);
+  border-color: var(--ink-muted);
   color: var(--ink);
+}
+
+.studio-btn:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .studio-btn:disabled {
@@ -172,10 +179,9 @@ button, a {
   border: 1px solid #0F172A;
 }
 
-.theme-blueprint .studio-btn-primary,
 .dark .studio-btn-primary {
   background-color: #38BDF8;
-  color: #0B132B !important;
+  color: #0B0F17 !important;
   border: 1px solid #38BDF8;
 }
 
@@ -185,96 +191,44 @@ button, a {
   color: #FFFFFF !important;
 }
 
-.theme-blueprint .studio-btn-primary:hover:not(:disabled),
 .dark .studio-btn-primary:hover:not(:disabled) {
   background-color: #7DD3FC;
   border-color: #7DD3FC;
-  color: #0B132B !important;
+  color: #0B0F17 !important;
 }
 
-.studio-btn-pigment {
+.studio-btn-accent {
   background-color: transparent;
-  color: var(--pigment);
-  border: 1px solid var(--pigment);
+  color: var(--accent);
+  border: 1px solid var(--accent);
 }
 
-.studio-btn-pigment:hover:not(:disabled) {
-  background-color: var(--pigment-subtle);
-  color: var(--pigment);
-  border-color: var(--pigment);
+.studio-btn-accent:hover:not(:disabled) {
+  background-color: var(--accent-subtle);
+  color: var(--accent);
+  border-color: var(--accent);
 }
 
-/* Background compatibility shims for legacy landing / studio sub-components */
-.bg-\[\#E7E3DA\] {
-  background-color: var(--ground) !important;
-}
-
-.bg-\[\#DCD7CB\] {
-  background-color: var(--panel-elevated) !important;
-}
-
-.bg-\[\#1A1917\] {
-  background-color: var(--panel-elevated) !important;
-}
-
-.text-\[\#1A1917\] {
-  color: var(--ink) !important;
-}
-
-.text-\[\#E7E3DA\] {
-  color: var(--ink) !important;
-}
-
-.text-\[\#6E6A61\] {
-  color: var(--muted) !important;
-}
-
-.text-\[\#4A4741\] {
-  color: var(--ink-sub) !important;
-}
-
-.text-\[\#9B3418\] {
-  color: var(--pigment) !important;
-}
-
-.border-\[\#1A1917\] {
-  border-color: var(--hairline) !important;
-}
-
-.border-\[\#E7E3DA\] {
-  border-color: var(--hairline) !important;
-}
-
-.border-\[\#DCD7CB\] {
-  border-color: var(--hairline) !important;
-}
-
-.border-\[\#9B3418\] {
-  border-color: var(--pigment) !important;
-}
-
-/* Scrollbar styling */
+/* --- Scrollbar ----------------------------------------------------------- */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--ground-sub);
+  background: var(--surface);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--muted);
+  background: var(--ink-muted);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--pigment);
+  background: var(--accent);
 }
 
-/* ==========================================================================
-   DENSITY PREFERENCES (Editorial vs Compact SecOps)
-   ========================================================================== */
+/* --- Density Compact Mode ------------------------------------------------ */
 .density-compact main {
   padding-top: 1rem !important;
   padding-bottom: 1.5rem !important;
@@ -290,20 +244,14 @@ button, a {
   padding: 1rem !important;
 }
 
-.density-compact .gap-8 {
-  gap: 1rem !important;
+.density-compact .gap-8 { gap: 1rem !important; }
+.density-compact .gap-6 { gap: 0.75rem !important; }
+
+/* --- Reduced Motion ------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
-
-.density-compact .gap-6 {
-  gap: 0.75rem !important;
-}
-
-/* Subtle blueprint technical grid for dark engineering mode */
-.theme-blueprint body,
-.theme-blueprint #root {
-  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
-                    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
-

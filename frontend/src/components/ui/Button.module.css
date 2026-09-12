@@ -1,14 +1,19 @@
+/* button clicks feel snappy as heck */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-sans);
+  border-radius: 8px;
+  font-family: inherit;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
   gap: 0.5rem;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .button:disabled {
@@ -34,50 +39,50 @@
 
 /* Variants */
 .primary {
-  background-color: var(--accent-blue);
+  background-color: var(--accent);
   color: #ffffff;
 }
 
 .primary:hover:not(:disabled) {
-  background-color: #2563EB; /* slightly darker blue */
+  background-color: var(--accent-hover);
 }
 
 .secondary {
-  background-color: var(--panel-elevated);
-  border-color: var(--border-color);
-  color: var(--text-primary);
+  background-color: var(--surface-raised);
+  border-color: var(--hairline);
+  color: var(--ink);
 }
 
 .secondary:hover:not(:disabled) {
-  background-color: #262C33;
+  background-color: var(--surface-raised);
 }
 
 .outline {
   background-color: transparent;
-  border-color: var(--border-color);
-  color: var(--text-primary);
+  border-color: var(--hairline);
+  color: var(--ink);
 }
 
 .outline:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--surface-raised);
 }
 
 .ghost {
   background-color: transparent;
-  color: var(--text-secondary);
+  color: var(--ink-secondary);
 }
 
 .ghost:hover:not(:disabled) {
-  color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--ink);
+  background-color: var(--surface-raised);
 }
 
 .danger {
-  background-color: rgba(239, 68, 68, 0.1);
-  color: var(--accent-red);
-  border-color: rgba(239, 68, 68, 0.2);
+  background-color: var(--fail-surface);
+  color: var(--fail);
+  border-color: var(--fail-surface);
 }
 
 .danger:hover:not(:disabled) {
-  background-color: rgba(239, 68, 68, 0.2);
+  background-color: var(--fail-surface);
 }
