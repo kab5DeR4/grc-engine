@@ -1,47 +1,62 @@
-import { Settings } from 'lucide-react';
+import { Settings, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function IntegrationList({ filteredIntegrations, selectedIntegration, setSelectedIntegration, setTestResult }) {
   if (filteredIntegrations.length === 0) {
     return (
-      <div className="p-8 text-center bg-[#DCD7CB]/50 hairline-all mono-label text-[11px] text-[#6E6A61]">
-        NO INTEGRATIONS FOUND
+      <div className="lg:col-span-6 xl:col-span-5 p-12 text-center bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-mono text-slate-500">
+        NO INTEGRATIONS MATCHING CURRENT FILTER
       </div>
     );
   }
 
   return (
-    <div className="lg:col-span-6 xl:col-span-5 space-y-4">
+    <div className="lg:col-span-6 xl:col-span-5 space-y-3">
       {filteredIntegrations.map((item) => {
-        const isSelected = selectedIntegration.id === item.id;
+        const isSelected = selectedIntegration?.id === item.id;
         const ItemIcon = item.icon || Settings;
+        const isConnected = item.status === 'CONNECTED';
+
         return (
-          <div
+          <button
             key={item.id}
+            type="button"
             onClick={() => {
               setSelectedIntegration(item);
               setTestResult(null);
             }}
-            className={`p-4 cursor-pointer hairline-all transition-colors flex items-center gap-4 ${
-              isSelected ? 'bg-[#DCD7CB] border-l-4 border-l-[#9B3418]' : 'bg-[#E7E3DA] hover:bg-[#DCD7CB]/50'
+            className={`w-full text-left p-4 rounded-xl border transition-all cursor-pointer flex items-center gap-3.5 ${
+              isSelected 
+                ? 'bg-[var(--surface)] border-sky-500 dark:border-sky-500 shadow-sm ring-1 ring-sky-500/30' 
+                : 'bg-white/70 dark:bg-slate-900/70 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
             }`}
           >
-            <div className={`p-2 hairline-all ${isSelected ? 'bg-[#9B3418] text-[#E7E3DA]' : 'bg-[#F2F0EB] text-[#1A1917]'}`}>
+            <div className={`p-2.5 rounded-lg shrink-0 ${
+              isSelected 
+                ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20' 
+                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+            }`}>
               <ItemIcon size={20} />
             </div>
-            <div className="flex-1">
+
+            <div className="flex-1 min-w-0">
               <div className="flex justify-between items-center mb-1">
-                <h3 className="serif-heading text-[18px] font-semibold text-[#1A1917]">{item.name}</h3>
-                <span className={`px-2 py-0.5 mono-label text-[9px] ${
-                  item.status === 'CONNECTED' ? 'bg-[#1A1917] text-[#E7E3DA]' : 'border border-[#9B3418] text-[#9B3418]'
+                <h3 className="font-bold text-sm text-slate-900 dark:text-white truncate">
+                  {item.name}
+                </h3>
+                <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-semibold border flex items-center gap-1 shrink-0 ${
+                  isConnected 
+                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20' 
+                    : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20'
                 }`}>
-                  {item.status}
+                  {isConnected ? <CheckCircle2 size={10} /> : <AlertCircle size={10} />}
+                  <span>{item.status}</span>
                 </span>
               </div>
-              <div className="mono-label text-[10px] text-[#6E6A61]">
+              <div className="text-xs font-mono text-slate-500 dark:text-slate-400 truncate">
                 {item.type}
               </div>
             </div>
-          </div>
+          </button>
         );
       })}
     </div>

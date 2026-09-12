@@ -61,7 +61,7 @@ export default function DashboardIntegrations() {
         success: true,
         message: `Connection to ${selectedIntegration.name} verified OK (18ms latency).`,
       });
-    }, 800);
+    }, 700);
   };
 
   const handleConfigChange = (key, value) => {
@@ -98,8 +98,8 @@ export default function DashboardIntegrations() {
   const currentConfig = configState[selectedIntegration.id];
 
   return (
-    <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
-      <main className="py-12 px-6 md:px-12 max-w-[1400px] mx-auto">
+    <div className="w-full min-h-full bg-[var(--ground)] text-slate-900 dark:text-slate-100 font-sans pb-16">
+      <main className="max-w-[1400px] mx-auto">
         <IntegrationHeader />
 
         <IntegrationFilterBar 
