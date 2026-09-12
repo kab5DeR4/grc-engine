@@ -13,7 +13,7 @@ export const ROLE_DETAILS = {
     shortLabel: 'ADMIN',
     code: 'ROLE-01',
     description: 'Full sovereign administrative control over workspace, RBAC policies, API credentials, and scans.',
-    badgeClass: 'bg-[#9B3418] text-[#FFFFFF] border-[#9B3418]',
+    badgeClass: 'bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border-rose-300 dark:border-rose-800',
     clearanceLevel: 'LEVEL 5 — ROOT SOVEREIGN',
   },
   SECURITY_ENGINEER: {
@@ -22,7 +22,7 @@ export const ROLE_DETAILS = {
     shortLabel: 'SEC ENG',
     code: 'ROLE-02',
     description: 'Execution of live cluster scans, telemetry validation, remediation workflows, and control testing.',
-    badgeClass: 'bg-[#1A1917] text-[#E7E3DA] border-[#1A1917]',
+    badgeClass: 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-300 dark:border-sky-800',
     clearanceLevel: 'LEVEL 4 — SECOPS OPERATOR',
   },
   EXTERNAL_AUDITOR: {
@@ -31,7 +31,7 @@ export const ROLE_DETAILS = {
     shortLabel: 'AUDITOR',
     code: 'ROLE-03',
     description: 'Third-party compliance evaluation, read-only evidence verification, and attestation PDF generation.',
-    badgeClass: 'bg-transparent text-[#9B3418] border-[#9B3418]',
+    badgeClass: 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800',
     clearanceLevel: 'LEVEL 2 — ATTESTATION REVIEWER',
   },
   READ_ONLY_VIEWER: {
@@ -40,7 +40,7 @@ export const ROLE_DETAILS = {
     shortLabel: 'VIEWER',
     code: 'ROLE-04',
     description: 'Stakeholder read access to compliance posture dashboards and read-only evidence records.',
-    badgeClass: 'bg-transparent text-[#6E6A61] border-[#6E6A61]',
+    badgeClass: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700',
     clearanceLevel: 'LEVEL 1 — STAKEHOLDER READ',
   },
 };

@@ -67,7 +67,7 @@ const ThemeDensitySelector = memo(() => {
 
       {/* Menú de personalización ultra limpio y profesional */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[280px] bg-white dark:bg-slate-900 rounded-2xl border border-slate-300 dark:border-slate-700 p-3 shadow-2xl z-50 animate-fade-down font-mono">
+        <div className="absolute right-0 mt-2 w-[280px] bg-[var(--surface)] rounded-xl border border-slate-300 dark:border-slate-700 p-3 shadow-md z-50 animate-fade-down font-mono">
           <div className="flex justify-between items-center pb-2.5 border-b border-slate-200 dark:border-slate-800 mb-2.5">
             <span className="text-[10px] text-slate-900 dark:text-sky-400 font-bold uppercase tracking-wider">ENTERPRISE THEME</span>
             <span className="text-[9.5px] text-slate-500 dark:text-slate-400 uppercase font-semibold">{density}</span>
@@ -84,7 +84,7 @@ const ThemeDensitySelector = memo(() => {
                   className={`w-full p-2.5 rounded-xl border text-left transition-all flex items-center justify-between cursor-pointer ${
                     isSelected
                       ? 'bg-slate-100 dark:bg-slate-800 border-slate-900 dark:border-sky-400 shadow-xs'
-                      : 'bg-white dark:bg-slate-900/60 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700'
+                      : 'bg-[var(--surface)]/60 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 hover:border-slate-300 dark:hover:border-slate-700'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
