@@ -1,10 +1,11 @@
+/* sidebar navigation hits different */
 .sidebar {
   width: 250px;
-  background-color: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
+  background-color: var(--surface);
+  border-right: 1px solid var(--hairline);
   display: flex;
   flex-direction: column;
-  transition: width 0.2s ease;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
 
@@ -14,7 +15,7 @@
 
 .header {
   padding: 1.5rem 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .logo {
@@ -22,13 +23,13 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
-  color: var(--text-primary);
+  color: var(--ink);
 }
 
 .logoIcon {
   width: 24px;
   height: 24px;
-  color: var(--accent-blue);
+  color: var(--accent);
   flex-shrink: 0;
 }
 
@@ -44,9 +45,9 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem;
-  background-color: var(--panel-bg);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
+  background-color: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--hairline);
   cursor: pointer;
 }
 
@@ -54,7 +55,7 @@
   width: 32px;
   height: 32px;
   border-radius: 4px;
-  background-color: var(--accent-blue);
+  background-color: var(--accent);
   color: #fff;
   display: flex;
   align-items: center;
@@ -79,7 +80,7 @@
 
 .workspaceEnv {
   font-size: 0.75rem;
-  color: var(--text-muted);
+  color: var(--ink-muted);
 }
 
 .nav {
@@ -91,7 +92,7 @@
 .navSectionTitle {
   font-size: 0.75rem;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--ink-muted);
   font-weight: 600;
   padding: 0 0.75rem;
   margin-bottom: 0.5rem;
@@ -103,25 +104,25 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 0.75rem;
-  border-radius: var(--radius-sm);
-  color: var(--text-secondary);
+  border-radius: 6px;
+  color: var(--ink-secondary);
   margin-bottom: 0.25rem;
-  transition: all 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .navItem:hover {
-  background-color: var(--panel-elevated);
-  color: var(--text-primary);
+  background-color: var(--surface-raised);
+  color: var(--ink);
 }
 
 .navItemActive {
-  background-color: rgba(59, 130, 246, 0.1); /* accent blue transparent */
-  color: var(--accent-blue);
+  background-color: var(--accent-subtle);
+  color: var(--accent);
 }
 
 .navItemActive:hover {
-  background-color: rgba(59, 130, 246, 0.15);
-  color: var(--accent-blue);
+  background-color: var(--accent-subtle);
+  color: var(--accent);
 }
 
 .navIcon {
@@ -138,7 +139,7 @@
 
 .footer {
   padding: 1rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--hairline);
 }
 
 .collapseButton {
@@ -146,14 +147,14 @@
   padding: 0.5rem;
   background: none;
   border: 1px solid transparent;
-  color: var(--text-muted);
+  color: var(--ink-muted);
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
   font-size: 0.875rem;
-  transition: all 0.2s ease;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .collapseButton:hover {
-  background-color: var(--panel-elevated);
-  color: var(--text-primary);
+  background-color: var(--surface-raised);
+  color: var(--ink);
 }

@@ -1,9 +1,10 @@
+/* layout shell looking clean fr */
 .container {
   display: flex;
   height: 100vh;
   width: 100vw;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(--ground);
+  color: var(--ink);
   overflow: hidden;
 }
 
@@ -18,5 +19,5 @@
   flex: 1;
   overflow-y: auto;
   padding: 2rem;
-  background-color: var(--bg-primary);
+  background-color: var(--ground);
 }

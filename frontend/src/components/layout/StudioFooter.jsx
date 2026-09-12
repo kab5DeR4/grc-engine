@@ -1,124 +1,234 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail } from 'lucide-react';
+import { Mail, ArrowUp, ExternalLink } from 'lucide-react';
 
-const GithubIcon = ({ size = 18 }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4"></path>
-  </svg>
-);
+function GithubIcon({ size = 16, className = '' }) {
+  return (
+    <svg 
+      width={size} 
+      height={size} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      className={className}
+    >
+      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+      <path d="M9 18c-4.51 2-5-2-7-2" />
+    </svg>
+  );
+}
 
-const LinkedinIcon = ({ size = 18 }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-    <rect width="4" height="12" x="2" y="9"></rect>
-    <circle cx="4" cy="4" r="2"></circle>
-  </svg>
-);
+function LinkedinIcon({ size = 16, className = '' }) {
+  return (
+    <svg 
+      width={size} 
+      height={size} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round" 
+      className={className}
+    >
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect width="4" height="12" x="2" y="9" />
+      <circle cx="4" r="2" />
+    </svg>
+  );
+}
 
 const StudioFooter = memo(function StudioFooter() {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <footer className="w-full bg-[#E7E3DA] dark:bg-[#121110] text-[#1A1917] dark:text-[#E7E3DA] border-t border-[#1A1917]/10 dark:border-[#E7E3DA]/10 pt-14 pb-8 px-4 sm:px-6 md:px-8 lg:px-12 font-sans transition-colors duration-200">
-      <div className="w-full max-w-[92vw] 2xl:max-w-[1600px] mx-auto">
+    <footer className="w-full bg-slate-100/80 dark:bg-[var(--ground)] text-slate-900 dark:text-slate-100 border-t border-slate-200 dark:border-slate-800 pt-14 pb-10 px-4 sm:px-6 md:px-8 font-sans transition-colors">
+      <div className="max-w-7xl mx-auto space-y-10">
         
-        {/* Main Footer Links Layout */}
-        <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 flex-1 w-full">
+        {/* Top 4-Column Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-8 border-b border-slate-200 dark:border-slate-800">
+          
+          {/* Brand Column (Col 4) */}
+          <div className="lg:col-span-4 space-y-4">
+            <Link to="/" className="inline-flex items-center gap-2 text-decoration-none">
+              <div className="w-7 h-7 rounded-lg bg-slate-900 dark:bg-sky-400 flex items-center justify-center text-white dark:text-slate-950 font-bold text-xs">
+                G
+              </div>
+              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                GRC Engine<span className="text-sky-600 dark:text-sky-400">.</span>
+              </span>
+            </Link>
             
-            {/* Brand Column */}
-            <div>
-              <Link to="/" className="inline-block font-serif text-[20px] font-bold text-[#1A1917] dark:text-[#E7E3DA] tracking-tight mb-3 text-decoration-none">
-                GRC Engine<span className="text-[#9B3418] dark:text-[#FF6B4A]">.</span>
-              </Link>
-              <p className="text-[13px] text-[#6E6A61] dark:text-[#9E988B] leading-relaxed max-w-xs">
-                An enterprise-grade governance, risk & compliance engine built for continuous cloud telemetry and automated auditor-ready proof generation.
-              </p>
-            </div>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xs">
+              Infrastructure-native compliance evidence. Turn real technical configuration state into deterministic, audit-ready verification.
+            </p>
 
-            {/* Product Column */}
-            <div>
-              <div className="text-[12px] font-semibold tracking-wider text-[#9B3418] dark:text-[#FF6B4A] uppercase mb-4">
-                Product
-              </div>
-              <ul className="space-y-2.5 text-[13.5px]">
-                <li><Link to="/features" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Features</Link></li>
-                <li><Link to="/features" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Platform Scope</Link></li>
-                <li><Link to="/docs" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Documentation</Link></li>
-                <li><Link to="/integrations" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Integrations</Link></li>
-              </ul>
-            </div>
-
-            {/* Company Column */}
-            <div>
-              <div className="text-[12px] font-semibold tracking-wider text-[#9B3418] dark:text-[#FF6B4A] uppercase mb-4">
-                Company
-              </div>
-              <ul className="space-y-2.5 text-[13.5px]">
-                <li><Link to="/contact" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">About Us</Link></li>
-                <li><Link to="/contact" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Blog</Link></li>
-                <li><Link to="/contact" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Careers</Link></li>
-                <li><Link to="/contact" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Contact Sales</Link></li>
-              </ul>
-            </div>
-
-            {/* Legal Column */}
-            <div>
-              <div className="text-[12px] font-semibold tracking-wider text-[#9B3418] dark:text-[#FF6B4A] uppercase mb-4">
-                Legal & Trust
-              </div>
-              <ul className="space-y-2.5 text-[13.5px]">
-                <li><Link to="/docs" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Privacy Policy</Link></li>
-                <li><Link to="/docs" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Terms of Service</Link></li>
-                <li><Link to="/docs" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Security Overview</Link></li>
-                <li><Link to="/docs" className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#1A1917] dark:hover:text-[#E7E3DA] transition-colors">Cookie Preferences</Link></li>
-              </ul>
+            <div className="flex items-center gap-2 pt-2">
+              <a 
+                href="https://github.com/kab5DeR4/grc-engine" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="w-8 h-8 rounded-lg bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors shadow-xs" 
+                title="GitHub Repository"
+              >
+                <GithubIcon size={15} />
+              </a>
+              <a 
+                href="https://www.linkedin.com/in/roshan-nale-551006316/" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="w-8 h-8 rounded-lg bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors shadow-xs" 
+                title="LinkedIn Profile"
+              >
+                <LinkedinIcon size={15} />
+              </a>
+              <a 
+                href="mailto:rnale88@gmail.com" 
+                className="w-8 h-8 rounded-lg bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 transition-colors shadow-xs" 
+                title="Contact Email"
+              >
+                <Mail size={15} />
+              </a>
             </div>
           </div>
 
-          {/* Social Links Cluster */}
-          <div className="flex flex-row md:flex-col items-center md:items-end space-x-5 md:space-x-0 md:space-y-4 shrink-0">
-            <a 
-              href="https://github.com/rnale88" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#9B3418] dark:hover:text-[#FF6B4A] transition-colors p-2 rounded-lg hover:bg-[#1A1917]/5 dark:hover:bg-[#E7E3DA]/5" 
-              aria-label="GitHub"
-            >
-              <GithubIcon size={19} />
-            </a>
-            <a 
-              href="https://www.linkedin.com/in/roshan-nale-551006316/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BRL8PJz8UQ8Gs1mr1jf6SuA%3D%3D" 
-              target="_blank" 
-              rel="noreferrer" 
-              className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#9B3418] dark:hover:text-[#FF6B4A] transition-colors p-2 rounded-lg hover:bg-[#1A1917]/5 dark:hover:bg-[#E7E3DA]/5" 
-              aria-label="LinkedIn"
-            >
-              <LinkedinIcon size={19} />
-            </a>
-            <a 
-              href="mailto:rnale88@gmail.com" 
-              className="text-[#6E6A61] dark:text-[#9E988B] hover:text-[#9B3418] dark:hover:text-[#FF6B4A] transition-colors p-2 rounded-lg hover:bg-[#1A1917]/5 dark:hover:bg-[#E7E3DA]/5" 
-              aria-label="Email"
-            >
-              <Mail size={19} />
-            </a>
+          {/* Product Column (Col 3) */}
+          <div className="lg:col-span-3 space-y-3 text-xs sm:text-sm">
+            <div className="font-bold font-mono uppercase tracking-wider text-slate-900 dark:text-slate-200 text-xs">
+              Product
+            </div>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/dashboard" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Posture Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/controls" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Controls Matrix
+                </Link>
+              </li>
+              <li>
+                <Link to="/archive" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Evidence Vault (SHA-256)
+                </Link>
+              </li>
+              <li>
+                <Link to="/findings" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Findings &amp; Remediation
+                </Link>
+              </li>
+              <li>
+                <Link to="/reports" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Audit Reports
+                </Link>
+              </li>
+            </ul>
           </div>
+
+          {/* Frameworks Column (Col 3) */}
+          <div className="lg:col-span-3 space-y-3 text-xs sm:text-sm">
+            <div className="font-bold font-mono uppercase tracking-wider text-slate-900 dark:text-slate-200 text-xs">
+              Frameworks
+            </div>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/features" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  SOC 2 Type II
+                </Link>
+              </li>
+              <li>
+                <Link to="/features" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  ISO / IEC 27001:2022
+                </Link>
+              </li>
+              <li>
+                <Link to="/features" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  NIST CSF v2.0
+                </Link>
+              </li>
+              <li>
+                <Link to="/features" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  CIS Controls v8
+                </Link>
+              </li>
+              <li>
+                <Link to="/features" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  HIPAA &amp; GDPR Art 32
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources Column (Col 2) */}
+          <div className="lg:col-span-2 space-y-3 text-xs sm:text-sm">
+            <div className="font-bold font-mono uppercase tracking-wider text-slate-900 dark:text-slate-200 text-xs">
+              Resources
+            </div>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/docs" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link to="/architecture" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Architecture
+                </Link>
+              </li>
+              <li>
+                <Link to="/integrations" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Integrations
+                </Link>
+              </li>
+              <li>
+                <a 
+                  href="https://github.com/kab5DeR4/grc-engine" 
+                  target="_blank" 
+                  rel="noreferrer" 
+                  className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none flex items-center gap-1"
+                >
+                  <span>GitHub</span>
+                  <ExternalLink size={12} className="opacity-70" />
+                </a>
+              </li>
+              <li>
+                <Link to="/contact" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
         </div>
 
-        {/* Bottom Copyright & Back to Top Bar */}
-        <div className="pt-6 border-t border-[#1A1917]/10 dark:border-[#E7E3DA]/10 flex flex-col sm:flex-row justify-between items-center text-[12.5px] text-[#6E6A61] dark:text-[#9E988B] gap-3">
-          <div>© {new Date().getFullYear()} GRC Engine by Roshan Nale. All rights reserved.</div>
-          <button 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
-            className="text-[#9B3418] dark:text-[#FF6B4A] hover:underline font-medium flex items-center gap-1 cursor-pointer bg-transparent border-none"
-          >
-            Back to top ↑
-          </button>
+        {/* Bottom Legal Row */}
+        <div className="flex flex-col sm:flex-row justify-between items-center text-xs font-mono text-slate-500 gap-4">
+          <div>
+            &copy; {new Date().getFullYear()} GRC Engine by Roshan Nale. Open-source under MIT License.
+          </div>
+          <div className="flex items-center gap-6">
+            <span>Deterministic &bull; Cryptographic &bull; Sovereign</span>
+            <button 
+              onClick={scrollToTop} 
+              className="text-sky-600 dark:text-sky-400 hover:underline font-semibold flex items-center gap-1 cursor-pointer bg-transparent border-none"
+            >
+              <span>Back to top</span>
+              <ArrowUp size={12} />
+            </button>
+          </div>
         </div>
 
       </div>
     </footer>
   );
 });
+
+StudioFooter.displayName = 'StudioFooter';
 
 export default StudioFooter;

@@ -42,13 +42,13 @@ const Sidebar = memo(function Sidebar({ collapsed, onToggle }) {
   const roleDetail = ROLE_DETAILS[currentUser?.role] || ROLE_DETAILS.PLATFORM_ADMIN;
 
   return (
-    <aside className={`h-full bg-white dark:bg-slate-900 border-r border-slate-300 dark:border-slate-800 flex flex-col justify-between transition-all duration-200 z-20 ${collapsed ? 'w-[72px]' : 'w-[250px]'}`}>
+    <aside className={`h-full bg-[var(--surface)] border-r border-[var(--hairline)] flex flex-col justify-between transition-all duration-200 z-20 ${collapsed ? 'w-[72px]' : 'w-[250px]'}`}>
       
       <div>
         {/* Header Enterprise Brand */}
-        <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800">
+        <div className="p-4 sm:p-5 border-b border-[var(--hairline)]">
           <Link to="/" className="flex items-center gap-3 cursor-pointer group select-none text-decoration-none">
-            <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 group-hover:border-slate-900 dark:group-hover:border-white transition-colors shrink-0">
+            <div className="p-2 rounded-lg bg-[var(--surface-raised)] border border-[var(--hairline)] group-hover:border-[var(--ink)] transition-colors shrink-0">
               <Box size={20} className="text-slate-900 dark:text-sky-400" />
             </div>
             {!collapsed && (
@@ -79,10 +79,10 @@ const Sidebar = memo(function Sidebar({ collapsed, onToggle }) {
                     key={item.name}
                     to={item.href}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-3 py-2.5 text-xs rounded-xl transition-all ${
+                      `flex items-center gap-3 px-3 py-2.5 text-xs rounded-lg transition-all ${
                         isActive
-                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-950 dark:text-white font-bold shadow-xs border border-slate-300 dark:border-slate-700'
-                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                          ? 'bg-[var(--surface-raised)] text-[var(--ink)] font-bold shadow-sm border border-[var(--hairline)]'
+                          : 'text-[var(--ink-muted)] hover:text-[var(--ink)] hover:bg-[var(--surface-raised)]'
                       }`
                     }
                     title={collapsed ? item.name : undefined}
@@ -100,11 +100,11 @@ const Sidebar = memo(function Sidebar({ collapsed, onToggle }) {
       </div>
 
       {/* Footer User Profile & Collapse */}
-      <div className="p-3 border-t border-slate-200 dark:border-slate-800 space-y-2 bg-slate-50 dark:bg-slate-900/60">
+      <div className="p-3 border-t border-[var(--hairline)] space-y-2 bg-[var(--ground)]">
         {!collapsed && currentUser && (
           <Link
             to="/settings/profile"
-            className="flex items-center gap-2.5 p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 transition-colors group block text-decoration-none"
+            className="flex items-center gap-2.5 p-2 bg-[var(--surface)] rounded-lg border border-[var(--hairline)] hover:border-[var(--ink-muted)] transition-colors group block text-decoration-none"
           >
             <img
               src={currentUser.avatar}

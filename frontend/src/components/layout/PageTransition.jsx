@@ -1,18 +1,28 @@
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 
-// page transition wrapper memoized for clean frame animations fr
-// keeps page layouts smooth across screen display scaling
+// page transition using Apple fluid spring physics and reduced motion respect fr
 const PageTransition = memo(({ children }) => {
   const location = useLocation();
+  const shouldReduceMotion = useReducedMotion();
   
   return (
     <motion.div
       key={location.pathname}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 8, scale: 0.995 }}
+      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.995 }}
+      transition={
+        shouldReduceMotion 
+          ? { duration: 0.15 } 
+          : { 
+              type: "spring", 
+              damping: 28, 
+              stiffness: 320, 
+              mass: 0.8 
+            }
+      }
       className="flex flex-col min-h-full w-full"
     >
       {children}
