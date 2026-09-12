@@ -2,95 +2,120 @@ import { memo } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { 
   LayoutDashboard, Shield, Files, AlertTriangle, 
-  Activity, FileText, Code, Network, Sliders, Server 
+  Activity, FileText, Code, Network, Sliders, Server,
+  Box, Settings
 } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 import { ROLE_DETAILS } from '../../data/demo/rbac';
 
-const navigation = [
-  { code: '01', name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { code: '02', name: 'Integrations', href: '/dashboard/integrations', icon: Network },
-  { code: '03', name: 'Assets Inventory', href: '/assets', icon: Server },
-  { code: '04', name: 'Architecture', href: '/architecture', icon: Code },
-  { code: '05', name: 'Controls Matrix', href: '/controls', icon: Shield },
-  { code: '06', name: 'Evidence Vault', href: '/archive', icon: Files },
-  { code: '07', name: 'Findings & Gaps', href: '/findings', icon: AlertTriangle },
-  { code: '08', name: 'Telemetry Scans', href: '/scans', icon: Activity },
-  { code: '09', name: 'Attestation Reports', href: '/reports', icon: FileText },
-  { code: '10', name: 'Settings & RBAC', href: '/settings/profile', icon: Sliders },
+const menuGroups = [
+  {
+    title: 'MAIN MENU',
+    items: [
+      { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+      { name: 'Assets Inventory', href: '/assets', icon: Server },
+      { name: 'Controls Matrix', href: '/controls', icon: Shield },
+      { name: 'Integrations', href: '/dashboard/integrations', icon: Network },
+      { name: 'Architecture', href: '/architecture', icon: Code },
+    ]
+  },
+  {
+    title: 'VERIFICATION & AUDIT',
+    items: [
+      { name: 'Findings & Gaps', href: '/findings', icon: AlertTriangle },
+      { name: 'Evidence Vault', href: '/archive', icon: Files },
+      { name: 'Telemetry Scans', href: '/scans', icon: Activity },
+      { name: 'Attestation Reports', href: '/reports', icon: FileText },
+    ]
+  },
+  {
+    title: 'MANAGEMENT',
+    items: [
+      { name: 'Roles & RBAC', href: '/settings/members', icon: Sliders },
+      { name: 'Settings', href: '/settings/profile', icon: Settings },
+    ]
+  }
 ];
 
-
-// memoize sidebar navigation component fr
 const Sidebar = memo(function Sidebar({ collapsed, onToggle }) {
   const { currentUser } = useDemoStore();
   const roleDetail = ROLE_DETAILS[currentUser?.role] || ROLE_DETAILS.PLATFORM_ADMIN;
 
   return (
-    <aside className={`h-full bg-[#DCD7CB] hairline-r flex flex-col justify-between transition-all duration-200 ${collapsed ? 'w-[68px]' : 'w-[240px]'}`}>
+    <aside className={`h-full bg-white dark:bg-slate-900 border-r border-slate-300 dark:border-slate-800 flex flex-col justify-between transition-all duration-200 z-20 ${collapsed ? 'w-[72px]' : 'w-[250px]'}`}>
       
       <div>
-        {/* Header */}
-        <div className="p-4 hairline-b">
-          <Link to="/" className="flex items-center gap-2 mb-3 cursor-pointer group select-none text-decoration-none" title="Return to Landing Page">
-            <span className="w-2.5 h-2.5 bg-[#9B3418] inline-block group-hover:scale-110 transition-transform"></span>
+        {/* Header Enterprise Brand */}
+        <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-slate-800">
+          <Link to="/" className="flex items-center gap-3 cursor-pointer group select-none text-decoration-none">
+            <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 group-hover:border-slate-900 dark:group-hover:border-white transition-colors shrink-0">
+              <Box size={20} className="text-slate-900 dark:text-sky-400" />
+            </div>
             {!collapsed && (
-              <span className="font-serif font-bold text-[16px] text-[#1A1917] tracking-tight group-hover:text-[#9B3418] transition-colors">
-                GRC ENGINE<span className="text-[#9B3418]">.</span>
-              </span>
+              <div className="min-w-0">
+                <span className="text-[10px] font-mono tracking-widest text-slate-500 dark:text-slate-400 block uppercase font-bold">
+                  ENTERPRISE
+                </span>
+                <span className="font-mono font-bold text-sm text-slate-900 dark:text-slate-100 truncate block">
+                  GRC Engine Studio
+                </span>
+              </div>
             )}
           </Link>
-          {!collapsed && (
-            <div className="bg-[#E7E3DA] hairline-all p-2.5 text-[10px] mono-label">
-              <div className="text-[#9B3418] font-bold">ACME SYSTEMS</div>
-              <div className="text-[#6E6A61] text-[9px]">ENV: PRODUCTION</div>
-            </div>
-          )}
         </div>
 
-        {/* Nav list */}
-        <nav className="p-2 space-y-1 overflow-y-auto max-h-[calc(100vh-230px)]">
-          {navigation.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.href}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 text-[11px] font-mono transition-colors border-l-2 ${
-                  isActive
-                    ? 'bg-[#E7E3DA] text-[#9B3418] border-[#9B3418] font-bold shadow-sm'
-                    : 'text-[#4A4741] border-transparent hover:bg-[#E7E3DA]/60 hover:text-[#1A1917]'
-                }`
-              }
-            >
-              <item.icon size={15} className="shrink-0" />
+        {/* Navigation Groups */}
+        <nav className="p-3 space-y-5 overflow-y-auto max-h-[calc(100vh-210px)] font-mono">
+          {menuGroups.map((group) => (
+            <div key={group.title}>
               {!collapsed && (
-                <div className="flex items-center justify-between w-full uppercase">
-                  <span>{item.name}</span>
-                  <span className="text-[9px] text-[#6E6A61] font-normal">[{item.code}]</span>
+                <div className="px-3 mb-1.5 text-[10px] tracking-wider text-slate-500 dark:text-slate-400 font-bold uppercase">
+                  {group.title}
                 </div>
               )}
-            </NavLink>
+              <div className="space-y-1">
+                {group.items.map((item) => (
+                  <NavLink
+                    key={item.name}
+                    to={item.href}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-3 py-2.5 text-xs rounded-xl transition-all ${
+                        isActive
+                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-950 dark:text-white font-bold shadow-xs border border-slate-300 dark:border-slate-700'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                      }`
+                    }
+                    title={collapsed ? item.name : undefined}
+                  >
+                    <item.icon size={16} className="shrink-0" />
+                    {!collapsed && (
+                      <span className="truncate">{item.name}</span>
+                    )}
+                  </NavLink>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
       </div>
 
-      {/* Footer Area with Current User and Collapse Toggle */}
-      <div className="p-3 hairline-t space-y-2 bg-[#DCD7CB]">
+      {/* Footer User Profile & Collapse */}
+      <div className="p-3 border-t border-slate-200 dark:border-slate-800 space-y-2 bg-slate-50 dark:bg-slate-900/60">
         {!collapsed && currentUser && (
           <Link
             to="/settings/profile"
-            className="flex items-center gap-2.5 p-2 bg-[#E7E3DA] hairline-all hover:border-[#9B3418] transition-colors group block text-decoration-none"
+            className="flex items-center gap-2.5 p-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-300 dark:border-slate-700 hover:border-slate-900 dark:hover:border-slate-500 transition-colors group block text-decoration-none"
           >
             <img
               src={currentUser.avatar}
               alt={currentUser.name}
-              className="w-7 h-7 hairline-all object-cover filter grayscale contrast-125 shrink-0"
+              className="w-7 h-7 rounded-lg object-cover filter grayscale shrink-0 border border-slate-300 dark:border-slate-600"
             />
-            <div className="min-w-0 flex-1">
-              <div className="text-[11px] font-bold text-[#1A1917] truncate group-hover:text-[#9B3418] transition-colors">
+            <div className="min-w-0 flex-1 font-mono">
+              <div className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
                 {currentUser.name}
               </div>
-              <div className="text-[9px] mono-label text-[#9B3418] truncate">
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
                 [{roleDetail.shortLabel}]
               </div>
             </div>
@@ -98,10 +123,11 @@ const Sidebar = memo(function Sidebar({ collapsed, onToggle }) {
         )}
 
         <button
+          type="button"
           onClick={onToggle}
-          className="w-full studio-btn text-[10px] py-1.5 px-2 text-center uppercase"
+          className="w-full py-2 px-3 text-[11px] font-mono font-bold rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors uppercase text-center cursor-pointer"
         >
-          {collapsed ? '→' : '[ ← COLLAPSE SIDEBAR ]'}
+          {collapsed ? '→' : '← Collapse'}
         </button>
       </div>
 
