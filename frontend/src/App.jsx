@@ -37,8 +37,8 @@ function App() {
 
   // Synchronize active theme and density CSS variables on the root document element for instant application-wide styling updates
   useEffect(() => {
-    const isDark = theme === 'obsidian' || theme === 'blueprint';
-    document.documentElement.className = `theme-${theme || 'bone'} density-${density || 'editorial'} ${isDark ? 'dark' : ''}`;
+    const isDark = theme === 'blueprint';
+    document.documentElement.className = `theme-${theme || 'auditor'} density-${density || 'editorial'} ${isDark ? 'dark' : ''}`;
   }, [theme, density]);
 
   return (
