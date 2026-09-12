@@ -92,47 +92,50 @@ export default function ControlsPage() {
   });
 
   return (
-    <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
+    <div className="w-full h-full font-mono text-slate-900 dark:text-slate-100">
       
-      <main className="py-12 px-6 md:px-12">
+      <main className="py-8 sm:py-12 max-w-[1520px] mx-auto space-y-8">
         {/* Page Header */}
-        <div className="mb-12 pb-6 hairline-b">
-          <div className="mono-label text-[#9B3418] mb-2">GRC CONTROLS CATALOGUE</div>
-          <h1 className="serif-heading text-[36px] md:text-[54px] text-[#1A1917]">
-            Control Specifications & <span className="serif-italic-pigment">Policy Matrix</span>
+        <div className="pb-6 border-b border-slate-300 dark:border-slate-800">
+          <div className="text-[10.5px] font-bold text-sky-600 dark:text-sky-400 mb-2 uppercase tracking-wider">
+            GRC CONTROLS CATALOGUE
+          </div>
+          <h1 className="serif-heading text-[34px] md:text-[48px] text-slate-900 dark:text-white font-bold">
+            Control Specifications & <span className="serif-italic-pigment text-sky-600 dark:text-sky-400">Policy Matrix</span>
           </h1>
-          <p className="mono-body text-[13px] text-[#4A4741] mt-3 max-w-3xl">
+          <p className="mono-body text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2 max-w-3xl">
             Complete inventory of technical governance controls enforcing posture integrity. Every control is continuously monitored via eBPF probes and cryptographic proof chains.
           </p>
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 pb-4 hairline-b">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           {/* Category Tabs */}
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
               <button
                 key={cat}
+                type="button"
                 onClick={() => setCategory(cat)}
-                className={`mono-label text-[10.5px] px-3 py-1.5 cursor-pointer border transition-colors ${
+                className={`text-[11px] font-bold px-3.5 py-1.5 rounded-xl border transition-all cursor-pointer ${
                   category === cat 
-                    ? 'bg-[#1A1917] text-[#E7E3DA] border-[#1A1917]' 
-                    : 'bg-transparent text-[#1A1917] border-[#1A1917]'
+                    ? 'bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 border-slate-900 dark:border-sky-400 shadow-xs' 
+                    : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400'
                 }`}
               >
-                [ {cat} ]
+                {cat}
               </button>
             ))}
           </div>
 
           {/* Search Input */}
-          <div className="w-full md:w-64">
+          <div className="w-full md:w-72">
             <input
               type="text"
               placeholder="SEARCH CONTROLS..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-1.5 text-[11px] mono-label text-[#1A1917] outline-none focus:border-[#9B3418]"
+              className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-slate-900 dark:focus:border-sky-400 shadow-xs"
             />
           </div>
         </div>
@@ -141,30 +144,34 @@ export default function ControlsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* Left Column: Control List */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="lg:col-span-7 space-y-3">
             {filteredControls.map((item) => {
               const isSelected = selectedControl.id === item.id;
               return (
                 <div
                   key={item.id}
                   onClick={() => setSelectedControl(item)}
-                  className={`p-5 cursor-pointer hairline-all transition-colors ${
-                    isSelected ? 'bg-[#DCD7CB] border-l-4 border-l-[#9B3418]' : 'bg-[#E7E3DA] hover:bg-[#DCD7CB]/50'
+                  className={`p-5 rounded-2xl cursor-pointer border transition-all ${
+                    isSelected 
+                      ? 'bg-slate-100 dark:bg-slate-800 border-slate-900 dark:border-sky-400 shadow-sm' 
+                      : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-800 hover:border-slate-400'
                   }`}
                 >
                   <div className="flex justify-between items-center mb-2">
-                    <span className="mono-label text-[#9B3418] font-bold">{item.id}</span>
-                    <span className="mono-label text-[10px] text-[#6E6A61]">{item.framework}</span>
+                    <span className="text-xs font-bold text-sky-600 dark:text-sky-400">{item.id}</span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">{item.framework}</span>
                   </div>
 
-                  <h3 className="serif-heading text-[22px] font-semibold text-[#1A1917] mb-2">
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">
                     {item.name}
                   </h3>
 
-                  <div className="flex justify-between items-center mt-3 pt-2 hairline-t text-[11px] mono-body">
-                    <span className="text-[#4A4741]">{item.telemetry}</span>
-                    <span className={`px-2 py-0.5 mono-label text-[9.5px] ${
-                      item.status === 'VERIFIED PASS' ? 'bg-[#1A1917] text-[#E7E3DA]' : 'border border-[#9B3418] text-[#9B3418]'
+                  <div className="flex justify-between items-center mt-3 pt-2 border-t border-slate-200 dark:border-slate-700 text-xs">
+                    <span className="text-slate-600 dark:text-slate-400 font-medium">{item.telemetry}</span>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                      item.status === 'VERIFIED PASS' 
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800' 
+                        : 'bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800'
                     }`}>
                       {item.status}
                     </span>
@@ -175,47 +182,55 @@ export default function ControlsPage() {
           </div>
 
           {/* Right Column: Selected Control Spec Drawer */}
-          <div className="lg:col-span-5 bg-[#DCD7CB] p-6 hairline-all sticky top-[80px] h-fit">
-            <div className="mono-label text-[#9B3418] mb-2">CONTROL SPECIFICATION SHEET</div>
-            <div className="font-serif text-[26px] font-bold text-[#1A1917] mb-4">
+          <div className="lg:col-span-5 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-300 dark:border-slate-800 shadow-sm sticky top-[80px] h-fit">
+            <div className="text-[10.5px] font-bold text-sky-600 dark:text-sky-400 mb-1 uppercase tracking-wider">
+              CONTROL SPECIFICATION SHEET
+            </div>
+            <div className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-4">
               {selectedControl.id}: {selectedControl.name}
             </div>
 
-            <div className="space-y-4 mono-body text-[12px] text-[#4A4741]">
-              <div className="p-3 bg-[#E7E3DA] hairline-all">
-                <div className="mono-label text-[10px] text-[#9B3418]">FRAMEWORK MAPPING</div>
-                <div className="text-[#1A1917] font-semibold mt-0.5">{selectedControl.framework}</div>
+            <div className="space-y-4 text-xs text-slate-700 dark:text-slate-300">
+              <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase">FRAMEWORK MAPPING</div>
+                <div className="text-slate-900 dark:text-white font-bold mt-0.5">{selectedControl.framework}</div>
               </div>
 
               <div>
-                <div className="mono-label text-[10.5px] text-[#1A1917] mb-1">DESCRIPTION</div>
-                <p className="leading-relaxed">{selectedControl.description}</p>
+                <div className="text-[10.5px] font-bold text-slate-900 dark:text-white uppercase mb-1">DESCRIPTION</div>
+                <p className="leading-relaxed text-slate-600 dark:text-slate-400">{selectedControl.description}</p>
               </div>
 
               <div>
-                <div className="mono-label text-[10.5px] text-[#1A1917] mb-1">TECHNICAL IMPLEMENTATION</div>
-                <p className="leading-relaxed bg-[#E7E3DA] p-3 hairline-all text-[11.5px]">
+                <div className="text-[10.5px] font-bold text-slate-900 dark:text-white uppercase mb-1">TECHNICAL IMPLEMENTATION</div>
+                <p className="leading-relaxed bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-[11.5px] text-slate-800 dark:text-slate-200 font-mono">
                   {selectedControl.implementation}
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="p-3 bg-[#E7E3DA] hairline-all">
-                  <div className="mono-label text-[9.5px] text-[#6E6A61]">SEVERITY LEVEL</div>
-                  <div className="mono-label text-[12px] text-[#9B3418] font-bold mt-1">{selectedControl.severity}</div>
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div className="text-[9.5px] font-bold text-slate-500 uppercase">SEVERITY LEVEL</div>
+                  <div className="text-xs text-rose-600 dark:text-rose-400 font-bold mt-1">{selectedControl.severity}</div>
                 </div>
-                <div className="p-3 bg-[#E7E3DA] hairline-all">
-                  <div className="mono-label text-[9.5px] text-[#6E6A61]">LAST VERIFIED</div>
-                  <div className="mono-label text-[10.5px] text-[#1A1917] mt-1">{new Date(selectedControl.lastVerified).toLocaleTimeString()}</div>
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <div className="text-[9.5px] font-bold text-slate-500 uppercase">LAST VERIFIED</div>
+                  <div className="text-xs text-slate-800 dark:text-slate-200 font-bold mt-1">{new Date(selectedControl.lastVerified).toLocaleTimeString()}</div>
                 </div>
               </div>
 
-              <div className="pt-4 hairline-t flex gap-3">
-                <Link to={`/archive?id=${selectedControl.id}`} className="studio-btn-primary studio-btn text-[10px] flex-1">
-                  [ VIEW EVIDENCE PROOF ]
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-700 flex gap-3">
+                <Link 
+                  to={`/archive?id=${selectedControl.id}`} 
+                  className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 rounded-xl text-xs font-bold text-center flex-1 transition-all shadow-xs"
+                >
+                  View Evidence Proof
                 </Link>
-                <Link to="/scans" className="studio-btn studio-btn-pigment text-[10px] flex-1">
-                  [ TEST CONTROL ]
+                <Link 
+                  to="/scans" 
+                  className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold text-center flex-1 transition-all"
+                >
+                  Test Control
                 </Link>
               </div>
             </div>
