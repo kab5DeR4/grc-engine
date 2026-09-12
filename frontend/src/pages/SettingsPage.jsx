@@ -62,37 +62,37 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="w-full h-full bg-[#E7E3DA] text-[#1A1917] font-mono">
-      <main className="py-10 px-4 sm:px-8 md:px-12">
+    <div className="w-full min-h-full bg-[var(--ground)] text-slate-900 dark:text-slate-100 font-sans pb-16">
+      <main className="max-w-[1400px] mx-auto">
         {/* Page Header */}
-        <div className="mb-8 pb-6 hairline-b flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div className="mb-8 pb-6 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <div className="mono-label text-[#9B3418] mb-1.5 flex items-center gap-1.5">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-mono font-semibold uppercase tracking-wider mb-2">
               <Sliders size={13} />
               <span>SETTINGS & GOVERNANCE MATRIX</span>
             </div>
-            <h1 className="serif-heading text-[34px] md:text-[48px] text-[#1A1917]">
-              User Profiles, Workspace & <span className="serif-italic-pigment">RBAC Governance</span>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+              User Profiles, Workspace & RBAC Governance
             </h1>
-            <p className="mono-body text-[12.5px] text-[#4A4741] mt-2 max-w-3xl">
+            <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 max-w-3xl leading-relaxed">
               Manage sovereign user credentials, multi-tenancy configurations, role-based access matrix, developer CI/CD tokens, alert webhooks, and tamper-evident audit logs.
             </p>
           </div>
 
           {/* Active Persona Badge */}
-          <div className="p-3 bg-[#DCD7CB] hairline-all self-start md:self-auto text-right">
-            <div className="mono-label text-[9.5px] text-[#6E6A61]">ACTIVE CONTEXT</div>
-            <div className="mono-label text-[12px] text-[#9B3418] font-bold mt-0.5">
+          <div className="p-3.5 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm self-start md:self-auto text-right">
+            <div className="text-[10px] font-mono font-bold text-slate-500 uppercase">ACTIVE CONTEXT</div>
+            <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mt-0.5">
               {roleDetail.name.toUpperCase()}
             </div>
-            <div className="text-[9px] text-[#4A4741] mt-0.5">
+            <div className="text-[11px] font-mono text-slate-400 mt-0.5">
               {currentUser.email}
             </div>
           </div>
         </div>
 
         {/* Tab Navigation Bar */}
-        <div className="flex flex-wrap gap-2 mb-8 pb-4 hairline-b">
+        <div className="flex flex-wrap gap-2 mb-8 pb-4 border-b border-slate-200 dark:border-slate-800">
           {SETTINGS_TABS.map((item) => {
             const isActive = activeTabId === item.id;
             return (
@@ -100,14 +100,14 @@ export default function SettingsPage() {
                 key={item.id}
                 type="button"
                 onClick={() => navigate(item.path)}
-                className={`mono-label text-[11px] px-3.5 py-2 border transition-all cursor-pointer flex items-center gap-2 ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center gap-2 ${
                   isActive
-                    ? 'bg-[#1A1917] text-[#E7E3DA] border-[#1A1917] font-bold shadow-sm'
-                    : 'bg-transparent text-[#1A1917] border-[#1A1917] hover:bg-[#DCD7CB]/60'
+                    ? 'bg-slate-900 text-white dark:bg-sky-500 dark:text-slate-950 shadow-xs'
+                    : 'bg-[var(--surface)] text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                 }`}
               >
-                <item.icon size={14} className={isActive ? 'text-[#9B3418]' : 'text-[#6E6A61]'} />
-                <span>[ {item.code} {item.name.toUpperCase()} ]</span>
+                <item.icon size={14} className={isActive ? 'text-sky-400 dark:text-slate-950' : 'text-slate-400'} />
+                <span>[{item.code} {item.name.toUpperCase()}]</span>
               </button>
             );
           })}

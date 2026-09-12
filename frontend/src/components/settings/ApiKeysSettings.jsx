@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { 
-  Key, Plus, Copy, Check, Lock, AlertTriangle, Terminal 
+  Key, Plus, Copy, Check, Lock, AlertTriangle, Terminal, X 
 } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 import { ROLES } from '../../data/demo/rbac';
@@ -48,7 +48,7 @@ export default function ApiKeysSettings() {
   };
 
   return (
-    <div className="space-y-8 font-mono">
+    <div className="space-y-6 font-sans text-slate-900 dark:text-slate-100">
       {/* RBAC Restriction Banner if not Platform Admin */}
       {!isPlatformAdmin && (
         <RbacPermissionBanner
@@ -58,14 +58,16 @@ export default function ApiKeysSettings() {
       )}
 
       {/* Developer Tokens Header Card */}
-      <div className="bg-[#DCD7CB] p-6 hairline-all">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 hairline-b">
+      <div className="bg-[var(--surface)] p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
-            <div className="mono-label text-[#9B3418] text-[10px]">CI/CD AUTOMATION CREDENTIALS</div>
-            <h2 className="serif-heading text-[26px] font-bold text-[#1A1917]">
+            <div className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
+              CI/CD AUTOMATION CREDENTIALS
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-0.5">
               Developer Tokens & CI/CD Pipeline Scanning
             </h2>
-            <p className="mono-body text-[11.5px] text-[#4A4741] mt-1 max-w-2xl">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 max-w-2xl leading-relaxed">
               Scoped API credentials used by GitHub Actions, GitLab CI/CD runners, Jenkins pipelines, and Terraform drift controllers to continuously validate compliance.
             </p>
           </div>
@@ -73,13 +75,15 @@ export default function ApiKeysSettings() {
           <button
             onClick={() => setShowCreateModal(true)}
             disabled={!isPlatformAdmin}
-            className={`studio-btn text-[10px] py-1.5 px-3 flex items-center gap-1.5 uppercase shrink-0 ${
-              isPlatformAdmin ? 'studio-btn-primary' : 'opacity-50 cursor-not-allowed'
+            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer ${
+              isPlatformAdmin 
+                ? 'bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950' 
+                : 'opacity-50 cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-500'
             }`}
             title={!isPlatformAdmin ? 'Requires Platform Admin role to provision API tokens' : ''}
           >
-            <Plus size={13} />
-            <span>GENERATE DEVELOPER TOKEN</span>
+            <Plus size={14} />
+            <span>GENERATE TOKEN</span>
           </button>
         </div>
 
@@ -90,45 +94,49 @@ export default function ApiKeysSettings() {
             return (
               <div
                 key={key.id}
-                className={`p-4 hairline-all flex flex-col md:flex-row md:items-center justify-between gap-3 transition-colors ${
-                  isRevoked ? 'bg-[#E7E3DA]/60 opacity-60' : 'bg-[#E7E3DA]'
+                className={`p-4 rounded-xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-3 ${
+                  isRevoked 
+                    ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-60' 
+                    : 'bg-slate-50/60 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/60'
                 }`}
               >
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-[#DCD7CB] hairline-all text-[#9B3418] shrink-0">
+                <div className="flex items-start gap-3.5">
+                  <div className="p-2.5 rounded-lg bg-[var(--surface)] border border-slate-200 dark:border-slate-700 text-sky-600 dark:text-sky-400 shrink-0">
                     <Key size={18} />
                   </div>
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-serif text-[17px] font-bold text-[#1A1917]">{key.name}</span>
-                      <span className={`mono-label text-[9px] px-1.5 py-0.5 ${
-                        isRevoked ? 'bg-[#6E6A61] text-[#FFFFFF]' : 'bg-[#1A1917] text-[#E7E3DA]'
+                      <span className="text-sm font-bold text-slate-900 dark:text-white">{key.name}</span>
+                      <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full border ${
+                        isRevoked 
+                          ? 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-300' 
+                          : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20'
                       }`}>
                         {key.status}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-1">
-                      <code className="text-[11px] bg-[#DCD7CB] px-2 py-0.5 hairline-all text-[#1A1917]">
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <code className="text-xs bg-slate-200 dark:bg-slate-950 px-2 py-0.5 rounded font-mono text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-800">
                         {key.maskedToken}
                       </code>
                       <button
                         onClick={() => handleCopy(key.maskedToken, key.id)}
-                        className="text-[#6E6A61] hover:text-[#9B3418] p-1 text-[10px] mono-label flex items-center gap-1"
+                        className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1 text-xs font-mono flex items-center gap-1 transition-colors"
                         title="Copy Prefix"
                       >
-                        {copiedKeyId === key.id ? <Check size={12} className="text-[#9B3418]" /> : <Copy size={12} />}
+                        {copiedKeyId === key.id ? <Check size={13} className="text-emerald-500" /> : <Copy size={13} />}
                       </button>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3 text-[10px] text-[#6E6A61] mt-2">
-                      <span>SCOPE: <span className="text-[#9B3418] font-semibold">{key.scope}</span></span>
+                    <div className="flex flex-wrap items-center gap-2 text-[10.5px] font-mono text-slate-500 mt-2">
+                      <span>SCOPE: <span className="text-sky-600 dark:text-sky-400 font-semibold">{key.scope}</span></span>
                       <span>•</span>
                       <span>CREATED: {key.createdAt}</span>
                       <span>•</span>
                       <span>EXPIRES: {key.expiresAt}</span>
                       <span>•</span>
-                      <span>LAST USED: <span className="text-[#1A1917]">{key.lastUsed}</span></span>
+                      <span>LAST USED: <span className="text-slate-700 dark:text-slate-300">{key.lastUsed}</span></span>
                     </div>
                   </div>
                 </div>
@@ -137,9 +145,9 @@ export default function ApiKeysSettings() {
                   {!isRevoked && isPlatformAdmin && (
                     <button
                       onClick={() => revokeApiKey(key.id)}
-                      className="studio-btn text-[9.5px] py-1 px-2.5 text-[#9B3418] hover:border-[#9B3418]"
+                      className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-500 hover:bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-mono transition-colors cursor-pointer"
                     >
-                      [ REVOKE TOKEN ]
+                      REVOKE TOKEN
                     </button>
                   )}
                 </div>
@@ -150,19 +158,19 @@ export default function ApiKeysSettings() {
       </div>
 
       {/* CI/CD Integration Guide Snippet Box */}
-      <div className="bg-[#1A1917] text-[#E7E3DA] p-6 hairline-all">
-        <div className="pb-3 border-b border-neutral-700 flex justify-between items-center">
+      <div className="bg-slate-950 text-slate-100 p-6 md:p-8 rounded-xl border border-slate-800 shadow-sm">
+        <div className="pb-3 border-b border-slate-800 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Terminal size={16} className="text-[#9B3418]" />
-            <span className="mono-label text-[11px] text-[#E7E3DA] font-bold">
+            <Terminal size={16} className="text-sky-400" />
+            <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
               CI/CD PIPELINE INTEGRATION SNIPPET (GITHUB ACTIONS)
             </span>
           </div>
-          <span className="mono-label text-[9.5px] text-[#A8A29E]">POSIX / YAML</span>
+          <span className="text-[11px] font-mono text-slate-400">YAML SPEC</span>
         </div>
 
-        <div className="pt-4 text-[11.5px] leading-relaxed text-[#D1CCC0]">
-          <pre className="overflow-x-auto bg-neutral-900 p-4 hairline-all text-[#E7E3DA] font-mono">
+        <div className="pt-4 text-xs leading-relaxed">
+          <pre className="overflow-x-auto bg-slate-900 p-4 rounded-xl border border-slate-800 text-slate-200 font-mono">
 {`- name: GRC Policy Gate Check
   uses: atelier-grc/policy-action@v2
   with:
@@ -173,35 +181,37 @@ export default function ApiKeysSettings() {
           </pre>
         </div>
 
-        <div className="mt-4 pt-3 border-t border-neutral-800 flex justify-between items-center text-[10.5px] text-[#A8A29E]">
+        <div className="mt-4 pt-3 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs text-slate-400 font-mono">
           <span>Passes ephemeral bearer token via TLS 1.3 to backend engine.</span>
-          <span className="text-[#9B3418]">FIPS 140-3 HSM VERIFIED</span>
+          <span className="text-emerald-400 font-semibold">FIPS 140-3 HSM VERIFIED</span>
         </div>
       </div>
 
       {/* Modal: Generate Developer Token */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 bg-[#1A1917]/70 flex items-center justify-center p-4">
-          <div className="bg-[#E7E3DA] p-6 md:p-8 hairline-all max-w-lg w-full font-mono shadow-2xl animate-in fade-in">
-            <div className="flex justify-between items-start pb-4 hairline-b">
+        <div className="fixed inset-0 z-50 bg-slate-950/60 flex items-center justify-center p-4">
+          <div className="bg-[var(--surface)] p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-800 max-w-lg w-full font-sans shadow-md animate-in fade-in">
+            <div className="flex justify-between items-start pb-4 border-b border-slate-200 dark:border-slate-800">
               <div>
-                <div className="mono-label text-[#9B3418] text-[10px]">DEVELOPER CREDENTIAL CREATOR</div>
-                <h3 className="serif-heading text-[24px] font-bold text-[#1A1917]">
+                <div className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 uppercase">
+                  DEVELOPER CREDENTIAL CREATOR
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                   Generate Developer Token
                 </h3>
               </div>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-[#6E6A61] hover:text-[#1A1917] text-[14px]"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
               >
-                [✕]
+                <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleCreateSubmit} className="py-5 space-y-4">
               <div>
-                <label className="mono-label text-[10.5px] text-[#1A1917] block mb-1">
-                  TOKEN NAME / IDENTIFIER
+                <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 block mb-1.5 uppercase">
+                  Token Name / Identifier
                 </label>
                 <input
                   type="text"
@@ -209,13 +219,13 @@ export default function ApiKeysSettings() {
                   value={keyFormData.name}
                   onChange={(e) => setKeyFormData(prev => ({ ...prev, name: e.target.value }))}
                   required
-                  className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-2 text-[12px] text-[#1A1917] outline-none focus:border-[#9B3418]"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="mono-label text-[10.5px] text-[#1A1917] block mb-1">
-                  CREDENTIAL SCOPE & ACCESS CAPABILITIES
+                <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 block mb-1.5 uppercase">
+                  Credential Scope & Capabilities
                 </label>
                 <select
                   value={keyFormData.scopeCode}
@@ -226,7 +236,7 @@ export default function ApiKeysSettings() {
                     if (code === 'INGEST_TELEMETRY') desc = 'Telemetry Ingest Only';
                     setKeyFormData(prev => ({ ...prev, scopeCode: code, scope: desc }));
                   }}
-                  className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-2 text-[12px] text-[#1A1917] outline-none focus:border-[#9B3418]"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all cursor-pointer"
                 >
                   <option value="SCAN_PIPELINE">CI/CD Pipeline Scanning (Read-Only Controls & Drifts)</option>
                   <option value="SCAN_AND_REMEDIATE">Full Scan & Remediation Trigger</option>
@@ -235,13 +245,13 @@ export default function ApiKeysSettings() {
               </div>
 
               <div>
-                <label className="mono-label text-[10.5px] text-[#1A1917] block mb-1">
-                  EXPIRATION WINDOW
+                <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 block mb-1.5 uppercase">
+                  Expiration Window
                 </label>
                 <select
                   value={keyFormData.expiresDays}
                   onChange={(e) => setKeyFormData(prev => ({ ...prev, expiresDays: Number(e.target.value) }))}
-                  className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-2 text-[12px] text-[#1A1917] outline-none focus:border-[#9B3418]"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all cursor-pointer"
                 >
                   <option value={30}>30 Days (Ephemeral Project)</option>
                   <option value={90}>90 Days (Quarterly Rotation Standard)</option>
@@ -249,26 +259,26 @@ export default function ApiKeysSettings() {
                 </select>
               </div>
 
-              <div className="p-3 bg-[#DCD7CB] hairline-all text-[11px] text-[#4A4741] flex items-start gap-2">
-                <Lock size={15} className="text-[#9B3418] shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-xl bg-sky-500/10 border border-sky-500/20 text-xs text-slate-700 dark:text-slate-300 flex items-start gap-2.5">
+                <Lock size={15} className="text-sky-600 dark:text-sky-400 shrink-0 mt-0.5" />
                 <span>
                   This token will be displayed only once upon generation. Be sure to copy and store it securely in your CI/CD repository secrets.
                 </span>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 hairline-t">
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="studio-btn text-[10px] py-1.5 px-3"
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 >
-                  [ CANCEL ]
+                  CANCEL
                 </button>
                 <button
                   type="submit"
-                  className="studio-btn-primary studio-btn text-[10px] py-1.5 px-4"
+                  className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 text-xs font-mono font-bold transition-all shadow-xs cursor-pointer"
                 >
-                  [ GENERATE TOKEN & LOG AUDIT ]
+                  GENERATE TOKEN
                 </button>
               </div>
             </form>
@@ -278,45 +288,47 @@ export default function ApiKeysSettings() {
 
       {/* Modal: Reveal Newly Created Token */}
       {createdTokenDetails && (
-        <div className="fixed inset-0 z-50 bg-[#1A1917]/70 flex items-center justify-center p-4">
-          <div className="bg-[#E7E3DA] p-6 md:p-8 hairline-all max-w-lg w-full font-mono shadow-2xl animate-in fade-in">
-            <div className="flex justify-between items-start pb-4 hairline-b">
+        <div className="fixed inset-0 z-50 bg-slate-950/60 flex items-center justify-center p-4">
+          <div className="bg-[var(--surface)] p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-800 max-w-lg w-full font-sans shadow-md animate-in fade-in">
+            <div className="flex justify-between items-start pb-4 border-b border-slate-200 dark:border-slate-800">
               <div>
-                <div className="mono-label text-[#9B3418] text-[10px]">NEW SECRET PROVISIONED</div>
-                <h3 className="serif-heading text-[24px] font-bold text-[#1A1917]">
+                <div className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 uppercase">
+                  NEW SECRET PROVISIONED
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                   Developer Token Created
                 </h3>
               </div>
               <button
                 onClick={() => setCreatedTokenDetails(null)}
-                className="text-[#6E6A61] hover:text-[#1A1917] text-[14px]"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
               >
-                [✕]
+                <X size={18} />
               </button>
             </div>
 
             <div className="py-5 space-y-4">
-              <div className="p-3 bg-[#9B3418]/10 border border-[#9B3418] text-[11px] text-[#1A1917] flex items-start gap-2">
-                <AlertTriangle size={16} className="text-[#9B3418] shrink-0 mt-0.5" />
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2.5">
+                <AlertTriangle size={16} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                 <span>
                   <strong>Copy this secret now!</strong> You will not be able to view this full token again after closing this dialog.
                 </span>
               </div>
 
               <div>
-                <label className="mono-label text-[10px] text-[#6E6A61] block mb-1">
-                  FULL DEVELOPER TOKEN
+                <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 block mb-1.5 uppercase">
+                  Full Developer Token
                 </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
                     readOnly
                     value={createdTokenDetails.fullToken}
-                    className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-2 text-[12px] font-mono text-[#1A1917] select-all outline-none"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono text-slate-900 dark:text-slate-100 select-all outline-none"
                   />
                   <button
                     onClick={() => handleCopy(createdTokenDetails.fullToken, 'modal-key')}
-                    className="studio-btn-primary studio-btn text-[10px] py-2 px-3 flex items-center gap-1 shrink-0"
+                    className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 text-xs font-mono font-bold rounded-xl transition-all flex items-center gap-1.5 shrink-0 shadow-xs cursor-pointer"
                   >
                     {copiedKeyId === 'modal-key' ? <Check size={13} /> : <Copy size={13} />}
                     <span>{copiedKeyId === 'modal-key' ? 'COPIED' : 'COPY'}</span>
@@ -324,19 +336,19 @@ export default function ApiKeysSettings() {
                 </div>
               </div>
 
-              <div className="text-[10.5px] text-[#4A4741] space-y-1">
-                <div>TOKEN NAME: <strong className="text-[#1A1917]">{createdTokenDetails.name}</strong></div>
-                <div>SCOPE: <strong className="text-[#9B3418]">{createdTokenDetails.scope}</strong></div>
-                <div>VALID UNTIL: <strong className="text-[#1A1917]">{createdTokenDetails.expiresAt}</strong></div>
+              <div className="text-xs text-slate-600 dark:text-slate-400 space-y-1 font-mono p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div>TOKEN NAME: <strong className="text-slate-900 dark:text-white">{createdTokenDetails.name}</strong></div>
+                <div>SCOPE: <strong className="text-sky-600 dark:text-sky-400">{createdTokenDetails.scope}</strong></div>
+                <div>VALID UNTIL: <strong className="text-slate-900 dark:text-white">{createdTokenDetails.expiresAt}</strong></div>
               </div>
             </div>
 
-            <div className="flex justify-end pt-4 hairline-t">
+            <div className="flex justify-end pt-4 border-t border-slate-200 dark:border-slate-800">
               <button
                 onClick={() => setCreatedTokenDetails(null)}
-                className="studio-btn-primary studio-btn text-[10px] py-1.5 px-4"
+                className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 text-xs font-mono font-bold transition-all shadow-xs cursor-pointer"
               >
-                [ I HAVE SECURELY SAVED THIS TOKEN ]
+                I HAVE SECURELY SAVED THIS TOKEN
               </button>
             </div>
           </div>

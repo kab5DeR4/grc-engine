@@ -41,25 +41,26 @@ export default function MembersRBACSettings() {
   };
 
   return (
-    <div className="space-y-8 font-mono">
+    <div className="space-y-6 font-sans text-slate-900 dark:text-slate-100">
+      
       {/* Live Persona Testbed Banner */}
-      <div className="bg-[#1A1917] text-[#E7E3DA] p-6 hairline-all">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-neutral-700">
+      <div className="bg-slate-900 text-white p-6 md:p-8 rounded-xl border border-slate-800 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
           <div>
-            <div className="mono-label text-[#9B3418] text-[10px] flex items-center gap-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-mono font-semibold uppercase tracking-wider mb-2">
               <Shield size={13} />
               <span>LIVE RBAC PERSONA SIMULATOR</span>
             </div>
-            <h2 className="serif-heading text-[26px] font-bold text-[#F5F3EF]">
-              Active Role: <span className="text-[#9B3418]">{ROLE_DETAILS[currentUser.role]?.name}</span>
+            <h2 className="text-2xl font-bold text-white">
+              Active Role: <span className="text-sky-400">{ROLE_DETAILS[currentUser.role]?.name}</span>
             </h2>
-            <p className="text-[11.5px] text-[#A8A29E] mt-1 max-w-2xl">
+            <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
               Switch personas below to test how GRC Engine enforces permissions across scans, remediation, evidence reading, PDF export, and API credentials in real time.
             </p>
           </div>
 
-          <div className="mono-label text-[10px] text-[#A8A29E] bg-neutral-900 p-2 hairline-all self-start md:self-auto">
-            CLEARANCE: <span className="text-[#E7E3DA]">{ROLE_DETAILS[currentUser.role]?.clearanceLevel}</span>
+          <div className="text-xs font-mono text-slate-400 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 self-start md:self-auto">
+            CLEARANCE: <span className="text-white font-bold">{ROLE_DETAILS[currentUser.role]?.clearanceLevel}</span>
           </div>
         </div>
 
@@ -72,18 +73,18 @@ export default function MembersRBACSettings() {
                 key={role.id}
                 type="button"
                 onClick={() => setCurrentUserRole(role.id)}
-                className={`p-3 text-left hairline-all transition-all cursor-pointer ${
+                className={`p-3.5 text-left rounded-xl transition-all cursor-pointer border ${
                   isActive
-                    ? 'bg-[#9B3418] text-[#FFFFFF] border-[#9B3418] shadow-md'
-                    : 'bg-neutral-900 text-[#E7E3DA] hover:bg-neutral-800 border-neutral-700'
+                    ? 'bg-sky-500 text-slate-950 border-sky-400 font-bold shadow-md'
+                    : 'bg-slate-800/80 text-slate-200 hover:bg-slate-800 border-slate-700'
                 }`}
               >
-                <div className="flex justify-between items-center mb-1">
-                  <span className="mono-label text-[10px] font-bold">[{role.shortLabel}]</span>
-                  {isActive && <Check size={14} className="text-[#FFFFFF]" />}
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider opacity-80">[{role.shortLabel}]</span>
+                  {isActive && <Check size={14} className="text-slate-950 font-bold" />}
                 </div>
-                <div className="font-serif text-[17px] font-bold">{role.name}</div>
-                <div className="text-[10px] opacity-80 mt-1 line-clamp-2 leading-relaxed">
+                <div className="text-sm font-bold">{role.name}</div>
+                <div className="text-xs opacity-75 mt-1 line-clamp-2 leading-relaxed">
                   {role.description}
                 </div>
               </button>
@@ -93,102 +94,104 @@ export default function MembersRBACSettings() {
       </div>
 
       {/* Official RBAC Matrix Matrix Table */}
-      <div className="bg-[#DCD7CB] p-6 hairline-all">
-        <div className="pb-4 hairline-b flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="bg-[var(--surface)] p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="pb-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <div className="mono-label text-[#9B3418] text-[10px]">GOVERNANCE ENFORCEMENT TABLE</div>
-            <h3 className="serif-heading text-[22px] font-bold text-[#1A1917]">
+            <div className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
+              GOVERNANCE ENFORCEMENT TABLE
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">
               Role-Based Access Control (RBAC) Matrix
             </h3>
           </div>
-          <div className="mono-label text-[10px] text-[#6E6A61]">
+          <div className="text-xs font-mono text-slate-500">
             CURRENT PERSONA COLUMN HIGHLIGHTED
           </div>
         </div>
 
         {/* Matrix Table */}
         <div className="overflow-x-auto pt-4">
-          <table className="w-full text-left text-[11.5px] border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#E7E3DA] hairline-b text-[#1A1917]">
-                <th className="p-3 mono-label text-[10px] text-[#1A1917] font-bold min-w-[220px]">
-                  FEATURE / AREA
+              <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono">
+                <th className="p-3 font-bold min-w-[220px]">
+                  FEATURE / CAPABILITY
                 </th>
-                <th className={`p-3 mono-label text-[10px] text-center min-w-[130px] ${currentUser.role === ROLES.PLATFORM_ADMIN ? 'bg-[#9B3418]/15 text-[#9B3418] font-bold' : 'text-[#1A1917]'}`}>
+                <th className={`p-3 text-center min-w-[130px] ${currentUser.role === ROLES.PLATFORM_ADMIN ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold' : ''}`}>
                   PLATFORM ADMIN
                 </th>
-                <th className={`p-3 mono-label text-[10px] text-center min-w-[130px] ${currentUser.role === ROLES.SECURITY_ENGINEER ? 'bg-[#9B3418]/15 text-[#9B3418] font-bold' : 'text-[#1A1917]'}`}>
+                <th className={`p-3 text-center min-w-[130px] ${currentUser.role === ROLES.SECURITY_ENGINEER ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold' : ''}`}>
                   SECURITY ENGINEER
                 </th>
-                <th className={`p-3 mono-label text-[10px] text-center min-w-[130px] ${currentUser.role === ROLES.EXTERNAL_AUDITOR ? 'bg-[#9B3418]/15 text-[#9B3418] font-bold' : 'text-[#1A1917]'}`}>
+                <th className={`p-3 text-center min-w-[130px] ${currentUser.role === ROLES.EXTERNAL_AUDITOR ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold' : ''}`}>
                   EXTERNAL AUDITOR
                 </th>
-                <th className={`p-3 mono-label text-[10px] text-center min-w-[130px] ${currentUser.role === ROLES.READ_ONLY_VIEWER ? 'bg-[#9B3418]/15 text-[#9B3418] font-bold' : 'text-[#1A1917]'}`}>
+                <th className={`p-3 text-center min-w-[130px] ${currentUser.role === ROLES.READ_ONLY_VIEWER ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 font-bold' : ''}`}>
                   READ-ONLY VIEWER
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--hairline)]">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {PERMISSION_MATRIX.map((row) => (
-                <tr key={row.key} className="bg-[#E7E3DA] hover:bg-[#DCD7CB]/40 transition-colors">
+                <tr key={row.key} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
                   <td className="p-3">
-                    <div className="font-bold text-[#1A1917] text-[12px]">{row.name}</div>
-                    <div className="text-[10.5px] text-[#6E6A61] mt-0.5">{row.description}</div>
+                    <div className="font-bold text-slate-900 dark:text-white text-xs">{row.name}</div>
+                    <div className="text-[11px] text-slate-500 mt-0.5">{row.description}</div>
                   </td>
 
                   {/* Platform Admin Cell */}
-                  <td className={`p-3 text-center ${currentUser.role === ROLES.PLATFORM_ADMIN ? 'bg-[#9B3418]/10' : ''}`}>
-                    <span className="inline-flex items-center gap-1 mono-label text-[10px] px-2 py-0.5 bg-[#1A1917] text-[#E7E3DA]">
-                      <Check size={12} className="text-[#E7E3DA]" />
+                  <td className={`p-3 text-center ${currentUser.role === ROLES.PLATFORM_ADMIN ? 'bg-sky-500/5 font-semibold' : ''}`}>
+                    <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
+                      <Check size={11} />
                       <span>{row.permissions.PLATFORM_ADMIN.label}</span>
                     </span>
                   </td>
 
                   {/* Security Engineer Cell */}
-                  <td className={`p-3 text-center ${currentUser.role === ROLES.SECURITY_ENGINEER ? 'bg-[#9B3418]/10' : ''}`}>
+                  <td className={`p-3 text-center ${currentUser.role === ROLES.SECURITY_ENGINEER ? 'bg-sky-500/5 font-semibold' : ''}`}>
                     {row.permissions.SECURITY_ENGINEER.granted ? (
-                      <span className="inline-flex items-center gap-1 mono-label text-[10px] px-2 py-0.5 bg-[#1A1917] text-[#E7E3DA]">
-                        <Check size={12} className="text-[#E7E3DA]" />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
+                        <Check size={11} />
                         <span>{row.permissions.SECURITY_ENGINEER.label}</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 mono-label text-[10px] px-2 py-0.5 border border-[#9B3418] text-[#9B3418]">
-                        <X size={12} />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20 font-semibold">
+                        <X size={11} />
                         <span>{row.permissions.SECURITY_ENGINEER.label}</span>
                       </span>
                     )}
                   </td>
 
                   {/* External Auditor Cell */}
-                  <td className={`p-3 text-center ${currentUser.role === ROLES.EXTERNAL_AUDITOR ? 'bg-[#9B3418]/10' : ''}`}>
+                  <td className={`p-3 text-center ${currentUser.role === ROLES.EXTERNAL_AUDITOR ? 'bg-sky-500/5 font-semibold' : ''}`}>
                     {row.permissions.EXTERNAL_AUDITOR.access === 'ALLOWED' ? (
-                      <span className="inline-flex items-center gap-1 mono-label text-[10px] px-2 py-0.5 bg-[#1A1917] text-[#E7E3DA]">
-                        <Check size={12} className="text-[#E7E3DA]" />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
+                        <Check size={11} />
                         <span>{row.permissions.EXTERNAL_AUDITOR.label}</span>
                       </span>
                     ) : row.permissions.EXTERNAL_AUDITOR.access === 'READ_ONLY' ? (
-                      <span className="inline-flex items-center gap-1 mono-label text-[10px] px-2 py-0.5 border border-[#1A1917] text-[#1A1917] bg-[#DCD7CB]">
-                        <Check size={12} />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 font-semibold">
+                        <Check size={11} />
                         <span>{row.permissions.EXTERNAL_AUDITOR.label}</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 mono-label text-[10px] px-2 py-0.5 border border-[#9B3418] text-[#9B3418]">
-                        <X size={12} />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20 font-semibold">
+                        <X size={11} />
                         <span>{row.permissions.EXTERNAL_AUDITOR.label}</span>
                       </span>
                     )}
                   </td>
 
                   {/* Read-Only Viewer Cell */}
-                  <td className={`p-3 text-center ${currentUser.role === ROLES.READ_ONLY_VIEWER ? 'bg-[#9B3418]/10' : ''}`}>
+                  <td className={`p-3 text-center ${currentUser.role === ROLES.READ_ONLY_VIEWER ? 'bg-sky-500/5 font-semibold' : ''}`}>
                     {row.permissions.READ_ONLY_VIEWER.access === 'READ_ONLY' ? (
-                      <span className="inline-flex items-center gap-1 mono-label text-[10px] px-2 py-0.5 border border-[#1A1917] text-[#1A1917] bg-[#DCD7CB]">
-                        <Check size={12} />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20 font-semibold">
+                        <Check size={11} />
                         <span>{row.permissions.READ_ONLY_VIEWER.label}</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 mono-label text-[10px] px-2 py-0.5 border border-[#9B3418] text-[#9B3418]">
-                        <X size={12} />
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20 font-semibold">
+                        <X size={11} />
                         <span>{row.permissions.READ_ONLY_VIEWER.label}</span>
                       </span>
                     )}
@@ -201,14 +204,16 @@ export default function MembersRBACSettings() {
       </div>
 
       {/* Workspace Members Table */}
-      <div className="bg-[#DCD7CB] p-6 hairline-all">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 hairline-b">
+      <div className="bg-[var(--surface)] p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
-            <div className="mono-label text-[#9B3418] text-[10px]">WORKSPACE ACCESS DIRECTORY</div>
-            <h3 className="serif-heading text-[22px] font-bold text-[#1A1917]">
+            <div className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider">
+              WORKSPACE ACCESS DIRECTORY
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">
               Workspace Members & Role Assignments
             </h3>
-            <p className="mono-body text-[11.5px] text-[#4A4741] mt-1">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
               Active identity bindings evaluated by the GRC Engine attribute-based access control engine.
             </p>
           </div>
@@ -216,60 +221,62 @@ export default function MembersRBACSettings() {
           <button
             onClick={() => setShowInviteModal(true)}
             disabled={!isPlatformAdmin}
-            className={`studio-btn text-[10px] py-1.5 px-3 flex items-center gap-1.5 uppercase shrink-0 ${
-              isPlatformAdmin ? 'studio-btn-pigment' : 'opacity-50 cursor-not-allowed'
+            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-xs shrink-0 cursor-pointer ${
+              isPlatformAdmin 
+                ? 'bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950' 
+                : 'opacity-50 cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-500'
             }`}
             title={!isPlatformAdmin ? 'Requires Platform Admin role to invite members' : ''}
           >
-            <UserPlus size={13} />
-            <span>INVITE NEW MEMBER</span>
+            <UserPlus size={14} />
+            <span>INVITE MEMBER</span>
           </button>
         </div>
 
         {!isPlatformAdmin && (
-          <div className="p-3 my-3 bg-[#E7E3DA] hairline-all text-[11px] text-[#4A4741] flex items-center gap-2">
-            <Info size={14} className="text-[#9B3418]" />
+          <div className="p-3 my-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 flex items-center gap-2">
+            <Info size={15} className="text-sky-500 shrink-0" />
             <span>
-              Role modification and member provisioning is restricted to <strong>Platform Admins</strong>. Switch to Platform Admin in the persona bar above to edit member roles.
+              Role modification and member provisioning is restricted to <strong>Platform Admins</strong>. Switch to Platform Admin in the persona simulator bar above to edit member roles.
             </span>
           </div>
         )}
 
         {/* Members List */}
         <div className="overflow-x-auto pt-2">
-          <table className="w-full text-left text-[11.5px] border-collapse">
+          <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#E7E3DA] hairline-b text-[#1A1917]">
-                <th className="p-3 mono-label text-[10px]">MEMBER / IDENTITY</th>
-                <th className="p-3 mono-label text-[10px]">ASSIGNED RBAC ROLE</th>
-                <th className="p-3 mono-label text-[10px]">2FA POSTURE</th>
-                <th className="p-3 mono-label text-[10px]">LAST ACTIVITY</th>
-                <th className="p-3 mono-label text-[10px] text-right">ACTIONS</th>
+              <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-mono">
+                <th className="p-3">MEMBER / IDENTITY</th>
+                <th className="p-3">ASSIGNED RBAC ROLE</th>
+                <th className="p-3">2FA POSTURE</th>
+                <th className="p-3">LAST ACTIVITY</th>
+                <th className="p-3 text-right">ACTIONS</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--hairline)]">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {members.map((mem) => {
                 const isCurrent = mem.email === currentUser.email;
                 return (
-                  <tr key={mem.id} className="bg-[#E7E3DA] hover:bg-[#DCD7CB]/40 transition-colors">
+                  <tr key={mem.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
                     <td className="p-3">
                       <div className="flex items-center gap-3">
                         <img
                           src={mem.avatar}
                           alt={mem.name}
-                          className="w-8 h-8 hairline-all object-cover filter grayscale contrast-125 shrink-0"
+                          className="w-8 h-8 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0"
                         />
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-[#1A1917] text-[12px]">{mem.name}</span>
+                            <span className="font-bold text-slate-900 dark:text-white text-xs">{mem.name}</span>
                             {isCurrent && (
-                              <span className="mono-label text-[8.5px] px-1 py-0.2 bg-[#9B3418] text-[#FFFFFF]">
+                              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-500 text-white font-bold">
                                 YOU
                               </span>
                             )}
                           </div>
-                          <div className="text-[10.5px] text-[#6E6A61]">{mem.email}</div>
-                          <div className="text-[10px] text-[#4A4741] italic">{mem.title}</div>
+                          <div className="text-[11px] text-slate-500">{mem.email}</div>
+                          <div className="text-[10.5px] text-slate-400 italic">{mem.title}</div>
                         </div>
                       </div>
                     </td>
@@ -280,7 +287,7 @@ export default function MembersRBACSettings() {
                         <select
                           value={mem.role}
                           onChange={(e) => updateMemberRole(mem.id, e.target.value)}
-                          className="bg-[#DCD7CB] border border-[#1A1917] px-2 py-1 text-[11px] mono-label text-[#1A1917] outline-none"
+                          className="bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-slate-900 dark:text-slate-100 outline-none"
                         >
                           <option value={ROLES.PLATFORM_ADMIN}>Platform Admin</option>
                           <option value={ROLES.SECURITY_ENGINEER}>Security Engineer</option>
@@ -288,20 +295,20 @@ export default function MembersRBACSettings() {
                           <option value={ROLES.READ_ONLY_VIEWER}>Read-Only Viewer</option>
                         </select>
                       ) : (
-                        <span className={`mono-label text-[10px] px-2 py-1 border ${ROLE_DETAILS[mem.role]?.badgeClass || ''}`}>
+                        <span className={`text-[10.5px] font-mono px-2 py-0.5 rounded-full border ${ROLE_DETAILS[mem.role]?.badgeClass || ''}`}>
                           {ROLE_DETAILS[mem.role]?.name}
                         </span>
                       )}
                     </td>
 
                     <td className="p-3">
-                      <span className="mono-label text-[10px] text-[#1A1917] flex items-center gap-1">
-                        <Fingerprint size={12} className="text-[#9B3418]" />
+                      <span className="text-[11px] font-mono text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                        <Fingerprint size={13} className="text-sky-500" />
                         <span>{mem.mfaStatus}</span>
                       </span>
                     </td>
 
-                    <td className="p-3 text-[11px] text-[#6E6A61]">
+                    <td className="p-3 text-[11px] text-slate-500 font-mono">
                       {mem.lastActive}
                     </td>
 
@@ -309,7 +316,7 @@ export default function MembersRBACSettings() {
                       {isPlatformAdmin && !isCurrent && (
                         <button
                           onClick={() => removeMember(mem.id)}
-                          className="p-1.5 text-[#6E6A61] hover:text-[#9B3418] transition-colors"
+                          className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-500/10 transition-colors"
                           title="Revoke Member Access"
                         >
                           <Trash2 size={14} />
@@ -326,27 +333,29 @@ export default function MembersRBACSettings() {
 
       {/* Modal: Invite Member */}
       {showInviteModal && (
-        <div className="fixed inset-0 z-50 bg-[#1A1917]/70 flex items-center justify-center p-4">
-          <div className="bg-[#E7E3DA] p-6 md:p-8 hairline-all max-w-lg w-full font-mono shadow-2xl animate-in fade-in">
-            <div className="flex justify-between items-start pb-4 hairline-b">
+        <div className="fixed inset-0 z-50 bg-slate-950/60 flex items-center justify-center p-4">
+          <div className="bg-[var(--surface)] p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-800 max-w-lg w-full font-sans shadow-md animate-in fade-in">
+            <div className="flex justify-between items-start pb-4 border-b border-slate-200 dark:border-slate-800">
               <div>
-                <div className="mono-label text-[#9B3418] text-[10px]">RBAC IDENTITY PROVISIONING</div>
-                <h3 className="serif-heading text-[24px] font-bold text-[#1A1917]">
+                <div className="text-[11px] font-mono font-bold text-sky-600 dark:text-sky-400 uppercase">
+                  RBAC IDENTITY PROVISIONING
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white">
                   Invite Workspace Member
                 </h3>
               </div>
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="text-[#6E6A61] hover:text-[#1A1917] text-[14px]"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
               >
-                [✕]
+                <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleInviteSubmit} className="py-5 space-y-4">
               <div>
-                <label className="mono-label text-[10.5px] text-[#1A1917] block mb-1">
-                  FULL NAME
+                <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 block mb-1.5 uppercase">
+                  Full Name
                 </label>
                 <input
                   type="text"
@@ -354,13 +363,13 @@ export default function MembersRBACSettings() {
                   value={inviteData.name}
                   onChange={(e) => setInviteData(prev => ({ ...prev, name: e.target.value }))}
                   required
-                  className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-2 text-[12px] text-[#1A1917] outline-none focus:border-[#9B3418]"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="mono-label text-[10.5px] text-[#1A1917] block mb-1">
-                  CORPORATE EMAIL (SSO BOUND)
+                <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 block mb-1.5 uppercase">
+                  Corporate Email (SSO Bound)
                 </label>
                 <input
                   type="email"
@@ -368,31 +377,31 @@ export default function MembersRBACSettings() {
                   value={inviteData.email}
                   onChange={(e) => setInviteData(prev => ({ ...prev, email: e.target.value }))}
                   required
-                  className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-2 text-[12px] text-[#1A1917] outline-none focus:border-[#9B3418]"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="mono-label text-[10.5px] text-[#1A1917] block mb-1">
-                  JOB TITLE / DEPARTMENT
+                <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 block mb-1.5 uppercase">
+                  Job Title / Department
                 </label>
                 <input
                   type="text"
                   placeholder="e.g. Senior Staff Auditor"
                   value={inviteData.title}
                   onChange={(e) => setInviteData(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-2 text-[12px] text-[#1A1917] outline-none focus:border-[#9B3418]"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="mono-label text-[10.5px] text-[#1A1917] block mb-1">
-                  ASSIGNED RBAC ROLE
+                <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300 block mb-1.5 uppercase">
+                  Assigned RBAC Role
                 </label>
                 <select
                   value={inviteData.role}
                   onChange={(e) => setInviteData(prev => ({ ...prev, role: e.target.value }))}
-                  className="w-full bg-[#DCD7CB] border border-[#1A1917] px-3 py-2 text-[12px] text-[#1A1917] outline-none focus:border-[#9B3418]"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all cursor-pointer"
                 >
                   <option value={ROLES.SECURITY_ENGINEER}>Security Engineer (Run scans, trigger remediation)</option>
                   <option value={ROLES.EXTERNAL_AUDITOR}>External Auditor (Read evidence, export PDF)</option>
@@ -401,19 +410,19 @@ export default function MembersRBACSettings() {
                 </select>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 hairline-t">
+              <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setShowInviteModal(false)}
-                  className="studio-btn text-[10px] py-1.5 px-3"
+                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 >
-                  [ CANCEL ]
+                  CANCEL
                 </button>
                 <button
                   type="submit"
-                  className="studio-btn-primary studio-btn text-[10px] py-1.5 px-4"
+                  className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-sky-500 dark:hover:bg-sky-400 text-white dark:text-slate-950 text-xs font-mono font-bold transition-all shadow-xs cursor-pointer"
                 >
-                  [ DISPATCH INVITATION & AUDIT ]
+                  DISPATCH INVITATION
                 </button>
               </div>
             </form>

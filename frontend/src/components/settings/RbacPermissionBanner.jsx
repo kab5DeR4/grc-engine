@@ -9,22 +9,23 @@ const RbacPermissionBanner = memo(({ actionName = 'this action', requiredRole = 
   const currentRoleDetail = ROLE_DETAILS[currentUser.role] || ROLE_DETAILS.PLATFORM_ADMIN;
 
   return (
-    <div className="p-4 bg-[#9B3418]/10 border border-[#9B3418] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-mono">
+    <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-slate-900 dark:text-slate-100 font-sans">
       <div className="flex items-start gap-3">
-        <ShieldAlert size={18} className="text-[#9B3418] shrink-0 mt-0.5" />
+        <ShieldAlert size={18} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
         <div>
-          <div className="mono-label text-[#9B3418] font-bold text-[11px]">
+          <div className="text-xs font-mono font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
             RBAC ACCESS RESTRICTION ACTIVE
           </div>
-          <div className="text-[11.5px] text-[#4A4741] mt-0.5">
-            Your current persona <span className="font-bold text-[#1A1917]">[{currentRoleDetail.name}]</span> is restricted from {actionName}. Requires <span className="font-bold text-[#9B3418]">[{requiredRole}]</span>.
+          <div className="text-xs text-slate-700 dark:text-slate-300 mt-0.5 leading-relaxed">
+            Your current persona <span className="font-semibold text-slate-900 dark:text-white">[{currentRoleDetail.name}]</span> is restricted from {actionName}. Requires <span className="font-semibold text-amber-700 dark:text-amber-400">[{requiredRole}]</span>.
           </div>
         </div>
       </div>
 
       <button
+        type="button"
         onClick={() => setCurrentUserRole(ROLES.PLATFORM_ADMIN)}
-        className="studio-btn studio-btn-pigment text-[10px] py-1 px-3 whitespace-nowrap self-start sm:self-auto flex items-center gap-1.5"
+        className="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-mono font-bold whitespace-nowrap self-start sm:self-auto flex items-center gap-1.5 transition-colors cursor-pointer shadow-xs"
       >
         <span>SWITCH TO ADMIN</span>
         <ArrowRight size={12} />
