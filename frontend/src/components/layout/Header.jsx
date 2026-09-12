@@ -1,6 +1,6 @@
 import { memo, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, ChevronDown, Sliders, Check } from 'lucide-react';
+import { Shield, ChevronDown, Check } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 import { ROLE_DETAILS } from '../../data/demo/rbac';
 import ThemeDensitySelector from '../ui/ThemeDensitySelector';
@@ -54,28 +54,30 @@ const Header = memo(() => {
   }, []);
 
   return (
-    <header className="h-[60px] flex items-center justify-between px-3 sm:px-6 bg-[#E7E3DA] dark:bg-[#1A1917] hairline-b sticky top-0 z-40 transition-colors font-mono">
-      <div className="flex items-center gap-3">
-        <span className="text-[#1A1917] dark:text-[#E7E3DA] text-[11px] font-bold hidden md:inline-block tracking-widest uppercase">
-          ACME-PRODUCTION-WORKSPACE
-        </span>
+    <header className="h-[64px] flex items-center justify-between px-4 sm:px-8 bg-white dark:bg-slate-900 border-b border-slate-300 dark:border-slate-800 sticky top-0 z-40 transition-colors font-mono">
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+          <span className="font-bold text-slate-700 dark:text-slate-300">DASHBOARD</span>
+          <span>&gt;</span>
+          <span className="text-slate-900 dark:text-white font-bold">OVERVIEW</span>
+        </div>
 
         {/* Live RBAC Role Switcher Dropdown */}
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative hidden md:block" ref={dropdownRef}>
           <button
             type="button"
             onClick={() => setRoleDropdownOpen(prev => !prev)}
-            className="flex items-center gap-1.5 px-2.5 py-1 bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all text-[10.5px] font-bold text-[#1A1917] dark:text-[#E7E3DA] hover:border-[#9B3418] transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-slate-200 hover:border-slate-500 transition-colors cursor-pointer"
             title="Switch RBAC Persona to test permissions"
           >
-            <Shield size={13} className="text-[#9B3418]" />
+            <Shield size={13} className="text-slate-900 dark:text-sky-400" />
             <span>ROLE: [{roleDetail.shortLabel}]</span>
             <ChevronDown size={12} className={`transition-transform duration-200 ${roleDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {roleDropdownOpen && (
-            <div className="absolute left-0 mt-1 w-64 bg-[#E7E3DA] dark:bg-[#1E1D1A] hairline-all shadow-2xl z-50 p-1 space-y-1">
-              <div className="px-2 py-1.5 text-[9px] mono-label text-[#6E6A61] hairline-b">
+            <div className="absolute left-0 mt-1.5 w-64 bg-white dark:bg-slate-900 rounded-2xl border border-slate-300 dark:border-slate-700 shadow-xl z-50 p-1.5 space-y-1">
+              <div className="px-3 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 uppercase tracking-wider">
                 SELECT RBAC TEST PERSONA
               </div>
               {Object.values(ROLE_DETAILS).map((role) => {
@@ -88,25 +90,25 @@ const Header = memo(() => {
                       setCurrentUserRole(role.id);
                       setRoleDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-2.5 py-2 text-[11px] flex items-center justify-between transition-colors ${
+                    className={`w-full text-left px-3 py-2 text-xs rounded-xl flex items-center justify-between transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-[#1A1917] text-[#E7E3DA] font-bold'
-                        : 'text-[#1A1917] dark:text-[#E7E3DA] hover:bg-[#DCD7CB] dark:hover:bg-[#2A2825]'
+                        ? 'bg-slate-900 text-white font-bold dark:bg-sky-400 dark:text-slate-950'
+                        : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
                     <div>
-                      <div>{role.name}</div>
-                      <div className="text-[9px] opacity-70 font-normal">{role.clearanceLevel}</div>
+                      <div className="font-semibold">{role.name}</div>
+                      <div className="text-[9.5px] opacity-75 font-normal">{role.clearanceLevel}</div>
                     </div>
-                    {isSelected && <Check size={13} className="text-[#9B3418]" />}
+                    {isSelected && <Check size={14} className={isSelected ? 'text-white dark:text-slate-950' : ''} />}
                   </button>
                 );
               })}
-              <div className="pt-1 hairline-t">
+              <div className="pt-1.5 border-t border-slate-200 dark:border-slate-800">
                 <Link
                   to="/settings/members"
                   onClick={() => setRoleDropdownOpen(false)}
-                  className="w-full block text-center text-[9.5px] mono-label text-[#9B3418] p-1.5 hover:underline"
+                  className="w-full block text-center text-[10.5px] font-bold text-slate-700 dark:text-slate-300 p-1.5 hover:underline"
                 >
                   VIEW FULL RBAC MATRIX →
                 </Link>
@@ -117,71 +119,65 @@ const Header = memo(() => {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Prominent Real / Demo Segmented Switch */}
+        {/* Real / Demo Segmented Switch */}
         <div 
-          className="flex items-center bg-[#DCD7CB] dark:bg-[#2A2825] hairline-all p-0.5 text-[10.5px] font-mono select-none"
+          className="flex items-center bg-slate-100 dark:bg-slate-800/90 rounded-xl p-1 text-xs select-none border border-slate-300 dark:border-slate-700"
           title={backendStatusMessage || (isLiveMode ? 'Connected to live FastAPI backend at http://localhost:8000' : 'Running on offline sandbox mock data')}
         >
           <button
             type="button"
             onClick={() => setLiveMode(false)}
-            className={`px-2.5 py-1 transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
               !isLiveMode 
-                ? 'bg-[#9B3418] text-white font-bold shadow-sm' 
-                : 'text-[#6E6A61] dark:text-[#A8A49C] hover:text-[#1A1917] dark:hover:text-[#E7E3DA]'
+                ? 'bg-white dark:bg-slate-700 text-slate-950 dark:text-white shadow-xs font-bold' 
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
             }`}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-white opacity-90 inline-block"></span>
-            <span>DEMO DATA</span>
+            <span>Sandbox</span>
           </button>
           <button
             type="button"
             onClick={() => setLiveMode(true)}
-            className={`px-2.5 py-1 transition-all flex items-center gap-1.5 cursor-pointer ${
+            className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
               isLiveMode 
-                ? 'bg-green-700 text-white font-bold shadow-sm' 
-                : 'text-[#6E6A61] dark:text-[#A8A49C] hover:text-[#1A1917] dark:hover:text-[#E7E3DA]'
+                ? 'bg-white dark:bg-slate-700 text-slate-950 dark:text-white shadow-xs font-bold' 
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white'
             }`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${isLiveMode ? 'bg-white animate-pulse' : 'bg-green-600'}`}></span>
-            <span>REAL DATA (LIVE API)</span>
+            <span className={`w-1.5 h-1.5 rounded-full ${isLiveMode ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></span>
+            <span>Live API</span>
           </button>
         </div>
         
-        {/* Theme and Density Selector */}
+        {/* Theme Selector */}
         <ThemeDensitySelector />
 
-        {/* Settings Shortcut Button */}
-        <Link
-          to="/settings/profile"
-          className="studio-btn text-[10.5px] py-1.5 px-2.5 flex items-center gap-1"
-          title="Workspace & User Settings"
-        >
-          <Sliders size={13} />
-          <span className="hidden sm:inline">[ SETTINGS ]</span>
-        </Link>
-
-        {/* Scan Button with RBAC Enforced Check */}
+        {/* Scan Button with Guaranteed High Contrast */}
         {canRunScan ? (
           <button 
+            type="button"
             onClick={handleScanClick}
             disabled={scanRunning}
-            className="studio-btn studio-btn-pigment text-[10.5px] py-1.5 px-3 uppercase"
+            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 rounded-xl text-xs font-bold uppercase transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
           >
-            {scanRunning ? '[ SCANNING... ]' : '[ RUN SYSTEM SCAN ]'}
+            {scanRunning ? 'Evaluating...' : 'Run Audit'}
           </button>
         ) : (
           <button 
+            type="button"
             disabled
-            className="studio-btn opacity-50 cursor-not-allowed text-[10px] py-1.5 px-2.5 border-dashed"
-            title={`Scan execution requires PLATFORM ADMIN or SECURITY ENGINEER role. Current role: ${roleDetail.name}`}
+            className="px-3.5 py-1.5 rounded-xl opacity-50 cursor-not-allowed text-xs border border-dashed border-slate-300 dark:border-slate-700 text-slate-500"
+            title={`Scan execution requires PLATFORM ADMIN role. Current: ${roleDetail.name}`}
           >
-            [ SCAN RESTRICTED: RBAC ]
+            Restricted
           </button>
         )}
 
-        <Link to="/login" className="studio-btn text-[10.5px] py-1.5 px-2.5 sm:px-3 uppercase">
-          [ LOGOUT ]
+        <Link 
+          to="/login" 
+          className="px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white rounded-xl border border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 transition-colors"
+        >
+          Logout
         </Link>
       </div>
     </header>
