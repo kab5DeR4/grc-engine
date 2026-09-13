@@ -49,13 +49,51 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Request duration & logging middleware
+# In-memory sliding window rate limiter
+_RATE_LIMIT_STORE: Dict[str, List[float]] = {}
+_MAX_REQUESTS_PER_MINUTE = 300
+_AUTH_MAX_REQUESTS_PER_MINUTE = 60
+
+# Security headers, rate limiting & duration middleware
 @app.middleware("http")
-async def add_process_time_header(request: Request, call_next):
+async def security_and_timing_middleware(request: Request, call_next):
+    # Rate limiting check
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    now = time.time()
+    is_auth_route = "/auth/login" in request.url.path
+    max_reqs = _AUTH_MAX_REQUESTS_PER_MINUTE if is_auth_route else _MAX_REQUESTS_PER_MINUTE
+
+    # Prune timestamps older than 60s
+    timestamps = [t for t in _RATE_LIMIT_STORE.get(client_ip, []) if now - t < 60.0]
+    if len(timestamps) >= max_reqs:
+        return JSONResponse(
+            status_code=429,
+            content={"detail": "Rate limit exceeded. Too many requests. Please try again later."},
+            headers={"Retry-After": "60"}
+        )
+    timestamps.append(now)
+    _RATE_LIMIT_STORE[client_ip] = timestamps
+
+    # Payload size limit protection (15MB max)
+    content_length = request.headers.get("content-length")
+    if content_length and int(content_length) > 15 * 1024 * 1024:
+        return JSONResponse(
+            status_code=413,
+            content={"detail": "Payload too large. Maximum allowed request size is 15MB."}
+        )
+
     start_time = time.time()
     response = await call_next(request)
     process_time = time.time() - start_time
+
+    # Standard security headers
     response.headers["X-Process-Time"] = str(round(process_time, 4))
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "geolocation=(), camera=(), microphone=()"
+
     return response
 
 # Global exception handlers

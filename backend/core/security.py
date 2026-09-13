@@ -55,3 +55,23 @@ def decode_access_token(token: str) -> Optional[dict]:
         return payload
     except Exception:
         return None
+
+
+def mask_sensitive_token(token: str) -> str:
+    """Mask tokens/secrets so only prefix and last 4 chars are visible."""
+    if not token or len(token) <= 8:
+        return "********"
+    if token.startswith("ghp_") or token.startswith("github_pat_"):
+        prefix_len = 4 if token.startswith("ghp_") else 11
+        return f"{token[:prefix_len]}****{token[-4:]}"
+    return f"{token[:3]}****{token[-4:]}"
+
+
+def sanitize_input_string(value: str, max_length: int = 500) -> str:
+    """Strip whitespace and truncate to max length to prevent buffer/string abuse."""
+    if not isinstance(value, str):
+        return ""
+    # strip dangerous control characters
+    cleaned = "".join(ch for ch in value if ch.isprintable() or ch in "\n\r\t")
+    return cleaned.strip()[:max_length]
+

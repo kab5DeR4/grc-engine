@@ -6,7 +6,7 @@ Handles connecting, testing, and querying live/mock infrastructure connectors.
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
@@ -16,23 +16,47 @@ from models.organization import Organization
 from api.deps import get_current_user_optional
 from connectors import get_connector, GitHubConnector, MockGitHubConnector
 from connectors.base import ConnectionTestResult
+from core.security import sanitize_input_string
 
 router = APIRouter()
 
+ALLOWED_PROVIDERS = {"GITHUB", "AWS", "GCP", "GITLAB"}
+
 
 class IntegrationCreatePayload(BaseModel):
-    integration_type: str = "GITHUB"  # GITHUB, AWS, etc.
-    name: Optional[str] = "GitHub Production"
-    credentials: Dict[str, Any] = {}
-    config_options: Dict[str, Any] = {}
+    integration_type: str = Field(default="GITHUB", max_length=50)
+    name: Optional[str] = Field(default="GitHub Production", max_length=100)
+    credentials: Dict[str, Any] = Field(default_factory=dict)
+    config_options: Dict[str, Any] = Field(default_factory=dict)
     is_mock: bool = False
+
+    @field_validator("integration_type")
+    @classmethod
+    def validate_provider(cls, v: str) -> str:
+        clean = v.strip().upper()
+        if clean not in ALLOWED_PROVIDERS:
+            raise ValueError(f"Invalid integration_type '{v}'. Must be one of {sorted(ALLOWED_PROVIDERS)}")
+        return clean
+
+    @field_validator("name")
+    @classmethod
+    def sanitize_name(cls, v: Optional[str]) -> str:
+        return sanitize_input_string(v or "GitHub Production", max_length=100)
 
 
 class IntegrationTestPayload(BaseModel):
-    integration_type: str = "GITHUB"
-    credentials: Dict[str, Any] = {}
-    config_options: Dict[str, Any] = {}
+    integration_type: str = Field(default="GITHUB", max_length=50)
+    credentials: Dict[str, Any] = Field(default_factory=dict)
+    config_options: Dict[str, Any] = Field(default_factory=dict)
     is_mock: bool = False
+
+    @field_validator("integration_type")
+    @classmethod
+    def validate_provider(cls, v: str) -> str:
+        clean = v.strip().upper()
+        if clean not in ALLOWED_PROVIDERS:
+            raise ValueError(f"Invalid integration_type '{v}'. Must be one of {sorted(ALLOWED_PROVIDERS)}")
+        return clean
 
 
 class IntegrationResponse(BaseModel):
