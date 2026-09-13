@@ -21,6 +21,13 @@ import PageTransition from './components/layout/PageTransition';
 
 import { useDemoStore } from './store/demoStore';
 import ScrollToTopButton from './components/ui/ScrollToTopButton';
+import ErrorBoundary from './components/ui/ErrorBoundary';
+import NotFoundPage from './pages/NotFoundPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsPage from './pages/TermsPage';
+import CookieConsentBanner from './components/ui/CookieConsentBanner';
+import { ToastProvider } from './components/ui/Toast';
+import CommandPalette from './components/ui/CommandPalette';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -41,32 +48,40 @@ function App() {
   }, [theme, density]);
 
   return (
-    <Router>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
-        <Route element={<AppShell />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/integrations" element={<IntegrationsDashboardPage />} />
-          <Route path="/assets" element={<AssetsPage />} />
-          <Route path="/architecture" element={<Architecture />} />
-          <Route path="/controls" element={<ControlsPage />} />
-          <Route path="/archive" element={<EvidenceVaultPage />} />
-          <Route path="/scans" element={<ScansPage />} />
-          <Route path="/findings" element={<FindingsPage />} />
-          <Route path="/reports" element={<ReportsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/settings/:tab" element={<SettingsPage />} />
-        </Route>
-        <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
-        <Route path="/features" element={<PageTransition><FeaturesPage /></PageTransition>} />
-        <Route path="/docs" element={<PageTransition><DocsPage /></PageTransition>} />
-        <Route path="/integrations" element={<PageTransition><IntegrationsPage /></PageTransition>} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-      <ScrollToTopButton />
-    </Router>
+    <ErrorBoundary>
+      <ToastProvider>
+        <Router>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
+            <Route element={<AppShell />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard/integrations" element={<IntegrationsDashboardPage />} />
+              <Route path="/assets" element={<AssetsPage />} />
+              <Route path="/architecture" element={<Architecture />} />
+              <Route path="/controls" element={<ControlsPage />} />
+              <Route path="/archive" element={<EvidenceVaultPage />} />
+              <Route path="/scans" element={<ScansPage />} />
+              <Route path="/findings" element={<FindingsPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/settings/:tab" element={<SettingsPage />} />
+            </Route>
+            <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
+            <Route path="/features" element={<PageTransition><FeaturesPage /></PageTransition>} />
+            <Route path="/docs" element={<PageTransition><DocsPage /></PageTransition>} />
+            <Route path="/integrations" element={<PageTransition><IntegrationsPage /></PageTransition>} />
+            <Route path="/privacy" element={<PageTransition><PrivacyPolicyPage /></PageTransition>} />
+            <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+          <CookieConsentBanner />
+          <CommandPalette />
+          <ScrollToTopButton />
+        </Router>
+      </ToastProvider>
+    </ErrorBoundary>
   );
 }
 
