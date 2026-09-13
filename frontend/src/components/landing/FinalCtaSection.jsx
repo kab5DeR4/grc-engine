@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ExternalLink, ShieldCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 
 function GithubIcon({ size = 15, className = '' }) {
@@ -32,44 +32,43 @@ const FinalCtaSection = memo(function FinalCtaSection() {
   };
 
   return (
-    <section className="w-full py-10 sm:py-14 md:py-16 px-4 sm:px-6 md:px-8 bg-[var(--ground)] font-sans text-center">
-      <div className="max-w-7xl mx-auto space-y-4">
+    <section className="w-full py-20 sm:py-24 px-4 sm:px-6 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800 text-center">
+      <div className="max-w-3xl mx-auto space-y-6">
         
-        {/* Headline */}
-        <div className="space-y-2 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[var(--ink-muted)] uppercase tracking-wider">
-            <ShieldCheck size={13} />
-            <span>CONTINUOUS GOVERNANCE</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight sm:tracking-tighter leading-tight">
+        <div className="space-y-3">
+          <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             See what your infrastructure can actually prove.
           </h2>
-          <p className="text-xs sm:text-sm text-[var(--ink-secondary)] max-w-lg mx-auto leading-relaxed">
-            Explore GRC Engine to connect technical configuration state with audit-ready compliance intelligence.
+          <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
+            Test compliance controls against live and mock configurations in the interactive sandbox.
           </p>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button
             type="button"
             onClick={handleLaunch}
-            className="px-6 py-2.5 rounded-lg bg-[var(--ink)] hover:opacity-90 text-[var(--ground)] text-xs font-bold transition-all inline-flex items-center gap-2 shadow-xs cursor-pointer border-none active:scale-[0.97]"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white shadow-sm transition-all border border-zinc-900 dark:border-zinc-100 active:scale-[0.98]"
           >
-            <span>Launch Posture Deck</span>
-            <ArrowRight size={14} />
+            <span>Launch Product Demo</span>
+            <ArrowRight size={15} className="text-orange-400 dark:text-orange-600" />
           </button>
 
           <a
             href="https://github.com/kab5DeR4/grc-engine"
             target="_blank"
             rel="noreferrer"
-            className="px-4 py-2.5 rounded-lg bg-[var(--surface)] hover:bg-[var(--surface-raised)] text-[var(--ink)] border border-[var(--hairline)] text-xs font-mono font-semibold transition-all text-decoration-none inline-flex items-center gap-1.5 shadow-xs active:scale-[0.97]"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-800 transition-colors no-underline"
           >
-            <GithubIcon size={14} />
-            <span>GitHub</span>
-            <ExternalLink size={11} className="opacity-60" />
+            <GithubIcon size={15} />
+            <span>View GitHub</span>
           </a>
+        </div>
+
+        <div className="pt-2">
+          <span className="text-[11px] font-mono text-zinc-400">
+            Self-hosted &bull; MIT License &bull; Read-Only Telemetry
+          </span>
         </div>
 
       </div>
@@ -78,5 +77,4 @@ const FinalCtaSection = memo(function FinalCtaSection() {
 });
 
 FinalCtaSection.displayName = 'FinalCtaSection';
-
 export default FinalCtaSection;
