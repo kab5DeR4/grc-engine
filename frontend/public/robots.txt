@@ -1,0 +1,27 @@
+# robots.txt for GRC Engine
+User-agent: *
+Allow: /
+Allow: /docs
+Allow: /features
+Allow: /architecture
+Allow: /contact
+Allow: /login
+
+# Disallow private/authenticated dashboard, evidence vault and internal APIs
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /archive
+Disallow: /archive/*
+Disallow: /controls
+Disallow: /controls/*
+Disallow: /scans
+Disallow: /scans/*
+Disallow: /findings
+Disallow: /findings/*
+Disallow: /reports
+Disallow: /reports/*
+Disallow: /settings
+Disallow: /settings/*
+Disallow: /api/
+
+Sitemap: https://grcengine.dev/sitemap.xml
