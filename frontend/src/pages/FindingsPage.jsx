@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useDemoStore } from '../store/demoStore';
 import RbacPermissionBanner from '../components/settings/RbacPermissionBanner';
-import { Wrench } from 'lucide-react';
+import { Wrench, CheckCircle2, AlertTriangle, ChevronDown, Copy, Check, Terminal } from 'lucide-react';
 
 export default function FindingsPage() {
   const { 
@@ -13,6 +13,10 @@ export default function FindingsPage() {
     hasPermission 
   } = useDemoStore();
   const [filter, setFilter] = useState('ALL');
+  const [severityFilter, setSeverityFilter] = useState('ALL');
+  const [expandedFindingId, setExpandedFindingId] = useState(null);
+  const [copiedScriptId, setCopiedScriptId] = useState(null);
+
   const canRemediate = hasPermission('simulate_remediation');
 
   const activeFindings = useMemo(() => {
@@ -26,15 +30,25 @@ export default function FindingsPage() {
         status: f.status || 'OPEN',
         title: f.title,
         remediation: f.remediation_action || f.description,
+        resource: f.target_resource_id || 'github.com/organization/core',
+        script: f.remediation_script || `gh api --method PUT /repos/${f.target_resource_id || 'org/repo'}/branches/main/protection --input protection-policy.json`
       }));
     }
-    return findings;
+    return findings.map(f => ({
+      ...f,
+      resource: f.account ? `${f.cloud} / ${f.account}` : 'AWS us-east-1',
+      script: f.title.includes('S3') 
+        ? 'aws s3api put-public-access-block --bucket customer-data-s3-vault --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"'
+        : f.title.includes('MFA')
+        ? 'aws iam enable-mfa-device --user-name privileged-user-01 --serial-number arn:aws:iam::123456789012:mfa/user-yubikey'
+        : 'aws cloudtrail update-trail --name multi-region-audit-trail --enable-log-file-validation'
+    }));
   }, [isLiveMode, liveFindings, findings]);
 
   const filtered = activeFindings.filter(f => {
-    if (filter === 'ALL') return true;
-    const normalized = (f.status || '').toUpperCase();
-    return normalized === filter;
+    const statusMatch = filter === 'ALL' || (f.status || '').toUpperCase() === filter;
+    const severityMatch = severityFilter === 'ALL' || (f.severity || '').toUpperCase() === severityFilter;
+    return statusMatch && severityMatch;
   });
 
   const handleRemediate = async (item) => {
@@ -49,34 +63,40 @@ export default function FindingsPage() {
     }
   };
 
+  const handleCopyScript = (item) => {
+    navigator.clipboard.writeText(item.script || item.remediation);
+    setCopiedScriptId(item.id);
+    setTimeout(() => setCopiedScriptId(null), 2000);
+  };
+
   return (
-    <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-8">
+    <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-6">
       
       {/* Page Header */}
-      <div className="pb-6 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="pb-4 border-b border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mb-2 uppercase tracking-wider">
+          <div className="text-[10.5px] font-mono uppercase tracking-wider text-slate-500 mb-1">
             Risk &amp; Drift Management
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Active Findings &amp; <span className="text-sky-600 dark:text-sky-400">Remediation SLA</span>
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
+            Active Findings &amp; Remediation Queue
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2 max-w-3xl leading-relaxed">
+          <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
             Prioritized inventory of security findings and control failures requiring engineering remediation to preserve audit readiness.
           </p>
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex gap-2 self-start md:self-auto">
+        {/* Status Filters */}
+        <div className="flex flex-wrap gap-1.5 font-mono text-xs">
           {['ALL', 'OPEN', 'RESOLVED'].map(st => (
             <button
               key={st}
               type="button"
               onClick={() => setFilter(st)}
-              className={`text-xs font-mono font-bold px-3.5 py-1.5 rounded-xl border transition-all duration-150 cursor-pointer ${
+              className={`px-3 py-1 rounded-md text-xs transition-colors cursor-pointer border ${
                 filter === st 
-                  ? 'bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 border-transparent shadow-xs' 
-                  : 'bg-[var(--surface)] text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400'
+                  ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 font-medium' 
+                  : 'bg-[var(--surface)] text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-700 hover:border-slate-300'
               }`}
             >
               {st}
@@ -85,7 +105,7 @@ export default function FindingsPage() {
         </div>
       </div>
 
-      {/* RBAC restriction banner */}
+      {/* RBAC restriction banner if user lacks permission */}
       {!canRemediate && (
         <RbacPermissionBanner
           actionName="simulating automated control remediation"
@@ -94,78 +114,113 @@ export default function FindingsPage() {
       )}
 
       {/* Findings List */}
-      <div className="space-y-4">
-        {filtered.map(item => {
-          const isResolved = item.status === 'Resolved' || item.status === 'RESOLVED';
-          return (
-            <div 
-              key={item.id} 
-              className="p-6 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div className="flex items-center gap-2.5 text-xs font-mono">
-                  <span className="font-bold text-sky-600 dark:text-sky-400">{item.id}</span>
-                  <span className="text-slate-400">&bull;</span>
-                  <span className="text-slate-500 font-semibold">{item.control || item.control_id}</span>
-                  <span className={`px-2 py-0.5 rounded text-[10.5px] font-bold ${
-                    item.severity === 'CRITICAL' 
-                      ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400' 
-                      : 'bg-amber-500/15 text-amber-600 dark:text-amber-400'
-                  }`}>
-                    {item.severity}
-                  </span>
+      <div className="space-y-3">
+        {filtered.length === 0 ? (
+          <div className="p-12 text-center bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+            <CheckCircle2 size={24} className="text-emerald-500 mx-auto" />
+            <div className="text-sm font-semibold text-slate-900 dark:text-white">Zero Open Findings</div>
+            <p className="text-xs text-slate-500 font-mono">All evaluated infrastructure controls are currently satisfied.</p>
+          </div>
+        ) : (
+          filtered.map(item => {
+            const isResolved = item.status === 'Resolved' || item.status === 'RESOLVED';
+            const isExpanded = expandedFindingId === item.id;
+
+            return (
+              <div 
+                key={item.id} 
+                className="p-5 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+              >
+                {/* Finding Header Bar */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono text-xs">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold text-orange-600 dark:text-orange-400">{item.id}</span>
+                    <span className="text-slate-300 dark:text-slate-700">&bull;</span>
+                    <span className="text-slate-500">{item.control || item.control_id}</span>
+                    <span className={`px-2 py-0.2 rounded text-[10px] font-bold ${
+                      item.severity === 'CRITICAL' 
+                        ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800' 
+                        : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800'
+                    }`}>
+                      {item.severity}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 text-xs">
+                    <span className="text-slate-400 font-mono text-[11px]">{item.sla}</span>
+                    <span className={`px-2 py-0.5 rounded text-[10.5px] font-mono font-medium ${
+                      isResolved 
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' 
+                        : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800'
+                    }`}>
+                      {item.status.toUpperCase()}
+                    </span>
+                  </div>
                 </div>
-                
-                <div className="flex items-center gap-3 text-xs font-mono">
-                  <span className="text-slate-500">{item.sla}</span>
-                  <span className={`px-2.5 py-0.5 rounded-md font-bold text-[11px] ${
-                    isResolved 
-                      ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' 
-                      : 'bg-rose-500/15 text-rose-600 dark:text-rose-400'
-                  }`}>
-                    {item.status.toUpperCase()}
-                  </span>
+
+                {/* Finding Title & Target Resource */}
+                <div className="space-y-1">
+                  <h2 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                    {item.title}
+                  </h2>
+                  <div className="text-xs font-mono text-slate-500">
+                    Affected Resource: {item.resource}
+                  </div>
                 </div>
-              </div>
 
-              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                {item.title}
-              </h2>
-
-              <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800 text-xs text-slate-700 dark:text-slate-300 space-y-1">
-                <span className="text-[10.5px] font-mono font-bold text-sky-600 dark:text-sky-400 block uppercase">
-                  Automated Remediation Guidance:
-                </span>
-                <p className="leading-relaxed font-mono text-[11.5px]">{item.remediation}</p>
-              </div>
-
-              {!isResolved && (
-                <div className="pt-2 flex justify-end">
-                  {canRemediate ? (
+                {/* Automated Remediation Guidance */}
+                <div className="p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200 dark:border-slate-800 text-xs space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+                      Automated Remediation Guidance
+                    </span>
                     <button
                       type="button"
-                      onClick={() => handleRemediate(item)}
-                      className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 rounded-xl text-xs font-bold transition-all duration-150 active:scale-[0.98] cursor-pointer flex items-center gap-1.5 shadow-xs border-none"
+                      onClick={() => handleCopyScript(item)}
+                      className="flex items-center gap-1 text-[11px] font-mono text-orange-600 dark:text-orange-400 hover:underline cursor-pointer bg-transparent border-none"
                     >
-                      <Wrench size={13} />
-                      <span>{isLiveMode ? 'Resolve Finding (API)' : 'Simulate Remediation'}</span>
+                      {copiedScriptId === item.id ? <Check size={12} /> : <Copy size={12} />}
+                      <span>{copiedScriptId === item.id ? 'Copied' : 'Copy Fix CLI'}</span>
                     </button>
-                  ) : (
-                    <button
-                      type="button"
-                      disabled
-                      className="px-3.5 py-1.5 rounded-xl opacity-50 cursor-not-allowed text-xs font-mono border border-dashed border-slate-300 dark:border-slate-700 text-slate-500"
-                      title="Remediation simulation restricted for External Auditors."
-                    >
-                      Remediation Restricted (RBAC)
-                    </button>
-                  )}
+                  </div>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
+                    {item.remediation}
+                  </p>
+                  <div className="p-2 rounded bg-slate-900 text-slate-200 font-mono text-[11px] overflow-x-auto border border-slate-800">
+                    <code>{item.script}</code>
+                  </div>
                 </div>
-              )}
-            </div>
-          );
-        })}
+
+                {/* Action Footer */}
+                {!isResolved && (
+                  <div className="pt-2 flex justify-end">
+                    {canRemediate ? (
+                      <button
+                        type="button"
+                        onClick={() => handleRemediate(item)}
+                        className="px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer border border-zinc-900 dark:border-zinc-100 active:scale-[0.98]"
+                      >
+                        <Wrench size={12} />
+                        <span>{isLiveMode ? 'Resolve Finding (API)' : 'Simulate Remediation'}</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        disabled
+                        className="px-3 py-1.5 rounded-lg opacity-50 cursor-not-allowed text-xs font-mono border border-dashed border-slate-300 dark:border-slate-700 text-slate-500"
+                        title="Remediation restricted for current RBAC role."
+                      >
+                        Remediation Restricted
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
       </div>
+
     </div>
   );
 }

@@ -2,7 +2,6 @@ import { useMemo, useCallback } from 'react';
 import { useDemoStore } from '../store/demoStore';
 import FeaturedHeroCard from '../components/dashboard/FeaturedHeroCard';
 import FrameworkCard from '../components/dashboard/FrameworkCard';
-import QuickStatStrip from '../components/dashboard/QuickStatStrip';
 import PipelineTracker from '../components/dashboard/PipelineTracker';
 import PriorityFindingsQueue from '../components/dashboard/PriorityFindingsQueue';
 import CloudEcosystemCard from '../components/dashboard/CloudEcosystemCard';
@@ -16,7 +15,7 @@ const Dashboard = () => {
     lastScan, 
     scanRunning, 
     runScan, 
-    triggerLiveScan,
+    triggerLiveScan, 
     isLiveMode, 
     setLiveMode,
     backendOnline,
@@ -56,7 +55,6 @@ const Dashboard = () => {
     return findings;
   }, [isLiveMode, liveFindings, findings]);
 
-  // Critical and High findings tally
   const criticalFindings = useMemo(
     () => activeFindingsList.filter(f => f.severity === 'CRITICAL' && (f.status || '').toUpperCase() !== 'RESOLVED'),
     [activeFindingsList]
@@ -66,13 +64,11 @@ const Dashboard = () => {
     [activeFindingsList]
   );
 
-  // Dynamic metrics derived cleanly by active mode
   const displayScore = isLiveMode 
     ? (liveAssetsCount > 0 ? (criticalFindings.length === 0 ? 95 : 88) : 100) 
     : overallCompliance;
   const totalAssetsCount = isLiveMode ? (liveAssetsCount || 2) : 172;
 
-  // Run unified scan handler
   const handleScan = useCallback(() => {
     if (!canRunScan) return;
     if (isLiveMode) {
@@ -82,7 +78,6 @@ const Dashboard = () => {
     }
   }, [canRunScan, isLiveMode, triggerLiveScan, runScan]);
 
-  // Inline finding remediation
   const handleRemediateFinding = useCallback(async (findingItem) => {
     try {
       if (isLiveMode && findingItem.rawId) {
@@ -95,22 +90,27 @@ const Dashboard = () => {
     }
   }, [isLiveMode, resolveLiveFinding, simulateRemediation]);
 
-  const userName = currentUser?.name?.split(' ')[0] || 'Salung';
+  const userName = currentUser?.name?.split(' ')[0] || 'Engineer';
 
   return (
-    <div className="flex flex-col gap-8 max-w-[1520px] mx-auto pb-16 font-mono text-slate-900 dark:text-slate-100">
+    <div className="flex flex-col gap-6 max-w-[1520px] mx-auto pb-16 font-sans text-slate-900 dark:text-slate-100">
       
       {/* Top Greeting Headline */}
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
-        <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
-          Welcome back, {userName}
-        </h1>
-        <span className="text-xs text-slate-400">
-          LAST DRIFT EVALUATION: <strong className="text-slate-700 dark:text-slate-300">{lastScan}</strong>
-        </span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
+            Security &amp; Compliance Posture
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5 font-mono">
+            Continuous deterministic infrastructure verification &bull; Welcome back, {userName}
+          </p>
+        </div>
+        <div className="text-xs font-mono text-slate-500">
+          Last evaluation: <strong className="text-slate-700 dark:text-slate-300">{lastScan}</strong>
+        </div>
       </div>
 
-      {/* Featured Hero Card (Geometric Systems v2.0 Banner) */}
+      {/* Featured KPI Summary Bar */}
       <FeaturedHeroCard
         score={displayScore}
         totalAssets={totalAssetsCount}
@@ -133,27 +133,27 @@ const Dashboard = () => {
       />
 
       {/* Regulatory Frameworks & Continuous Baselines */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between pb-1">
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
           <div>
-            <span className="text-[10.5px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
-              REGULATORY FRAMEWORKS & BASELINES
-            </span>
-            <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            <div className="text-[10.5px] font-mono font-medium text-slate-500 uppercase tracking-wider">
+              Regulatory Frameworks &amp; Baselines
+            </div>
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white">
               Continuous Standard Enforcement
-            </h3>
+            </h2>
           </div>
           <Link
             to="/controls"
-            className="text-xs font-bold text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center gap-1.5 transition-colors bg-slate-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700"
+            className="text-xs font-mono text-orange-600 dark:text-orange-400 hover:underline flex items-center gap-1 transition-colors no-underline"
           >
-            <span>VIEW ALL CONTROLS</span>
+            <span>View All Controls</span>
             <ArrowUpRight size={13} />
           </Link>
         </div>
 
         {/* Frameworks Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {frameworks.map(fw => (
             <FrameworkCard
               key={fw.id}
@@ -167,26 +167,6 @@ const Dashboard = () => {
             />
           ))}
         </div>
-      </section>
-
-      {/* Quick Metrics Datum Cards */}
-      <section>
-        <QuickStatStrip
-          totalAssets={totalAssetsCount}
-          criticalRisks={criticalFindings.length}
-          highRisks={highFindings.length}
-          activeFrameworks={frameworks.length}
-          automatedCoverage={displayScore}
-          isLive={isLiveMode}
-        />
-      </section>
-
-      {/* Deterministic Verification Pipeline */}
-      <section>
-        <PipelineTracker 
-          activeScan={scanRunning}
-          lastCompleted={lastScan}
-        />
       </section>
 
       {/* Category 02: Operational Risk & Telemetry Connectors */}
@@ -210,6 +190,14 @@ const Dashboard = () => {
           />
         </div>
 
+      </section>
+
+      {/* Deterministic Verification Pipeline Log */}
+      <section>
+        <PipelineTracker 
+          activeScan={scanRunning}
+          lastCompleted={lastScan}
+        />
       </section>
 
     </div>

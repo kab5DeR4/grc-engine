@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { 
   Server, GitBranch, 
   Search, RefreshCw, CheckCircle2,
-  AlertTriangle, Copy, Check
+  AlertTriangle, Copy, Check, Filter, Layers, Database
 } from 'lucide-react';
 import { useDemoStore } from '../store/demoStore';
 import Drawer from '../components/ui/Drawer';
@@ -101,13 +101,16 @@ export default function AssetsPage() {
         complianceScore: 100,
         defaultBranch: 'us-east-1',
         branchProtection: true,
-        secretScanning: true,
-        dependabot: true,
         metadata: {
-          region: 'us-east-1',
-          versioning: 'Enabled',
-          server_side_encryption: 'AES256',
-          public_access_block: 'Enabled (Strict)',
+          encryption: 'AES256-KMS',
+          versioning: 'ENABLED',
+          object_lock: 'COMPLIANCE',
+          public_access_block: {
+            block_public_acls: true,
+            block_public_policy: true,
+            ignore_public_acls: true,
+            restrict_public_buckets: true,
+          },
         },
       },
       {
@@ -116,14 +119,14 @@ export default function AssetsPage() {
         identifier: 'arn:aws:iam::123456789012:root',
         provider: 'AWS',
         type: 'IAM_SECURITY_PRINCIPAL',
-        criticality: 'TIER_1',
+        criticality: 'TIER_0',
         complianceScore: 82,
         defaultBranch: 'global',
         branchProtection: true,
-        secretScanning: true,
-        dependabot: true,
         metadata: {
-          mfa_active: true,
+          mfa_enabled: true,
+          hardware_mfa: true,
+          access_keys_count: 0,
           password_policy: {
             min_length: 16,
             require_symbols: true,
@@ -177,19 +180,19 @@ export default function AssetsPage() {
   };
 
   return (
-    <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-8">
+    <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-6">
       
       {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="text-xs font-mono font-bold text-sky-600 dark:text-sky-400 mb-2 uppercase tracking-wider">
+          <div className="text-[10.5px] font-mono uppercase tracking-wider text-slate-500 mb-1">
             {isLiveMode ? 'Live API Discovery' : 'Discovered Inventory'}
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Infrastructure Asset <span className="text-sky-600 dark:text-sky-400">Inventory</span>
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
+            Infrastructure Asset Inventory
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-2 max-w-3xl leading-relaxed">
-            Continuously discovered repositories, identity pools, and cloud storage buckets parsed into canonical asset definitions.
+          <p className="text-xs text-slate-500 mt-1 max-w-2xl leading-relaxed">
+            Continuously discovered repositories, identity principals, and cloud storage buckets parsed into canonical asset definitions.
           </p>
         </div>
 
@@ -197,58 +200,58 @@ export default function AssetsPage() {
           type="button"
           onClick={handleRefresh}
           disabled={scanRunning}
-          className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-sky-400 dark:text-slate-950 dark:hover:bg-sky-300 text-xs font-bold transition-all duration-150 active:scale-[0.98] cursor-pointer flex items-center gap-2 shadow-xs border-none self-start md:self-auto shrink-0"
+          className="px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 border border-zinc-900 dark:border-zinc-100 shadow-xs active:scale-[0.98] self-start md:self-auto shrink-0"
         >
-          <RefreshCw size={13} className={scanRunning ? 'animate-spin' : ''} />
-          <span>{scanRunning ? 'Scanning Assets...' : 'Refresh Assets'}</span>
+          <RefreshCw size={12} className={scanRunning ? 'animate-spin text-orange-400 dark:text-orange-600' : ''} />
+          <span>{scanRunning ? 'Scanning Assets...' : 'Refresh Inventory'}</span>
         </button>
       </div>
 
       {/* KPI Stats Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
-          <div className="text-xs font-mono font-bold text-slate-500 uppercase">Total Discovered Assets</div>
-          <div className="text-2xl font-extrabold text-slate-900 dark:text-white">
-            {stats.total} <span className="text-xs font-normal text-slate-500">Nodes</span>
+        <div className="p-4 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div className="text-xs font-mono text-slate-500">Total Discovered Assets</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-white tabular-nums">
+            {stats.total} <span className="text-xs font-normal text-slate-500 font-mono">Nodes</span>
           </div>
         </div>
-        <div className="p-5 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
-          <div className="text-xs font-mono font-bold text-slate-500 uppercase">Protected Infrastructure</div>
-          <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400">
+        <div className="p-4 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div className="text-xs font-mono text-slate-500">Protected Infrastructure</div>
+          <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
             {stats.protectedCount} / {stats.total}
           </div>
         </div>
-        <div className="p-5 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
-          <div className="text-xs font-mono font-bold text-slate-500 uppercase">Average Asset Health</div>
-          <div className="text-2xl font-extrabold text-sky-600 dark:text-sky-400">
+        <div className="p-4 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-1">
+          <div className="text-xs font-mono text-slate-500">Average Asset Health</div>
+          <div className="text-2xl font-bold text-slate-900 dark:text-slate-100 tabular-nums">
             {stats.avgCompliance}%
           </div>
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div className="relative w-full sm:w-80">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+      {/* Search & Provider Filters Bar */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="relative flex-1 max-w-md">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Search assets by name or URI..."
+            placeholder="Search assets by name or ARN / URL..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-mono placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:border-sky-500"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 pl-9 pr-3 py-1.5 rounded-lg text-xs font-mono text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-zinc-900 dark:focus:border-zinc-100"
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-1.5 font-mono text-xs">
           {['ALL', 'GITHUB', 'AWS'].map((prov) => (
             <button
               key={prov}
               type="button"
               onClick={() => setProviderFilter(prov)}
-              className={`px-3.5 py-1.5 text-xs font-mono font-bold rounded-xl border transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-md text-xs transition-colors cursor-pointer border ${
                 providerFilter === prov
-                  ? 'bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 border-transparent shadow-xs'
-                  : 'bg-slate-50 dark:bg-slate-850 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-400'
+                  ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 font-medium'
+                  : 'bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               {prov}
@@ -257,124 +260,147 @@ export default function AssetsPage() {
         </div>
       </div>
 
-      {/* Assets Inventory Table */}
-      <div className="overflow-x-auto bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs">
-        <table className="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr className="bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-800 text-[11px] font-mono font-bold text-slate-500 uppercase tracking-wider">
-              <th className="p-4">Identifier / Asset</th>
-              <th className="p-4">Provider</th>
-              <th className="p-4">Type</th>
-              <th className="p-4">Scope</th>
-              <th className="p-4">Protection</th>
-              <th className="p-4">Compliance</th>
-              <th className="p-4 text-right">Inspect</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-            {filteredAssets.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="p-8 text-center text-xs text-slate-500 font-mono">
-                  No discovered infrastructure assets match your query.
-                </td>
+      {/* High-Density Enterprise Data Table */}
+      <div className="bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 font-mono text-[11px] text-slate-500 uppercase tracking-wider">
+                <th className="py-3 px-4 font-medium">Identifier / Asset</th>
+                <th className="py-3 px-3 font-medium">Provider</th>
+                <th className="py-3 px-3 font-medium">Type</th>
+                <th className="py-3 px-3 font-medium">Scope</th>
+                <th className="py-3 px-3 font-medium">Protection</th>
+                <th className="py-3 px-3 font-medium">Compliance</th>
+                <th className="py-3 px-4 font-medium text-right">Inspect</th>
               </tr>
-            ) : (
-              filteredAssets.map((asset) => (
-                <tr key={asset.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-850/50 transition-colors">
-                  <td className="p-4 font-bold">
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 font-mono">
+              {filteredAssets.map((asset) => (
+                <tr 
+                  key={asset.id} 
+                  className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
+                >
+                  <td className="py-3 px-4">
                     <div className="flex items-center gap-2.5">
-                      <Server size={15} className="text-sky-500 shrink-0" />
-                      <div>
-                        <div className="text-slate-900 dark:text-slate-100 font-semibold">{asset.name}</div>
-                        <div className="text-[11px] text-slate-500 font-mono font-normal">{asset.identifier}</div>
+                      <div className="w-7 h-7 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 shrink-0">
+                        {asset.provider === 'GITHUB' ? <GitBranch size={14} /> : <Database size={14} />}
+                      </div>
+                      <div className="min-w-0 font-sans">
+                        <div className="font-semibold text-slate-900 dark:text-slate-100 truncate max-w-[280px]">
+                          {asset.name}
+                        </div>
+                        <div className="text-[11px] text-slate-400 font-mono truncate max-w-[280px]">
+                          {asset.identifier}
+                        </div>
                       </div>
                     </div>
                   </td>
-                  <td className="p-4">
-                    <span className="px-2.5 py-0.5 text-[10.5px] bg-slate-100 dark:bg-slate-800 rounded-md font-mono font-bold text-slate-700 dark:text-slate-300">
+
+                  <td className="py-3 px-3">
+                    <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-medium border border-slate-200 dark:border-slate-700">
                       {asset.provider}
                     </span>
                   </td>
-                  <td className="p-4 text-slate-600 dark:text-slate-400 font-mono text-[11px]">
+
+                  <td className="py-3 px-3 text-slate-600 dark:text-slate-400 text-[11px]">
                     {asset.type}
                   </td>
-                  <td className="p-4 font-mono text-slate-600 dark:text-slate-400">
+
+                  <td className="py-3 px-3 text-slate-600 dark:text-slate-400 text-[11px]">
                     <span className="flex items-center gap-1">
-                      <GitBranch size={12} className="text-sky-500" />
-                      {asset.defaultBranch}
+                      <GitBranch size={11} className="text-slate-400" />
+                      <span>{asset.defaultBranch}</span>
                     </span>
                   </td>
-                  <td className="p-4">
+
+                  <td className="py-3 px-3">
                     {asset.branchProtection ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-emerald-600 dark:text-emerald-400 font-bold font-mono">
-                        <CheckCircle2 size={13} /> ENFORCED
+                      <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-[11px] font-medium">
+                        <CheckCircle2 size={12} />
+                        <span>Enforced</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] text-rose-600 dark:text-rose-400 font-bold font-mono">
-                        <AlertTriangle size={13} /> DISABLED
+                      <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 text-[11px] font-medium">
+                        <AlertTriangle size={12} />
+                        <span>Disabled</span>
                       </span>
                     )}
                   </td>
-                  <td className="p-4">
+
+                  <td className="py-3 px-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-16 bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-                        <div
-                          className="bg-emerald-500 h-full rounded-full"
-                          style={{ width: `${asset.complianceScore}%` }}
+                      <div className="w-16 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full rounded-full ${asset.complianceScore >= 90 ? 'bg-emerald-500' : 'bg-amber-500'}`} 
+                          style={{ width: `${asset.complianceScore}%` }} 
                         />
                       </div>
-                      <span className="text-xs font-bold font-mono text-slate-800 dark:text-slate-200">{asset.complianceScore}%</span>
+                      <span className="text-[11px] tabular-nums font-semibold">{asset.complianceScore}%</span>
                     </div>
                   </td>
-                  <td className="p-4 text-right">
+
+                  <td className="py-3 px-4 text-right">
                     <button
                       type="button"
                       onClick={() => handleInspectAst(asset)}
-                      className="px-3 py-1 text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-300 transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
-                      title="Inspect Raw AST Payload"
+                      className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-mono transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
                     >
                       Inspect AST
                     </button>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      {/* Raw AST Drawer Modal */}
+      {/* Slide-over AST Drawer for Detailed Inspection */}
       <Drawer
         isOpen={drawerOpen}
         onClose={() => setDrawerOpen(false)}
-        title={`Asset Payload // ${selectedAsset?.name || ''}`}
+        title={selectedAsset ? `Asset AST: ${selectedAsset.name}` : 'Asset Inspector'}
       >
         {selectedAsset && (
-          <div className="space-y-4 font-mono text-xs">
-            <div className="p-4 bg-slate-100 dark:bg-slate-800 rounded-xl space-y-1">
-              <div className="text-[10.5px] font-bold text-slate-500 uppercase">Asset Identifier</div>
-              <div className="font-bold text-slate-900 dark:text-white break-all">{selectedAsset.identifier}</div>
-              <div className="text-[11px] text-sky-600 dark:text-sky-400">PROVIDER: {selectedAsset.provider} ({selectedAsset.type})</div>
+          <div className="p-6 space-y-6 font-mono text-xs text-slate-800 dark:text-slate-200">
+            <div className="space-y-2 font-sans">
+              <div className="text-xs text-slate-500 uppercase font-mono">Resource Identifier</div>
+              <div className="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 font-mono text-xs select-all break-all">
+                {selectedAsset.identifier}
+              </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Raw Discovered Metadata:</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-slate-500 uppercase">Parsed AST Metadata (JSON)</span>
+                <button
+                  type="button"
+                  onClick={handleCopyAst}
+                  className="flex items-center gap-1 text-[11px] text-orange-600 dark:text-orange-400 hover:underline cursor-pointer bg-transparent border-none"
+                >
+                  {copiedAst ? <Check size={12} /> : <Copy size={12} />}
+                  <span>{copiedAst ? 'Copied' : 'Copy JSON'}</span>
+                </button>
+              </div>
+              <pre className="p-4 rounded-xl bg-slate-900 text-slate-200 text-[11px] leading-relaxed overflow-x-auto border border-slate-800 max-h-[400px]">
+                {JSON.stringify(selectedAsset.metadata, null, 2)}
+              </pre>
+            </div>
+
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-end">
               <button
                 type="button"
-                onClick={handleCopyAst}
-                className="px-3 py-1 rounded-lg bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 text-xs font-bold flex items-center gap-1.5 cursor-pointer border-none"
+                onClick={() => setDrawerOpen(false)}
+                className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-mono font-medium transition-colors cursor-pointer border-none"
               >
-                {copiedAst ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
-                <span>{copiedAst ? 'Copied' : 'Copy JSON'}</span>
+                Close Inspector
               </button>
             </div>
-
-            <pre className="p-4 bg-slate-900 text-slate-100 rounded-xl text-xs overflow-x-auto max-h-[420px] leading-relaxed border border-slate-800">
-              {JSON.stringify(selectedAsset.metadata, null, 2)}
-            </pre>
           </div>
         )}
       </Drawer>
+
     </div>
   );
 }

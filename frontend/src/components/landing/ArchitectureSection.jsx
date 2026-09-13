@@ -1,32 +1,44 @@
 import { memo } from 'react';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight, Server, Cpu, Database, FileCheck, Layers, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const ArchitectureSection = memo(function ArchitectureSection() {
-  const pipeline = [
-    { name: 'Sources', tech: 'GitHub, AWS, Cloud APIs', desc: 'Raw infrastructure' },
-    { name: 'Collectors', tech: 'Read-only API clients', desc: 'Normalized ingestion' },
-    { name: 'Evidence Vault', tech: 'SHA-256 JSON hashing', desc: 'Immutable ledger' },
-    { name: 'Control Mapping', tech: 'Canonical catalog', desc: 'Multi-framework crosswalk' },
-    { name: 'Evaluation', tech: 'Deterministic rule engine', desc: 'Zero hallucination' },
-    { name: 'Reports & Drift', tech: 'Audit attestation packages', desc: 'Continuous proof' },
+  const layers = [
+    {
+      title: '01 Ingestion & Telemetry',
+      tech: 'Read-only REST APIs & eBPF Probes',
+      detail: 'GitHub VCS, AWS CloudTrail, S3 KMS, and Kubernetes runtime state.',
+      icon: Server,
+    },
+    {
+      title: '02 Cryptographic Vault',
+      tech: 'SHA-256 Key-Sorted JSON Hashing',
+      detail: 'Immutable proof ledger generated at capture for independent audit verification.',
+      icon: Database,
+    },
+    {
+      title: '03 Evaluation Engine',
+      tech: 'FastAPI + Python Deterministic Rules',
+      detail: 'Zero-hallucination policy execution mapped to SOC 2, ISO 27001, and NIST CSF.',
+      icon: Cpu,
+    },
   ];
 
   return (
-    <section className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
+    <section className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/80 dark:border-zinc-800">
       <div className="max-w-5xl mx-auto space-y-10">
         
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="max-w-2xl space-y-2">
             <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">
-              Technical Pipeline
+              Technical Stack
             </div>
             <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
               System architecture.
             </h2>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              How configuration state travels from cloud infrastructure to immutable audit evidence without manual intervention.
+              Modular technical stack engineered for continuous posture evaluation, data sovereignty, and audit transparency.
             </p>
           </div>
 
@@ -39,60 +51,54 @@ const ArchitectureSection = memo(function ArchitectureSection() {
           </Link>
         </div>
 
-        {/* Compact Pipeline Flow Diagram */}
-        <div className="p-5 sm:p-6 rounded-xl border border-zinc-200/90 dark:border-zinc-800 bg-zinc-50/40 dark:bg-zinc-900/30">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 relative">
-            {pipeline.map((stage, idx) => (
-              <div
-                key={stage.name}
-                className="p-3.5 rounded-lg bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 space-y-2 flex flex-col justify-between"
+        {/* Distinct 3-Tier Architecture Layer Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {layers.map((layer) => {
+            const Icon = layer.icon;
+            return (
+              <div 
+                key={layer.title}
+                className="p-5 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 space-y-3 shadow-sm flex flex-col justify-between"
               >
-                <div className="space-y-1">
-                  <div className="text-[10px] font-mono text-orange-600 dark:text-orange-400 font-medium">
-                    0{idx + 1}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono text-orange-600 dark:text-orange-400 font-medium">
+                      {layer.title}
+                    </span>
+                    <div className="w-6 h-6 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 flex items-center justify-center">
+                      <Icon size={13} />
+                    </div>
                   </div>
-                  <div className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-                    {stage.name}
-                  </div>
-                  <div className="text-[11px] text-zinc-500 leading-tight">
-                    {stage.desc}
-                  </div>
-                </div>
-                <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800 text-[10px] font-mono text-zinc-400 truncate">
-                  {stage.tech}
+
+                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                    {layer.tech}
+                  </h3>
+
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    {layer.detail}
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
 
-        {/* Technical Implementation Stack Notes */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-800/60 space-y-1">
-            <div className="font-semibold text-zinc-900 dark:text-zinc-100">
-              FastAPI Core
-            </div>
-            <p className="text-zinc-500 leading-relaxed">
-              Asynchronous REST endpoints with strict Pydantic v2 schemas and RFC-7807 error models.
-            </p>
+        {/* Backend & ORM Tech Specs Bar */}
+        <div className="p-4 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-zinc-500">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span className="text-zinc-900 dark:text-zinc-100 font-medium">FastAPI Python 3.11+</span>
+            <span>&bull; Async REST API</span>
           </div>
 
-          <div className="p-4 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-800/60 space-y-1">
-            <div className="font-semibold text-zinc-900 dark:text-zinc-100">
-              SQLAlchemy 2.0 ORM
-            </div>
-            <p className="text-zinc-500 leading-relaxed">
-              Async database layer with SQLite and PostgreSQL support backed by Alembic schema migrations.
-            </p>
+          <div className="flex items-center gap-2">
+            <span className="text-zinc-900 dark:text-zinc-100 font-medium">SQLAlchemy 2.0 ORM</span>
+            <span>&bull; SQLite / PostgreSQL</span>
           </div>
 
-          <div className="p-4 rounded-lg bg-zinc-50/70 dark:bg-zinc-900/40 border border-zinc-200/60 dark:border-zinc-800/60 space-y-1">
-            <div className="font-semibold text-zinc-900 dark:text-zinc-100">
-              Deterministic Rules
-            </div>
-            <p className="text-zinc-500 leading-relaxed">
-              Explicit Python logic with zero probabilistic hallucination for auditable, reproducible scoring.
-            </p>
+          <div className="flex items-center gap-2">
+            <span className="text-zinc-900 dark:text-zinc-100 font-medium">Deterministic Scoring</span>
+            <span>&bull; Zero Hallucination</span>
           </div>
         </div>
 
