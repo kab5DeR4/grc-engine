@@ -1,19 +1,23 @@
 import { memo } from 'react';
 import { Check, ShieldCheck } from 'lucide-react';
+import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 const RealEvidenceRecordSection = memo(function RealEvidenceRecordSection() {
   return (
-    <section className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/80 dark:border-zinc-800">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <section className="w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/80 dark:border-zinc-800">
+      <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Section Header */}
         <div className="text-left space-y-2">
           <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">
             Audit Provenance
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <AnimatedBlurTextHeading 
+            as="h2" 
+            className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+          >
             What verifiable evidence actually looks like.
-          </h2>
+          </AnimatedBlurTextHeading>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Not a screenshot or manual checkbox. Every finding is anchored in a cryptographically hashed, timestamped technical record.
           </p>

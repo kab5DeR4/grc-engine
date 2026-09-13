@@ -1,5 +1,6 @@
 import { memo, useState } from 'react';
 import { Check, GitBranch, Lock, Database } from 'lucide-react';
+import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 const EvidenceModelSection = memo(function EvidenceModelSection() {
   const [activeSourceId, setActiveSourceId] = useState('branch');
@@ -112,17 +113,20 @@ const EvidenceModelSection = memo(function EvidenceModelSection() {
   const activeSource = sources.find((s) => s.id === activeSourceId) || sources[0];
 
   return (
-    <section className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
-      <div className="max-w-5xl mx-auto space-y-10">
+    <section className="w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
+      <div className="max-w-7xl mx-auto space-y-10">
         
         {/* Section Header */}
         <div className="max-w-2xl space-y-2">
           <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">
             Unified Evidence Architecture
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <AnimatedBlurTextHeading 
+            as="h2" 
+            className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+          >
             One evidence layer. Multiple frameworks.
-          </h2>
+          </AnimatedBlurTextHeading>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Stop collecting the same evidence four times for four different audits. Ingest infrastructure state once, and GRC Engine maps it to every relevant framework.
           </p>

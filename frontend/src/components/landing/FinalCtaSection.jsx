@@ -1,7 +1,8 @@
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
+import InteractiveCursorGlowButton from '../ui/InteractiveCursorGlowButton';
+import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 function GithubIcon({ size = 15, className = '' }) {
   return (
@@ -32,27 +33,25 @@ const FinalCtaSection = memo(function FinalCtaSection() {
   };
 
   return (
-    <section className="w-full py-20 sm:py-24 px-4 sm:px-6 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800 text-center">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <section className="w-full py-12 sm:py-16 px-4 sm:px-6 lg:px-8 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800 text-center">
+      <div className="max-w-5xl mx-auto space-y-6">
         
         <div className="space-y-3">
-          <h2 className="text-2xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <AnimatedBlurTextHeading 
+            as="h2" 
+            className="text-2xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+          >
             See what your infrastructure can actually prove.
-          </h2>
+          </AnimatedBlurTextHeading>
           <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
             Test compliance controls against live and mock configurations in the interactive sandbox.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <button
-            type="button"
-            onClick={handleLaunch}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white shadow-sm transition-all border border-zinc-900 dark:border-zinc-100 active:scale-[0.98]"
-          >
+          <InteractiveCursorGlowButton onClick={handleLaunch}>
             <span>Launch Product Demo</span>
-            <ArrowRight size={15} className="text-orange-400 dark:text-orange-600" />
-          </button>
+          </InteractiveCursorGlowButton>
 
           <a
             href="https://github.com/kab5DeR4/grc-engine"

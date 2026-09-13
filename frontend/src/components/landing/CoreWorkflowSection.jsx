@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 const CoreWorkflowSection = memo(function CoreWorkflowSection() {
   const steps = [
@@ -30,17 +31,20 @@ const CoreWorkflowSection = memo(function CoreWorkflowSection() {
   ];
 
   return (
-    <section id="how-it-works" className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans border-t border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50">
-      <div className="max-w-5xl mx-auto space-y-10">
+    <section id="how-it-works" className="w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans border-t border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/50">
+      <div className="max-w-7xl mx-auto space-y-10">
         
         {/* Section Header */}
         <div className="max-w-2xl space-y-2">
           <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">
             System Workflow
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <AnimatedBlurTextHeading 
+            as="h2" 
+            className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+          >
             From compliance requirements to technical evidence.
-          </h2>
+          </AnimatedBlurTextHeading>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             A continuous verification cycle that eliminates manual audits by anchoring policy directly in source code and cloud configuration.
           </p>

@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { ExternalLink, Code2, GitFork, Check } from 'lucide-react';
+import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 function GithubIcon({ size = 16, className = '' }) {
   return (
@@ -22,8 +23,8 @@ function GithubIcon({ size = 16, className = '' }) {
 
 const OpenSourceSection = memo(function OpenSourceSection() {
   return (
-    <section className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/80 dark:border-zinc-800">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <section className="w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/80 dark:border-zinc-800">
+      <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Main Content Container */}
         <div className="p-6 sm:p-8 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -39,9 +40,12 @@ const OpenSourceSection = memo(function OpenSourceSection() {
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+            <AnimatedBlurTextHeading 
+              as="h2" 
+              className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+            >
               Explore the system.
-            </h2>
+            </AnimatedBlurTextHeading>
 
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
               GRC Engine is built in the open. Inspect the source code, review the canonical control definitions, and test the deterministic evaluation engine on your own machine.

@@ -6,6 +6,7 @@ import {
   Database,
   ExternalLink
 } from 'lucide-react';
+import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 const ProductShowcaseSection = memo(function ProductShowcaseSection() {
   const [selectedAssetIndex, setSelectedAssetIndex] = useState(0);
@@ -81,8 +82,8 @@ const ProductShowcaseSection = memo(function ProductShowcaseSection() {
   const currentAsset = assets[selectedAssetIndex];
 
   return (
-    <section className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
-      <div className="max-w-5xl mx-auto space-y-10">
+    <section className="w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
+      <div className="max-w-7xl mx-auto space-y-10">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -90,9 +91,12 @@ const ProductShowcaseSection = memo(function ProductShowcaseSection() {
             <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">
               Inspection Interface
             </div>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+            <AnimatedBlurTextHeading 
+              as="h2" 
+              className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+            >
               See what the system can actually verify.
-            </h2>
+            </AnimatedBlurTextHeading>
             <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
               Real infrastructure state evaluated deterministically against canonical controls, complete with immutable SHA-256 evidence provenance.
             </p>

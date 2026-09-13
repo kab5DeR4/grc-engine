@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Lock, ShieldCheck, Clock, Key } from 'lucide-react';
+import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 const SecurityPrinciplesSection = memo(function SecurityPrinciplesSection() {
   const principles = [
@@ -26,17 +27,20 @@ const SecurityPrinciplesSection = memo(function SecurityPrinciplesSection() {
   ];
 
   return (
-    <section id="security" className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
-      <div className="max-w-5xl mx-auto space-y-10">
+    <section id="security" className="w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
+      <div className="max-w-7xl mx-auto space-y-10">
         
         {/* Section Header */}
         <div className="max-w-2xl space-y-2">
           <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">
             Security Architecture
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <AnimatedBlurTextHeading 
+            as="h2" 
+            className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+          >
             Built for sensitive infrastructure.
-          </h2>
+          </AnimatedBlurTextHeading>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
             Engineered to operate safely inside enterprise environments where read access is tightly regulated and data exfiltration is unacceptable.
           </p>
