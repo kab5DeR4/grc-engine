@@ -1,61 +1,66 @@
 import StudioNav from '../components/layout/StudioNav';
 import StudioFooter from '../components/layout/StudioFooter';
 import HeroSection from '../components/landing/HeroSection';
+import CoreWorkflowSection from '../components/landing/CoreWorkflowSection';
+import ProductShowcaseSection from '../components/landing/ProductShowcaseSection';
 import ProblemComparison from '../components/landing/ProblemComparison';
-import ProductFlowSection from '../components/landing/ProductFlowSection';
-import MidPageCtaSection from '../components/landing/MidPageCtaSection';
-import FrameworkMappingSection from '../components/landing/FrameworkMappingSection';
-import EvidenceIntegritySection from '../components/landing/EvidenceIntegritySection';
+import EvidenceModelSection from '../components/landing/EvidenceModelSection';
+import RealEvidenceRecordSection from '../components/landing/RealEvidenceRecordSection';
 import SecurityPrinciplesSection from '../components/landing/SecurityPrinciplesSection';
-import DemoExperienceSection from '../components/landing/DemoExperienceSection';
-import EngineeringCredibilitySection from '../components/landing/EngineeringCredibilitySection';
+import IntegrationsSection from '../components/landing/IntegrationsSection';
+import ArchitectureSection from '../components/landing/ArchitectureSection';
+import OpenSourceSection from '../components/landing/OpenSourceSection';
 import FinalCtaSection from '../components/landing/FinalCtaSection';
 
 /**
  * GRC Engine Redesigned Landing Page
- * Hierarchy: High-Utility Command Hero -> Single Comprehensive Comparison Matrix ->
- *            Product Flow & Inspector -> Strategic Mid CTA -> Framework Mapping ->
- *            Evidence Verification -> Security Commitments -> Sandbox -> Tech Stack -> Final CTA
+ * Coherent Third Design:
+ * - Clean, calm, modern light interface foundation
+ * - Precise technical security-engineering character with restrained orange accent
+ * - Clear narrative: "Compliance, grounded in verifiable evidence."
  */
 export default function LandingPage() {
   return (
-    <div className="w-full min-h-screen bg-[var(--ground)] text-[var(--ink)] font-sans transition-colors duration-150 selection:bg-sky-500/20 selection:text-sky-900 dark:selection:text-sky-200 overflow-x-hidden">
+    <div className="w-full min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans antialiased selection:bg-orange-500/20 selection:text-orange-900 dark:selection:text-orange-200 overflow-x-hidden">
       {/* 01 — Top Navigation */}
       <StudioNav />
 
       <main>
-        {/* 02 — Hero: Command Center UI Cockpit */}
+        {/* 02 — Hero with Conceptual Loop & Product Verification Centerpiece */}
         <HeroSection />
 
-        {/* 03 — Consolidated Comparison Matrix: Traditional GRC vs Infrastructure-Native */}
+        {/* 03 — Core Product Story: 01 Control to 05 Report */}
+        <CoreWorkflowSection />
+
+        {/* 04 — Product UI Showcase: What the system can actually verify */}
+        <ProductShowcaseSection />
+
+        {/* 05 — Problem & Solution: Compliance shouldn't depend on screenshots */}
         <ProblemComparison />
 
-        {/* 04 — Unified Product Flow: Live Rule Evaluation Sandbox */}
-        <ProductFlowSection />
+        {/* 06 — Evidence Model: 1 Evidence layer to Multiple Frameworks */}
+        <EvidenceModelSection />
 
-        {/* 05 — Strategic Mid-Page Contextual CTA */}
-        <MidPageCtaSection />
+        {/* 07 — Real Concrete Evidence Record Example */}
+        <RealEvidenceRecordSection />
 
-        {/* 06 — Frameworks: Recognizable badges & 1-to-many mapping */}
-        <FrameworkMappingSection />
-
-        {/* 07 — Evidence Integrity: Cryptographic SHA-256 fingerprinting */}
-        <EvidenceIntegritySection />
-
-        {/* 08 — Enterprise Security Commitments */}
+        {/* 08 — Security: Built for sensitive infrastructure (4 key principles) */}
         <SecurityPrinciplesSection />
 
-        {/* 09 — Interactive Demo Sandbox */}
-        <DemoExperienceSection />
+        {/* 09 — Integrations: Connect the systems you already use */}
+        <IntegrationsSection />
 
-        {/* 10 — Built-with Tech Stack & Open Source */}
-        <EngineeringCredibilitySection />
+        {/* 10 — Compact Technical Architecture */}
+        <ArchitectureSection />
 
-        {/* 11 — Final CTA */}
+        {/* 11 — Open Source Identity */}
+        <OpenSourceSection />
+
+        {/* 12 — Final CTA */}
         <FinalCtaSection />
       </main>
 
-      {/* Engineering Footer */}
+      {/* 13 — Minimal Professional Footer */}
       <StudioFooter />
     </div>
   );
