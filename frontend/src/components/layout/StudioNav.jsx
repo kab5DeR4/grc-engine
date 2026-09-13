@@ -1,11 +1,10 @@
 import { useState, useEffect, memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, ArrowRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import ThemeDensitySelector from '../ui/ThemeDensitySelector';
 import { useDemoStore } from '../../store/demoStore';
 
-function GithubIcon({ size = 16, className = '' }) {
+// minimal github svg icon
+function GithubIcon({ size = 15, className = '' }) {
   return (
     <svg 
       width={size} 
@@ -32,17 +31,17 @@ const StudioNav = memo(function StudioNav() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 16);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (id) => {
+  const handleNavScroll = (id) => {
     setMobileMenuOpen(false);
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     } else {
       navigate(`/#${id}`);
     }
@@ -58,148 +57,146 @@ const StudioNav = memo(function StudioNav() {
     <header 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 font-sans ${
         scrolled || mobileMenuOpen 
-          ? 'bg-[var(--surface)] border-b border-[var(--hairline)] shadow-sm' 
-          : 'bg-[var(--surface)] border-b border-transparent'
+          ? 'bg-white/90 dark:bg-zinc-950/90 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800 shadow-sm' 
+          : 'bg-white/80 dark:bg-zinc-950/80 backdrop-blur-sm border-b border-zinc-200/50 dark:border-zinc-800/50'
       }`}
     >
-      <div className="h-16 flex items-center justify-between px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
+      <div className="h-14 max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
         
-        {/* Brand Logo */}
+        {/* Left: GRC Engine Logo / Wordmark */}
         <Link 
           to="/" 
-          className="flex items-center gap-2.5 group text-decoration-none select-none" 
+          className="flex items-center gap-2.5 text-zinc-900 dark:text-zinc-100 hover:opacity-90 transition-opacity no-underline group"
           onClick={() => setMobileMenuOpen(false)}
         >
-          <div className="w-7 h-7 rounded-lg bg-slate-900 dark:bg-sky-400 flex items-center justify-center text-white dark:text-slate-950 font-bold text-xs shadow-xs transition-transform duration-150 group-active:scale-95">
+          <div className="w-5 h-5 rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 flex items-center justify-center font-mono font-semibold text-xs transition-transform group-hover:scale-105">
             G
           </div>
-          <span className="text-lg font-bold text-slate-900 dark:text-slate-100 tracking-tight">
-            GRC Engine<span className="text-sky-600 dark:text-sky-400">.</span>
+          <span className="font-medium text-sm tracking-tight text-zinc-900 dark:text-zinc-100">
+            GRC Engine
+          </span>
+          <span className="text-[10px] font-mono font-medium px-1.5 py-0.5 rounded bg-orange-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-400 border border-orange-200/60 dark:border-orange-800/60">
+            v1.0
           </span>
         </Link>
 
-        {/* Center Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-7">
+        {/* Center: Quiet Navigation Links */}
+        <nav className="hidden md:flex items-center gap-7 text-sm font-normal text-zinc-600 dark:text-zinc-400">
           <Link
             to="/dashboard"
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none"
+            className="hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors no-underline"
           >
             Platform
           </Link>
           <button
-            onClick={() => handleNavClick('how-it-works')}
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors bg-transparent border-none cursor-pointer p-0"
+            type="button"
+            onClick={() => handleNavScroll('how-it-works')}
+            className="bg-transparent border-none p-0 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors"
           >
             How It Works
           </button>
           <button
-            onClick={() => handleNavClick('security')}
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors bg-transparent border-none cursor-pointer p-0"
+            type="button"
+            onClick={() => handleNavScroll('security')}
+            className="bg-transparent border-none p-0 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors"
           >
             Security
           </button>
           <Link
             to="/docs"
-            className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors text-decoration-none"
+            className="hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors no-underline"
           >
             Documentation
           </Link>
         </nav>
 
-        {/* Right Actions */}
-        <div className="flex items-center space-x-3">
+        {/* Right: Actions */}
+        <div className="flex items-center gap-3">
           <a
             href="https://github.com/kab5DeR4/grc-engine"
             target="_blank"
             rel="noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all text-xs font-medium text-decoration-none active:scale-95"
+            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800/60 transition-colors no-underline"
             title="View source on GitHub"
           >
-            <GithubIcon size={15} />
-            <span>GitHub</span>
+            <GithubIcon size={14} />
+            <span className="font-medium">GitHub</span>
           </a>
-
-          <ThemeDensitySelector />
 
           <button 
             type="button"
             onClick={handleDemoLaunch}
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 dark:text-slate-950 dark:bg-sky-400 dark:hover:bg-sky-300 transition-all shadow-xs cursor-pointer border-none active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white shadow-sm transition-all border border-zinc-900 dark:border-zinc-100 active:scale-[0.98]"
           >
-            <span>Try Demo</span>
-            <ArrowRight size={13} />
+            <span>Launch Product</span>
+            <ArrowRight size={13} className="text-orange-400 dark:text-orange-600" />
           </button>
 
-          {/* Mobile menu toggle */}
+          {/* Mobile hamburger */}
           <button
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-transparent border-none cursor-pointer active:scale-90 transition-transform"
+            className="md:hidden p-1.5 text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white bg-transparent border-none cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Spring Drawer */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 340 }}
-            className="md:hidden bg-[var(--surface)] border-b border-[var(--hairline)] p-5 space-y-3 shadow-md overflow-hidden"
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-4 py-4 space-y-3 text-sm">
+          <Link 
+            to="/dashboard" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-zinc-700 dark:text-zinc-300 py-1.5 no-underline"
           >
-            <Link 
-              to="/dashboard" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-medium text-slate-800 dark:text-slate-200 py-1.5 text-decoration-none"
+            Platform
+          </Link>
+          <button 
+            type="button"
+            onClick={() => handleNavScroll('how-it-works')}
+            className="block w-full text-left text-zinc-700 dark:text-zinc-300 py-1.5 bg-transparent border-none p-0 cursor-pointer text-sm"
+          >
+            How It Works
+          </button>
+          <button 
+            type="button"
+            onClick={() => handleNavScroll('security')}
+            className="block w-full text-left text-zinc-700 dark:text-zinc-300 py-1.5 bg-transparent border-none p-0 cursor-pointer text-sm"
+          >
+            Security
+          </button>
+          <Link 
+            to="/docs" 
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-zinc-700 dark:text-zinc-300 py-1.5 no-underline"
+          >
+            Documentation
+          </Link>
+          <div className="pt-3 border-t border-zinc-100 dark:border-zinc-800 flex items-center gap-2">
+            <a
+              href="https://github.com/kab5DeR4/grc-engine"
+              target="_blank"
+              rel="noreferrer"
+              className="flex-1 py-2 text-center text-xs font-medium border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 rounded no-underline"
             >
-              Platform
-            </Link>
-            <button 
-              onClick={() => handleNavClick('how-it-works')}
-              className="block w-full text-left text-sm font-medium text-slate-800 dark:text-slate-200 py-1.5 bg-transparent border-none p-0 cursor-pointer"
+              GitHub
+            </a>
+            <button
+              type="button"
+              onClick={handleDemoLaunch}
+              className="flex-1 py-2 text-center text-xs font-medium bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded border-none cursor-pointer"
             >
-              How It Works
+              Launch Product
             </button>
-            <button 
-              onClick={() => handleNavClick('security')}
-              className="block w-full text-left text-sm font-medium text-slate-800 dark:text-slate-200 py-1.5 bg-transparent border-none p-0 cursor-pointer"
-            >
-              Security
-            </button>
-            <Link 
-              to="/docs" 
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-medium text-slate-800 dark:text-slate-200 py-1.5 text-decoration-none"
-            >
-              Documentation
-            </Link>
-            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex gap-2">
-              <a
-                href="https://github.com/kab5DeR4/grc-engine"
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 py-2 text-center text-xs font-medium border border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 text-decoration-none"
-              >
-                GitHub
-              </a>
-              <button
-                onClick={handleDemoLaunch}
-                className="flex-1 py-2 text-center text-xs font-semibold bg-slate-900 text-white dark:bg-sky-400 dark:text-slate-950 rounded-lg border-none"
-              >
-                Try Demo
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </header>
   );
 });
 
 StudioNav.displayName = 'StudioNav';
-
 export default StudioNav;
