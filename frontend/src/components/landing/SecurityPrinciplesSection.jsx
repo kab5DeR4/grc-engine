@@ -1,88 +1,65 @@
 import { memo } from 'react';
-import { Lock, ShieldCheck, EyeOff, Database, Key, Server } from 'lucide-react';
+import { Lock, ShieldCheck, Clock, Key } from 'lucide-react';
 
-// security principles in crisp bento grid
 const SecurityPrinciplesSection = memo(function SecurityPrinciplesSection() {
-  const concreteClaims = [
+  const principles = [
     {
       icon: Lock,
-      title: 'Least-Privilege Read-Only Access',
-      tag: 'SCOPES: READ-ONLY',
-      desc: 'Connectors for GitHub, AWS, and Okta request minimal read-only scopes. GRC Engine never mutates or modifies production environments.',
-    },
-    {
-      icon: EyeOff,
-      title: 'Zero External LLM Exfiltration',
-      tag: 'AIR-GAPPED EVAL',
-      desc: 'Rule evaluations execute deterministically on your infrastructure. Private configuration state is never transmitted to third-party AI APIs.',
-    },
-    {
-      icon: Database,
-      title: 'Encrypted in Transit & at Rest',
-      tag: 'TLS 1.3 & AES-256',
-      desc: 'All telemetry is encrypted in transit via TLS 1.3 and at rest with AES-256 encryption supporting customer-managed KMS keys.',
+      title: 'Least-privilege access',
+      detail: 'Connectors for GitHub and cloud environments request minimal read-only scopes. GRC Engine never writes to or mutates your infrastructure.',
     },
     {
       icon: ShieldCheck,
-      title: 'Cryptographic Tamper Verification',
-      tag: 'SHA-256 HASHING',
-      desc: 'Every evidence payload receives a timestamped SHA-256 fingerprint at ingestion, preventing post-capture alteration.',
+      title: 'Evidence integrity',
+      detail: 'Every collected configuration payload is hashed with SHA-256 at capture, ensuring tamper-evident provenance that auditors can verify.',
+    },
+    {
+      icon: Clock,
+      title: 'Auditable collection',
+      detail: 'Every scan, rule evaluation, and attestation record is timestamped with complete collector versioning and immutable ledger tracking.',
     },
     {
       icon: Key,
-      title: 'Granular Role-Based Access Control',
-      tag: 'RBAC: 4 ROLES',
-      desc: 'Strict authorization matrices isolate permissions across Platform Admins, Compliance Leads, Security Engineers, and External Auditors.',
-    },
-    {
-      icon: Server,
-      title: 'Sovereign VPC Deployment Ready',
-      tag: 'VPC & ON-PREM',
-      desc: 'Deployable as a self-contained service within your own VPC or air-gapped network for complete enterprise data sovereignty.',
+      title: 'Secure credential handling',
+      detail: 'API tokens and keys are securely scoped and isolated. Private infrastructure configuration data is never transmitted to external AI services.',
     },
   ];
 
   return (
-    <section id="security" className="w-full py-8 sm:py-12 md:py-16 px-4 sm:px-6 md:px-8 font-sans bg-[var(--ground)]">
-      <div className="max-w-7xl mx-auto space-y-5">
+    <section id="security" className="w-full py-16 sm:py-20 px-4 sm:px-6 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
+      <div className="max-w-5xl mx-auto space-y-10">
         
         {/* Section Header */}
-        <div className="text-left max-w-3xl space-y-1.5">
-          <div className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[var(--ink-muted)] uppercase tracking-wider">
-            <Lock size={13} />
-            <span>ENTERPRISE SECURITY SPECIFICATIONS</span>
+        <div className="max-w-2xl space-y-2">
+          <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">
+            Security Architecture
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[var(--ink)] tracking-tight sm:tracking-tighter">
-            Built for sensitive infrastructure data.
+          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+            Built for sensitive infrastructure.
           </h2>
-          <p className="text-xs sm:text-sm text-[var(--ink-secondary)] leading-relaxed font-normal">
-            Concrete security architecture designed to satisfy strict enterprise CISO and auditor requirements.
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Engineered to operate safely inside enterprise environments where read access is tightly regulated and data exfiltration is unacceptable.
           </p>
         </div>
 
-        {/* Bento Interconnected Architecture Matrix */}
-        <div className="border border-[var(--hairline)] rounded-xl bg-[var(--hairline)] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px overflow-hidden shadow-sm">
-          {concreteClaims.map((item, idx) => {
+        {/* 4-Item Clean Technical Layout (Not giant cards) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {principles.map((item) => {
             const Icon = item.icon;
             return (
-              <div
-                key={idx}
-                className="p-5 bg-[var(--surface)] space-y-2.5 flex flex-col justify-between hover:bg-[var(--surface-raised)] transition-colors"
+              <div 
+                key={item.title}
+                className="p-5 rounded-lg border border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/40 dark:bg-zinc-900/30 space-y-3"
               >
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div className="w-8 h-8 rounded-lg bg-[var(--surface-raised)] border border-[var(--hairline)] text-sky-500 flex items-center justify-center">
-                      <Icon size={16} />
-                    </div>
-                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-[var(--surface-raised)] text-[var(--ink-muted)] border border-[var(--hairline)]">
-                      {item.tag}
-                    </span>
-                  </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-[var(--ink)]">
+                <div className="w-8 h-8 rounded bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 flex items-center justify-center text-zinc-700 dark:text-zinc-300">
+                  <Icon size={16} className="text-orange-600 dark:text-orange-500" />
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-[var(--ink-muted)] leading-relaxed">
-                    {item.desc}
+                  <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    {item.detail}
                   </p>
                 </div>
               </div>
@@ -96,5 +73,4 @@ const SecurityPrinciplesSection = memo(function SecurityPrinciplesSection() {
 });
 
 SecurityPrinciplesSection.displayName = 'SecurityPrinciplesSection';
-
 export default SecurityPrinciplesSection;
