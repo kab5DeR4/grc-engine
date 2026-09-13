@@ -22,8 +22,8 @@ function GithubIcon({ size = 15, className = '' }) {
 
 const StudioFooter = memo(function StudioFooter() {
   return (
-    <footer className="w-full bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800 py-12 px-4 sm:px-6 font-sans">
-      <div className="max-w-5xl mx-auto space-y-8">
+    <footer className="w-full bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-8">
         
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
           {/* Brand info */}
@@ -66,6 +66,12 @@ const StudioFooter = memo(function StudioFooter() {
             </a>
             <Link to="/contact" className="hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors no-underline">
               Contact
+            </Link>
+            <Link to="/privacy" className="hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors no-underline">
+              Privacy
+            </Link>
+            <Link to="/terms" className="hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors no-underline">
+              Terms
             </Link>
           </div>
         </div>
