@@ -375,12 +375,16 @@ Recalculates deterministic SHA-256 hash of raw JSON telemetry payload stored in 
 ## 8. Continuous Scans & Job Triggering (`/api/v1/scans`)
 
 ### 8.1 Trigger Compliance Scan
+Triggers a live or sandbox compliance scan across connected infrastructure integrations (e.g. GitHub repositories). Automatically discovers assets, inspects control states (branch protection, review policies, secret scanning, dependabot alerts), hashes SHA-256 evidence snapshots, evaluates compliance rules, and generates findings for any failing controls.
+
 - **Method / Path:** `POST /api/v1/scans/trigger`
+- **Authentication:** `Bearer <JWT_ACCESS_TOKEN>` (Optional in demo sandbox)
 
 #### Request Body
 ```json
 {
-  "target_scope": "REPOSITORIES"
+  "target_scope": "REPOSITORIES",
+  "integration_id": null
 }
 ```
 
@@ -389,13 +393,13 @@ Recalculates deterministic SHA-256 hash of raw JSON telemetry payload stored in 
 {
   "id": "scan-9021-uuid",
   "organization_id": "ORG-ACME-01",
-  "status": "PENDING",
+  "status": "COMPLETED",
   "target_scope": "REPOSITORIES",
-  "assets_scanned_count": 0,
-  "controls_evaluated_count": 0,
-  "findings_count": 0,
-  "started_at": "2026-09-08T14:48:00Z",
-  "completed_at": null
+  "assets_scanned_count": 3,
+  "controls_evaluated_count": 12,
+  "findings_count": 2,
+  "started_at": "2026-09-14T14:48:00Z",
+  "completed_at": "2026-09-14T14:48:02Z"
 }
 ```
 
