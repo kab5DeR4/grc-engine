@@ -29,6 +29,8 @@ import CookieConsentBanner from './components/ui/CookieConsentBanner';
 import { ToastProvider } from './components/ui/Toast';
 import CommandPalette from './components/ui/CommandPalette';
 
+import MetaHead from './components/layout/MetaHead';
+
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -51,6 +53,7 @@ function App() {
     <ErrorBoundary>
       <ToastProvider>
         <Router>
+          <MetaHead />
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<LandingPage />} />

@@ -100,6 +100,7 @@ export default function DashboardIntegrations() {
   return (
     <div className="w-full min-h-full bg-[var(--ground)] text-slate-900 dark:text-slate-100 font-sans pb-16">
       <main className="max-w-[1400px] mx-auto">
+        <h1 className="sr-only">System Integrations & Telemetry Ingress Dashboard</h1>
         <IntegrationHeader />
 
         <IntegrationFilterBar 

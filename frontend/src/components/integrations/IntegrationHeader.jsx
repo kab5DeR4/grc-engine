@@ -7,9 +7,9 @@ export default function IntegrationHeader() {
         <Network size={13} />
         <span>SYSTEM INTEGRATIONS & TELEMETRY INGRESS</span>
       </div>
-      <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
         Connection Management
-      </h1>
+      </h2>
       <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 max-w-3xl leading-relaxed">
         Configure telemetry ingress points, CI/CD policy enforcements, and downstream workflow alerts. Manage API credentials and verify live connection health with 1-click latency pings.
       </p>

@@ -1,0 +1,20 @@
+# GRC Engine - Continuous Automated Compliance & Audit Engine
+
+> Continuous, code-first compliance automation, automated evidence collection, real-time audit readiness, and automated control verification for modern cloud infrastructure (AWS, Azure, GCP, GitHub, Kubernetes).
+
+## Core Capabilities
+- **Automated Evidence Harvesting:** Continuous collection of infrastructure configurations, Git commit histories, CI/CD pipeline runs, and access policies.
+- **Control Framework Mapping:** Out-of-the-box compliance controls for SOC 2 Type II, ISO 27001, NIST 800-53, HIPAA, and PCI-DSS.
+- **Audit-Ready Dashboards:** Executive summary reports, granular gap analysis, policy deviation alerts, and live risk metrics.
+- **Developer-First Integration:** Native CI/CD checks, PR scanners, and real-time posture feedback before merging to production.
+
+## Key System Concepts
+- `Evidence Collection Agent`: Lightweight background scanner reading cloud APIs & VCS state.
+- `Policy Engine`: Evaluates rules as code against collected metadata.
+- `Control Registry`: Maps raw infrastructure evidence into formal audit requirements.
+- `Audit Vault`: Cryptographically signed evidence storage for auditor verification.
+
+## Public Resources
+- Main Site: https://grcengine.dev
+- Architecture Docs: https://grcengine.dev/architecture
+- GitHub Repository: https://github.com/grc-engine/grc-engine
