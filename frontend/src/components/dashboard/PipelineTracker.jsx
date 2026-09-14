@@ -16,10 +16,13 @@ const STAGES = [
 
 export const PipelineTracker = memo(function PipelineTracker({ 
   activeScan = false, 
-  lastCompleted = 'Just now' 
+  lastCompleted = 'Just now',
+  isLive = false,
+  hasLiveIntegrations = false,
 }) {
+  const isAwaiting = isLive && !hasLiveIntegrations;
+
   return (
-    // stages tracking clean as a whistle
     <div className="bg-[var(--surface)] rounded-xl border border-[var(--hairline)] p-6 md:p-8 shadow-sm font-mono text-[var(--ink)]">
       
       {/* Header */}
@@ -34,11 +37,23 @@ export const PipelineTracker = memo(function PipelineTracker({
         </div>
         <div className="flex items-center gap-3 text-xs text-[var(--ink-muted)]">
           <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[var(--surface-raised)] border border-[var(--hairline)] font-bold text-[var(--ink)]">
-            <span className={`w-2 h-2 rounded-full ${activeScan ? 'bg-[var(--warn)] animate-ping' : 'bg-[var(--pass)]'}`}></span>
-            <span>{activeScan ? 'EVALUATION ACTIVE' : 'ALL STAGES NOMINAL'}</span>
+            <span className={`w-2 h-2 rounded-full ${
+              activeScan 
+                ? 'bg-[var(--warn)] animate-ping' 
+                : isAwaiting 
+                ? 'bg-amber-500' 
+                : 'bg-[var(--pass)]'
+            }`}></span>
+            <span>
+              {activeScan 
+                ? 'EVALUATION ACTIVE' 
+                : isAwaiting 
+                ? 'STANDBY / AWAITING CONNECTOR' 
+                : 'ALL STAGES NOMINAL'}
+            </span>
           </span>
           <span className="text-[11px] text-[var(--ink-muted)] font-semibold">
-            CYCLE: {lastCompleted}
+            CYCLE: {isAwaiting ? 'Standby' : lastCompleted}
           </span>
         </div>
       </div>
@@ -54,7 +69,7 @@ export const PipelineTracker = memo(function PipelineTracker({
             >
               <div className="flex justify-between items-center text-[10.5px] text-[var(--ink-muted)] mb-3 font-bold">
                 <span className="tabular-nums">0{idx + 1}</span>
-                <span className="w-2 h-2 rounded-full bg-[var(--pass)]"></span>
+                <span className={`w-2 h-2 rounded-full ${isAwaiting ? 'bg-amber-400 opacity-60' : 'bg-[var(--pass)]'}`}></span>
               </div>
               <div className="p-2 rounded-lg bg-[var(--surface)] border border-[var(--hairline)] w-fit mb-3 group-hover:scale-105 transition-transform">
                 <Icon size={16} className="text-[var(--ink)] dark:text-[var(--accent)]" />

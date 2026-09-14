@@ -1,62 +1,113 @@
-import { memo } from 'react';
-import { ArrowUpRight, CheckCircle2, Clock, Wrench } from 'lucide-react';
+import { memo, useState } from 'react';
+import { ArrowUpRight, CheckCircle2, Clock, Wrench, Eye, ShieldAlert, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const PriorityFindingsQueue = memo(function PriorityFindingsQueue({
   findings = [],
   onRemediate,
   canRemediate = true,
+  onSelectFinding,
+  isLive = false,
+  hasLiveIntegrations = false,
 }) {
-  const displayFindings = findings.slice(0, 4);
+  const [activeTab, setActiveTab] = useState('ALL');
+
+  const filteredFindings = findings.filter((f) => {
+    if (activeTab === 'CRITICAL') return f.severity === 'CRITICAL';
+    if (activeTab === 'HIGH') return f.severity === 'HIGH';
+    if (activeTab === 'RESOLVED') return (f.status || '').toUpperCase() === 'RESOLVED';
+    return (f.status || '').toUpperCase() !== 'RESOLVED';
+  });
+
+  const displayFindings = filteredFindings.slice(0, 5);
 
   return (
-    // findings queue refactored fr fr
-    <div className="bg-[var(--surface)] rounded-xl border border-[var(--hairline)] p-6 md:p-8 shadow-sm font-mono text-[var(--ink)] flex flex-col justify-between h-full">
+    <div className="bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 p-6 md:p-7 shadow-xs font-sans text-slate-900 dark:text-slate-100 flex flex-col justify-between h-full">
       
       {/* Header Section */}
       <div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-[var(--hairline)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
-            <span className="text-[10.5px] font-bold text-[var(--ink-muted)] uppercase tracking-wider block">
+            <span className="text-[10.5px] font-mono font-bold text-slate-500 uppercase tracking-wider block">
               OPERATIONAL RISK MANAGEMENT
             </span>
-            <h3 className="text-xl sm:text-2xl font-bold text-[var(--ink)] mt-1">
-              Priority Findings & Remediation SLA
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-1 tracking-tight">
+              Priority Findings &amp; Remediation SLA
             </h3>
           </div>
-          <Link
-            to="/findings"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-[var(--hairline)] hover:border-[var(--ink-muted)] text-xs font-bold text-[var(--ink)] transition-colors self-start sm:self-auto bg-[var(--surface-raised)] active:scale-[0.97]"
-          >
-            <span>CHECK ALL (<span className="tabular-nums">{findings.length}</span>)</span>
-            <ArrowUpRight size={13} />
-          </Link>
+
+          <div className="flex items-center gap-2">
+            {/* Filter Tabs */}
+            <div className="flex items-center bg-slate-100 dark:bg-slate-900/60 p-1 rounded-lg border border-slate-200/80 dark:border-slate-800 text-[11px] font-medium">
+              {['ALL', 'CRITICAL', 'HIGH', 'RESOLVED'].map((tab) => (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                    activeTab === tab
+                      ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold shadow-xs'
+                      : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+
+            <Link
+              to="/findings"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors no-underline"
+            >
+              <span>View All</span>
+              <ArrowUpRight size={13} />
+            </Link>
+          </div>
         </div>
 
         {/* Content */}
         {displayFindings.length === 0 ? (
-          <div className="p-10 text-center bg-[var(--surface-raised)] rounded-xl border border-[var(--hairline)] my-6">
-            <CheckCircle2 size={32} className="text-[var(--pass)] mx-auto mb-2" />
-            <div className="text-sm font-bold text-[var(--ink)]">
-              Zero Active Non-Compliant Drift Detected
+          <div className="p-8 text-center bg-slate-50 dark:bg-slate-900/40 rounded-xl border border-dashed border-slate-200 dark:border-slate-800 my-6">
+            <CheckCircle2 size={32} className={`mx-auto mb-2 ${isLive && !hasLiveIntegrations ? 'text-amber-500' : 'text-emerald-500'}`} />
+            <div className="text-sm font-bold text-slate-900 dark:text-white">
+              {isLive 
+                ? (hasLiveIntegrations 
+                    ? 'Zero Security Defects Across Connected Repositories' 
+                    : 'No Live Connectors Configured') 
+                : 'Zero Non-Compliant Drift in this Category'}
             </div>
-            <div className="text-xs text-[var(--ink-muted)] mt-1">
-              All infrastructure configurations match canonical security benchmarks.
+            <div className="text-xs text-slate-500 mt-1 font-mono max-w-sm mx-auto">
+              {isLive 
+                ? (hasLiveIntegrations 
+                    ? 'All monitored repositories pass canonical security benchmarks.' 
+                    : 'Connect GitHub or AWS in Live API mode to harvest real findings and telemetry.') 
+                : 'All infrastructure configurations match canonical security benchmarks.'}
             </div>
+            {isLive && !hasLiveIntegrations && (
+              <div className="mt-4">
+                <Link
+                  to="/dashboard/integrations"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition-all no-underline"
+                >
+                  <span>Connect GitHub</span>
+                  <ArrowUpRight size={12} />
+                </Link>
+              </div>
+            )}
           </div>
         ) : (
           <div className="mt-4 overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-[var(--hairline)] text-[10.5px] text-[var(--ink-muted)] uppercase font-semibold">
-                  <th className="py-3 pr-4">ID</th>
-                  <th className="py-3 px-4">DEFECT / CONTROL</th>
-                  <th className="py-3 px-4 hidden sm:table-cell">ENVIRONMENT</th>
-                  <th className="py-3 px-4">SEVERITY / SLA</th>
-                  <th className="py-3 pl-4 text-right">ACTION</th>
+                <tr className="border-b border-slate-200 dark:border-slate-800 text-[10.5px] font-mono text-slate-500 uppercase font-semibold">
+                  <th className="py-3 pr-3">ID</th>
+                  <th className="py-3 px-3">DEFECT CONTEXT &amp; CONTROL</th>
+                  <th className="py-3 px-3 hidden sm:table-cell">ENVIRONMENT</th>
+                  <th className="py-3 px-3">SEVERITY / SLA</th>
+                  <th className="py-3 pl-3 text-right">ACTION</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--hairline)]">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80">
                 {displayFindings.map((finding) => {
                   const isCritical = finding.severity === 'CRITICAL';
                   const isResolved = (finding.status || '').toUpperCase() === 'RESOLVED';
@@ -64,72 +115,75 @@ export const PriorityFindingsQueue = memo(function PriorityFindingsQueue({
                   return (
                     <tr 
                       key={finding.id}
-                      className="hover:bg-[var(--surface-raised)] transition-colors group"
+                      onClick={() => onSelectFinding && onSelectFinding(finding)}
+                      className="hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-colors group cursor-pointer"
                     >
                       {/* ID */}
-                      <td className="py-4 pr-4 align-top">
-                        <span className="px-2 py-1 bg-[var(--surface-raised)] rounded-md text-[10.5px] font-bold text-[var(--ink)] border border-[var(--hairline)]">
+                      <td className="py-3.5 pr-3 align-top">
+                        <span className="px-2 py-0.5 bg-slate-100 dark:bg-slate-800 rounded font-mono text-[10.5px] font-bold text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                           {finding.id}
                         </span>
                       </td>
 
                       {/* Defect / Control */}
-                      <td className="py-4 px-4 align-top max-w-xs">
-                        <h4 className="font-bold text-xs sm:text-sm text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors truncate">
+                      <td className="py-3.5 px-3 align-top max-w-sm">
+                        <h4 className="font-semibold text-xs sm:text-sm text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors truncate">
                           {finding.title}
                         </h4>
-                        <p className="text-[11px] text-[var(--ink-muted)] mt-0.5 truncate">
-                          Control: <span className="font-bold text-[var(--ink-secondary)]">{finding.controlId || finding.canonical_control_id || 'CTL-001'}</span>
+                        <p className="text-[11px] text-slate-500 mt-0.5 truncate font-mono">
+                          Control: <strong className="text-slate-700 dark:text-slate-300">{finding.controlId || finding.canonical_control_id || 'CTL-001'}</strong>
                         </p>
                       </td>
 
                       {/* Environment */}
-                      <td className="py-4 px-4 align-top hidden sm:table-cell">
-                        <span className="text-xs text-[var(--ink)] block font-medium">
+                      <td className="py-3.5 px-3 align-top hidden sm:table-cell">
+                        <span className="text-xs text-slate-800 dark:text-slate-200 block font-medium">
                           {finding.cloud || 'AWS'}
                         </span>
-                        <span className="text-[10.5px] text-[var(--ink-muted)] block">
+                        <span className="text-[10.5px] text-slate-500 block font-mono">
                           {finding.account || 'Production'}
                         </span>
                       </td>
 
                       {/* Severity / SLA */}
-                      <td className="py-4 px-4 align-top">
+                      <td className="py-3.5 px-3 align-top">
                         <div className="flex items-center gap-2">
-                          <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold border ${
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold font-mono border ${
                             isCritical
-                              ? 'bg-[var(--fail-surface)] text-[var(--fail)] border-[var(--fail)]/30'
-                              : 'bg-[var(--warn-surface)] text-[var(--warn)] border-[var(--warn)]/30'
+                              ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
+                              : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20'
                           }`}>
                             {finding.severity || 'HIGH'}
                           </span>
-                          <span className="text-[10px] text-[var(--ink-muted)] flex items-center gap-1 hidden md:inline-flex font-semibold">
-                            <Clock size={10} /> <span className="tabular-nums">24</span>H
+                          <span className="text-[10px] text-slate-500 flex items-center gap-1 hidden md:inline-flex font-mono">
+                            <Clock size={10} /> <span className="tabular-nums">24</span>H SLA
                           </span>
                         </div>
                       </td>
 
-                      {/* Action Button - High Contrast */}
-                      <td className="py-4 pl-4 align-top text-right">
-                        <div className="flex items-center justify-end gap-2">
+                      {/* Action Buttons */}
+                      <td className="py-3.5 pl-3 align-top text-right" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-end gap-1.5">
                           {onRemediate && !isResolved && (
                             <button
                               type="button"
                               onClick={() => onRemediate(finding)}
                               disabled={!canRemediate}
-                              className="px-3 py-1.5 bg-[var(--ink)] hover:opacity-90 text-[var(--surface)] dark:bg-[var(--accent)] dark:text-[var(--ground)] rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm active:scale-[0.97] cursor-pointer"
+                              className="px-2.5 py-1 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-orange-600 dark:hover:bg-orange-500 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 shadow-xs cursor-pointer border-none"
                               title={canRemediate ? 'Execute automated remediation patch' : 'Restricted by RBAC'}
                             >
-                              <Wrench size={12} />
+                              <Wrench size={11} />
                               <span>Remediate</span>
                             </button>
                           )}
-                          <Link
-                            to="/findings"
-                            className="p-1.5 text-[var(--ink-muted)] hover:text-[var(--ink)] transition-colors"
+                          <button
+                            type="button"
+                            onClick={() => onSelectFinding && onSelectFinding(finding)}
+                            className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded transition-colors cursor-pointer"
+                            title="Inspect evidence proof in drawer"
                           >
-                            <ArrowUpRight size={14} />
-                          </Link>
+                            <Eye size={13} />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -142,11 +196,12 @@ export const PriorityFindingsQueue = memo(function PriorityFindingsQueue({
       </div>
 
       {/* Footer */}
-      <div className="mt-5 pt-4 border-t border-[var(--hairline)] flex items-center justify-between text-xs text-[var(--ink-muted)]">
-        <span>SLA BREACH RISK: <span className="tabular-nums">0</span> OPEN BREACHES</span>
-        <Link to="/findings" className="font-bold text-[var(--ink)] hover:underline flex items-center gap-1">
-          <span>ALL FINDINGS</span>
-          <span>→</span>
+      <div className="mt-5 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 font-mono">
+        <span>
+          MEAN TIME TO REMEDIATE (MTTR): <strong>{isLive && !hasLiveIntegrations ? 'Standby (Awaiting Ingress)' : '4.2H'}</strong> {isLive && !hasLiveIntegrations ? '' : '(SLA < 24H)'}
+        </span>
+        <Link to="/findings" className="font-semibold text-orange-600 dark:text-orange-400 hover:underline flex items-center gap-1 no-underline">
+          <span>FINDINGS CATALOG &rarr;</span>
         </Link>
       </div>
 
@@ -154,4 +209,5 @@ export const PriorityFindingsQueue = memo(function PriorityFindingsQueue({
   );
 });
 
+PriorityFindingsQueue.displayName = 'PriorityFindingsQueue';
 export default PriorityFindingsQueue;
