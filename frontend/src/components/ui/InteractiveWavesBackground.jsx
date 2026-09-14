@@ -322,10 +322,26 @@ export const InteractiveWavesBackground = memo(function InteractiveWavesBackgrou
       }
     }
 
-    // Initial setup with ResizeObserver for reliable dimension capture
+    // Initial setup with ResizeObserver & IntersectionObserver for performance CPU optimization
     setSize();
     setLines();
-    frameIdRef.current = requestAnimationFrame(tick);
+
+    let isVisible = true;
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible) {
+        if (!frameIdRef.current) {
+          frameIdRef.current = requestAnimationFrame(tick);
+        }
+      } else {
+        if (frameIdRef.current) {
+          cancelAnimationFrame(frameIdRef.current);
+          frameIdRef.current = null;
+        }
+      }
+    }, { threshold: 0.05 });
+
+    intersectionObserver.observe(container);
 
     const resizeObserver = new ResizeObserver(() => {
       onResize();
@@ -337,6 +353,7 @@ export const InteractiveWavesBackground = memo(function InteractiveWavesBackgrou
     window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     return () => {
+      intersectionObserver.disconnect();
       resizeObserver.disconnect();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
