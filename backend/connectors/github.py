@@ -2,6 +2,7 @@
 GitHub Infrastructure Connector
 Implements live communication with the GitHub REST API using httpx for
 repository discovery, branch protection inspection, secret scanning, and dependabot alerts.
+Includes robust rate-limit inspection, token scope awareness, and deterministic error telemetry.
 """
 
 from datetime import datetime, timezone
@@ -26,7 +27,7 @@ class GitHubConnector(BaseConnector):
 
     def __init__(self, credentials: Dict[str, Any], config_options: Optional[Dict[str, Any]] = None):
         super().__init__(credentials, config_options)
-        self.token = self.credentials.get("token") or self.credentials.get("pat") or ""
+        self.token = self.credentials.get("token") or self.credentials.get("pat") or self.credentials.get("personal_access_token") or ""
         self.headers = {
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
@@ -34,6 +35,15 @@ class GitHubConnector(BaseConnector):
         }
         if self.token:
             self.headers["Authorization"] = f"Bearer {self.token}"
+
+    def _extract_rate_limit(self, response: httpx.Response) -> Dict[str, Any]:
+        """Extracts standard GitHub API rate limiting headers."""
+        return {
+            "limit": response.headers.get("x-ratelimit-limit"),
+            "remaining": response.headers.get("x-ratelimit-remaining"),
+            "reset": response.headers.get("x-ratelimit-reset"),
+            "used": response.headers.get("x-ratelimit-used"),
+        }
 
     async def test_connection(self) -> ConnectionTestResult:
         """
@@ -48,6 +58,8 @@ class GitHubConnector(BaseConnector):
         async with httpx.AsyncClient(timeout=10.0) as client:
             try:
                 response = await client.get(f"{self.GITHUB_API_URL}/user", headers=self.headers)
+                rate_info = self._extract_rate_limit(response)
+
                 if response.status_code == 200:
                     data = response.json()
                     scopes_header = response.headers.get("x-oauth-scopes", "")
@@ -61,22 +73,27 @@ class GitHubConnector(BaseConnector):
                             "id": data.get("id"),
                             "html_url": data.get("html_url"),
                             "scopes": scopes,
+                            "type": data.get("type", "User"),
                         },
-                        rate_limit={
-                            "limit": response.headers.get("x-ratelimit-limit"),
-                            "remaining": response.headers.get("x-ratelimit-remaining"),
-                            "reset": response.headers.get("x-ratelimit-reset"),
-                        },
+                        rate_limit=rate_info,
                     )
                 elif response.status_code == 401:
                     return ConnectionTestResult(
                         success=False,
                         message="Invalid or expired GitHub Personal Access Token (HTTP 401 Unauthorized).",
+                        rate_limit=rate_info,
+                    )
+                elif response.status_code in (403, 429):
+                    return ConnectionTestResult(
+                        success=False,
+                        message="GitHub API rate limit exceeded or access forbidden. Check token permissions.",
+                        rate_limit=rate_info,
                     )
                 else:
                     return ConnectionTestResult(
                         success=False,
                         message=f"GitHub API returned unexpected status {response.status_code}: {response.text}",
+                        rate_limit=rate_info,
                     )
             except Exception as e:
                 return ConnectionTestResult(
@@ -87,8 +104,9 @@ class GitHubConnector(BaseConnector):
     async def discover_assets(self) -> List[DiscoveredAssetDTO]:
         """
         Discovers repositories accessible by the token (GET /user/repos or /orgs/{org}/repos).
+        Supports organization filtering and pagination up to 100 repositories.
         """
-        target_org = self.config_options.get("org")
+        target_org = self.config_options.get("org") if self.config_options else None
         url = (
             f"{self.GITHUB_API_URL}/orgs/{target_org}/repos?per_page=100&type=all"
             if target_org
@@ -103,14 +121,17 @@ class GitHubConnector(BaseConnector):
                     return assets
 
                 repos = response.json()
+                if not isinstance(repos, list):
+                    return assets
+
                 for repo in repos:
                     full_name = repo.get("full_name") or f"{repo.get('owner', {}).get('login')}/{repo.get('name')}"
-                    criticality = "TIER_1" if not repo.get("private") or repo.get("name") in ["main", "core"] else "TIER_2"
+                    criticality = "TIER_1" if not repo.get("private") or repo.get("name") in ["main", "core", "api"] else "TIER_2"
                     
                     assets.append(
                         DiscoveredAssetDTO(
                             asset_type="GITHUB_REPO",
-                            name=repo.get("name"),
+                            name=repo.get("name") or full_name,
                             identifier=full_name,
                             criticality=criticality,
                             is_monitored=not repo.get("archived", False),
@@ -123,6 +144,8 @@ class GitHubConnector(BaseConnector):
                                 "fork": repo.get("fork", False),
                                 "pushed_at": repo.get("pushed_at"),
                                 "html_url": repo.get("html_url"),
+                                "open_issues_count": repo.get("open_issues_count", 0),
+                                "stargazers_count": repo.get("stargazers_count", 0),
                             },
                         )
                     )
@@ -134,7 +157,7 @@ class GitHubConnector(BaseConnector):
     async def collect_control_state(self, asset: DiscoveredAssetDTO) -> List[RawControlStateDTO]:
         """
         Collects live security control telemetry for a GitHub repository:
-        1. Branch Protection (`CTL-GH-01`, `CTL-GH-02`, `CTL-GH-05`)
+        1. Branch Protection (`CTL-GH-01`, `CTL-GH-02`)
         2. Secret Scanning & Push Protection (`CTL-GH-03`)
         3. Automated Vulnerability / Dependabot Alerts (`CTL-GH-04`)
         """
@@ -183,8 +206,8 @@ class GitHubConnector(BaseConnector):
                             collected_at=collected_at,
                         )
                     )
-                else:
-                    # 404 means no branch protection rule configured
+                elif p_res.status_code == 404:
+                    # 404 means no branch protection rule configured on default branch
                     states.append(
                         RawControlStateDTO(
                             asset_identifier=repo_identifier,
@@ -192,8 +215,24 @@ class GitHubConnector(BaseConnector):
                             evidence_uri=protection_uri,
                             raw_payload={
                                 "protected": False,
-                                "status_code": p_res.status_code,
-                                "message": "No branch protection rule configured on default branch.",
+                                "status_code": 404,
+                                "message": f"No branch protection configured on '{default_branch}'.",
+                            },
+                            collected_at=collected_at,
+                        )
+                    )
+                elif p_res.status_code == 403:
+                    # 403 means token lacks admin permissions on repo
+                    states.append(
+                        RawControlStateDTO(
+                            asset_identifier=repo_identifier,
+                            control_code="CTL-GH-01",
+                            evidence_uri=protection_uri,
+                            raw_payload={
+                                "protected": False,
+                                "status_code": 403,
+                                "permission_error": True,
+                                "message": "Token lacks 'Administration: Read' permission on repository.",
                             },
                             collected_at=collected_at,
                         )
@@ -238,8 +277,9 @@ class GitHubConnector(BaseConnector):
             # 3. Inspect Dependabot / Vulnerability Alerts
             alerts_uri = f"{self.GITHUB_API_URL}/repos/{repo_identifier}/vulnerability-alerts"
             try:
-                # GET returns 204 if enabled, 404 if disabled
+                # GET returns 204 if enabled, 404 if disabled, 403 if insufficient scopes
                 va_res = await client.get(alerts_uri, headers=self.headers)
+                alerts_active = (va_res.status_code == 204)
                 states.append(
                     RawControlStateDTO(
                         asset_identifier=repo_identifier,
@@ -247,7 +287,8 @@ class GitHubConnector(BaseConnector):
                         evidence_uri=alerts_uri,
                         raw_payload={
                             "status_code": va_res.status_code,
-                            "vulnerability_alerts_enabled": (va_res.status_code == 204),
+                            "vulnerability_alerts_enabled": alerts_active,
+                            "permission_error": (va_res.status_code == 403),
                         },
                         collected_at=collected_at,
                     )
