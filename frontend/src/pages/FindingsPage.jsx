@@ -3,6 +3,8 @@ import { useDemoStore } from '../store/demoStore';
 import RbacPermissionBanner from '../components/settings/RbacPermissionBanner';
 import { Wrench, CheckCircle2, ChevronDown, ChevronRight, Copy, Check, Terminal, Search, Filter, ShieldAlert, CheckSquare, Square } from 'lucide-react';
 
+import { Link } from 'react-router-dom';
+
 export default function FindingsPage() {
   const { 
     findings, 
@@ -22,20 +24,25 @@ export default function FindingsPage() {
   const canRemediate = hasPermission('simulate_remediation');
 
   const activeFindings = useMemo(() => {
-    if (isLiveMode && liveFindings && liveFindings.length > 0) {
-      return liveFindings.map(f => ({
-        id: f.finding_code || f.id,
-        rawId: f.id,
-        control: f.canonical_control_id || 'CTL-GH-01',
-        severity: f.severity || 'HIGH',
-        sla: '24h SLA',
-        status: f.status || 'OPEN',
-        title: f.title,
-        remediation: f.remediation_action || f.description,
-        resource: f.target_resource_id || 'github.com/organization/core',
-        script: f.remediation_script || `gh api --method PUT /repos/${f.target_resource_id || 'org/repo'}/branches/main/protection --input protection-policy.json`
-      }));
+    if (isLiveMode) {
+      if (liveFindings && liveFindings.length > 0) {
+        return liveFindings.map(f => ({
+          id: f.finding_code || f.id,
+          rawId: f.id,
+          control: f.canonical_control_id || 'CTL-GH-01',
+          severity: f.severity || 'HIGH',
+          sla: '24h SLA',
+          status: f.status || 'OPEN',
+          title: f.title,
+          remediation: f.remediation_action || f.description,
+          resource: f.target_resource_id || 'github.com/organization/core',
+          script: f.remediation_script || `gh api --method PUT /repos/${f.target_resource_id || 'org/repo'}/branches/main/protection --input protection-policy.json`
+        }));
+      }
+      return [];
     }
+
+    // Demo Mode:
     return findings.map(f => ({
       ...f,
       resource: f.account ? `${f.cloud} / ${f.account}` : 'AWS us-east-1',
@@ -205,10 +212,26 @@ export default function FindingsPage() {
       {/* Interactive Table Stack List */}
       <div className="space-y-3">
         {filtered.length === 0 ? (
-          <div className="p-12 text-center bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
-            <CheckCircle2 size={24} className="text-emerald-500 mx-auto" />
-            <div className="text-sm font-semibold text-slate-900 dark:text-white">Zero Findings Found</div>
-            <p className="text-xs text-slate-500 font-mono">No findings match your current filters.</p>
+          <div className="p-12 text-center bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+            <CheckCircle2 size={28} className="text-emerald-500 mx-auto" />
+            <div className="text-sm font-semibold text-slate-900 dark:text-white">
+              {isLiveMode ? 'No Active Live Findings' : 'Zero Findings Found'}
+            </div>
+            <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed font-mono">
+              {isLiveMode 
+                ? 'No policy deviations or compliance gaps detected on connected live integrations.' 
+                : 'No findings match your current filters.'}
+            </p>
+            {isLiveMode && (
+              <div className="pt-2">
+                <Link
+                  to="/dashboard/integrations"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-all no-underline font-sans"
+                >
+                  <span>Manage Live Integrations &rarr;</span>
+                </Link>
+              </div>
+            )}
           </div>
         ) : (
           filtered.map(item => {

@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDemoStore } from '../store/demoStore';
 import { CheckCircle2, ShieldCheck, Database, Copy, Check, Search, Shield, RefreshCw } from 'lucide-react';
+import CryptographicVerifierModal from '../components/evidence/CryptographicVerifierModal';
 
 const demoArchiveLogs = [
   {
@@ -61,6 +62,8 @@ const demoArchiveLogs = [
   },
 ];
 
+import { Link } from 'react-router-dom';
+
 export default function ArchivePage() {
   const { isLiveMode, liveEvidence, verifyLiveEvidence, fetchLiveTelemetry } = useDemoStore();
   const [searchParams] = useSearchParams();
@@ -77,29 +80,36 @@ export default function ArchivePage() {
   }, [isLiveMode, fetchLiveTelemetry]);
 
   const activeEvidence = useMemo(() => {
-    if (isLiveMode && liveEvidence && liveEvidence.length > 0) {
-      return liveEvidence.map(e => ({
-        id: `EVD-${e.id.slice(0, 8)}`,
-        rawId: e.id,
-        controlId: e.control_definition_id || 'CTL-GH-01',
-        title: `Infrastructure Evidence Artifact: ${e.source_uri || 'Config Snapshot'}`,
-        date: new Date(e.created_at).toUTCString(),
-        hash: e.sha256_hash,
-        framework: 'SOC 2 / ISO 27001',
-        status: 'VERIFIED IMMUTABLE',
-        collector: 'Live REST Ingestion',
-        resource: e.source_uri || 'github.com/acme/repo'
-      }));
+    if (isLiveMode) {
+      if (liveEvidence && liveEvidence.length > 0) {
+        return liveEvidence.map(e => ({
+          id: `EVD-${e.id.slice(0, 8)}`,
+          rawId: e.id,
+          controlId: e.control_definition_id || 'CTL-GH-01',
+          title: `Infrastructure Evidence Artifact: ${e.source_uri || 'Config Snapshot'}`,
+          date: new Date(e.created_at).toUTCString(),
+          hash: e.sha256_hash,
+          framework: 'SOC 2 / ISO 27001',
+          status: 'VERIFIED IMMUTABLE',
+          collector: 'Live REST Ingestion',
+          resource: e.source_uri || 'github.com/acme/repo'
+        }));
+      }
+      return [];
     }
+
+    // Demo Mode:
     return demoArchiveLogs;
   }, [isLiveMode, liveEvidence]);
 
-  const [selectedEvd, setSelectedEvd] = useState(activeEvidence[0] || demoArchiveLogs[0]);
+  const [selectedEvd, setSelectedEvd] = useState(activeEvidence[0] || null);
 
   useEffect(() => {
     if (activeEvidence.length > 0) {
       const match = highlightedId ? activeEvidence.find(e => e.controlId === highlightedId) : null;
       setSelectedEvd(match || activeEvidence[0]);
+    } else {
+      setSelectedEvd(null);
     }
   }, [activeEvidence, highlightedId]);
 
@@ -140,6 +150,8 @@ export default function ArchivePage() {
     setVerifying(false);
   };
 
+  const [showVerifierModal, setShowVerifierModal] = useState(false);
+
   return (
     <div className="w-full h-full text-slate-900 dark:text-slate-100 font-sans max-w-[1520px] mx-auto pb-16 space-y-6">
       
@@ -157,8 +169,16 @@ export default function ArchivePage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-xs text-slate-500">
-          <span>{filteredEvidence.length} Proofs Indexed</span>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setShowVerifierModal(true)}
+            className="px-3.5 py-1.5 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-all flex items-center gap-1.5 cursor-pointer border-none"
+          >
+            <ShieldCheck size={14} />
+            <span>Verify Payload Hash</span>
+          </button>
+          <span className="font-mono text-xs text-slate-500">{filteredEvidence.length} Proofs Indexed</span>
         </div>
       </div>
 
@@ -181,42 +201,66 @@ export default function ArchivePage() {
         
         {/* Left Column: Proofs List (7 Cols) */}
         <div className="lg:col-span-7 space-y-3">
-          {filteredEvidence.map((item) => {
-            const isSelected = selectedEvd?.id === item.id;
-            return (
-              <div
-                key={item.id}
-                onClick={() => {
-                  setSelectedEvd(item);
-                  setVerificationResult(null);
-                }}
-                className={`p-4 rounded-xl border transition-all cursor-pointer space-y-2.5 font-sans ${
-                  isSelected
-                    ? 'bg-white dark:bg-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xs ring-1 ring-zinc-900 dark:ring-zinc-100'
-                    : 'bg-[var(--surface)] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center justify-between font-mono text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-orange-600 dark:text-orange-400">{item.id}</span>
-                    <span className="text-slate-300 dark:text-slate-700">&bull;</span>
-                    <span className="text-slate-500 font-mono text-[11px]">{item.controlId}</span>
+          {filteredEvidence.length === 0 ? (
+            <div className="p-12 text-center bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+              <Database size={32} className="text-slate-400 mx-auto" />
+              <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+                {isLiveMode ? 'No Live Evidence Records' : 'No Evidence Proofs Found'}
+              </h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                {isLiveMode 
+                  ? 'Tamper-evident SHA-256 evidence records are generated automatically during live compliance evaluation runs. Connect GitHub and trigger an audit scan to generate verifiable evidence proofs.' 
+                  : 'No evidence proofs match your search query.'}
+              </p>
+              {isLiveMode && (
+                <div className="pt-2">
+                  <Link
+                    to="/dashboard/integrations"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-all no-underline"
+                  >
+                    <span>Connect GitHub Integration &rarr;</span>
+                  </Link>
+                </div>
+              )}
+            </div>
+          ) : (
+            filteredEvidence.map((item) => {
+              const isSelected = selectedEvd?.id === item.id;
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => {
+                    setSelectedEvd(item);
+                    setVerificationResult(null);
+                  }}
+                  className={`p-4 rounded-xl border transition-all cursor-pointer space-y-2.5 font-sans ${
+                    isSelected
+                      ? 'bg-white dark:bg-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xs ring-1 ring-zinc-900 dark:ring-zinc-100'
+                      : 'bg-[var(--surface)] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-orange-600 dark:text-orange-400">{item.id}</span>
+                      <span className="text-slate-300 dark:text-slate-700">&bull;</span>
+                      <span className="text-slate-500 font-mono text-[11px]">{item.controlId}</span>
+                    </div>
+                    <span className="text-[11px] text-slate-400 font-mono">
+                      {item.date}
+                    </span>
                   </div>
-                  <span className="text-[11px] text-slate-400 font-mono">
-                    {item.date}
-                  </span>
-                </div>
 
-                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                  {item.title}
-                </h3>
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                    {item.title}
+                  </h3>
 
-                <div className="p-2 rounded bg-slate-50 dark:bg-slate-950/60 font-mono text-[11px] text-slate-600 dark:text-slate-400 truncate border border-slate-100 dark:border-slate-800">
-                  #{item.hash}
+                  <div className="p-2 rounded bg-slate-50 dark:bg-slate-950/60 font-mono text-[11px] text-slate-600 dark:text-slate-400 truncate border border-slate-100 dark:border-slate-800">
+                    #{item.hash}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
 
         {/* Right Column: Sticky Proof Certificate (5 Cols) */}
@@ -312,6 +356,11 @@ export default function ArchivePage() {
 
       </div>
 
+      {/* Cryptographic Notary Verifier Modal */}
+      <CryptographicVerifierModal
+        isOpen={showVerifierModal}
+        onClose={() => setShowVerifierModal(false)}
+      />
     </div>
   );
 }
