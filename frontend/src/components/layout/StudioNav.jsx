@@ -51,7 +51,7 @@ const StudioNav = memo(function StudioNav() {
       <header 
         className={`fixed top-0 left-0 right-0 z-40 font-sans transition-all duration-300 ease-out ${
           scrolled || mobileMenuOpen 
-            ? 'bg-white/75 dark:bg-zinc-950/75 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 shadow-xs' 
+            ? 'bg-white/40 dark:bg-zinc-950/40 backdrop-blur-3xl border-b border-white/30 dark:border-zinc-800/40 shadow-[0_8px_32px_0_rgba(0,0,0,0.08)]' 
             : 'bg-transparent border-b border-transparent shadow-none'
         }`}
       >

@@ -52,7 +52,7 @@ const Header = memo(() => {
   }, []);
 
   return (
-    <header className="h-14 flex items-center justify-between px-4 sm:px-6 bg-[var(--surface)] border-b border-slate-200 dark:border-slate-800 sticky top-0 z-40 font-sans transition-colors">
+    <header className="h-14 flex items-center justify-between px-4 sm:px-6 bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl border-b border-white/20 dark:border-slate-700/40 shadow-[0_4px_30px_rgba(0,0,0,0.05)] sticky top-0 z-40 font-sans transition-all">
       
       {/* Left: Environment Breadcrumb & Live Health Dot */}
       <div className="flex items-center gap-3">
