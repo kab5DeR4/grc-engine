@@ -7,6 +7,8 @@ import {
 import { useDemoStore } from '../store/demoStore';
 import Drawer from '../components/ui/Drawer';
 
+import { Link } from 'react-router-dom';
+
 export default function AssetsPage() {
   const { 
     isLiveMode, 
@@ -24,25 +26,28 @@ export default function AssetsPage() {
 
   // Normalize assets whether from live API or demo infrastructure
   const assetsList = useMemo(() => {
-    if (isLiveMode && discoveredAssets.length > 0) {
-      return discoveredAssets.map(a => ({
-        id: a.id,
-        name: a.name,
-        identifier: a.identifier || a.external_id || a.name,
-        provider: (a.asset_type || '').includes('GITHUB') ? 'GITHUB' : 'AWS',
-        type: a.asset_type || 'REPOSITORY',
-        criticality: a.criticality || 'TIER_1',
-        isMonitored: a.is_monitored !== false,
-        complianceScore: a.compliance_score || 92,
-        metadata: a.raw_metadata || {},
-        branchProtection: Boolean(a.raw_metadata?.branch_protection?.enabled ?? a.raw_metadata?.protected),
-        secretScanning: a.raw_metadata?.secret_scanning?.status === 'enabled' || true,
-        dependabot: a.raw_metadata?.dependabot_alerts ?? true,
-        defaultBranch: a.raw_metadata?.default_branch || 'main',
-      }));
+    if (isLiveMode) {
+      if (discoveredAssets && discoveredAssets.length > 0) {
+        return discoveredAssets.map(a => ({
+          id: a.id,
+          name: a.name,
+          identifier: a.identifier || a.external_id || a.name,
+          provider: (a.asset_type || '').includes('GITHUB') ? 'GITHUB' : 'AWS',
+          type: a.asset_type || 'REPOSITORY',
+          criticality: a.criticality || 'TIER_1',
+          isMonitored: a.is_monitored !== false,
+          complianceScore: a.compliance_score || 92,
+          metadata: a.raw_metadata || {},
+          branchProtection: Boolean(a.raw_metadata?.branch_protection?.enabled ?? a.raw_metadata?.protected),
+          secretScanning: a.raw_metadata?.secret_scanning?.status === 'enabled' || true,
+          dependabot: a.raw_metadata?.dependabot_alerts ?? true,
+          defaultBranch: a.raw_metadata?.default_branch || 'main',
+        }));
+      }
+      return [];
     }
 
-    // Fallback: build list from demo store infrastructure
+    // Demo Mode: build list from demo store infrastructure
     return [
       {
         id: 'AST-GH-01',
@@ -262,98 +267,122 @@ export default function AssetsPage() {
 
       {/* High-Density Enterprise Data Table */}
       <div className="bg-[var(--surface)] rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 font-mono text-[11px] text-slate-500 uppercase tracking-wider">
-                <th className="py-3 px-4 font-medium">Identifier / Asset</th>
-                <th className="py-3 px-3 font-medium">Provider</th>
-                <th className="py-3 px-3 font-medium">Type</th>
-                <th className="py-3 px-3 font-medium">Scope</th>
-                <th className="py-3 px-3 font-medium">Protection</th>
-                <th className="py-3 px-3 font-medium">Compliance</th>
-                <th className="py-3 px-4 font-medium text-right">Inspect</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 font-mono">
-              {filteredAssets.map((asset) => (
-                <tr 
-                  key={asset.id} 
-                  className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
+        {filteredAssets.length === 0 ? (
+          <div className="p-12 text-center my-6 space-y-3">
+            <Server size={32} className="text-slate-400 mx-auto" />
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+              {isLiveMode ? 'No Live Assets Discovered' : 'No Assets Found Matching Query'}
+            </h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+              {isLiveMode 
+                ? 'The live backend currently has zero discovered asset records. Connect GitHub in Connection Management and trigger a scan to discover repositories and branch policies.' 
+                : 'Try adjusting your search query or provider filter to inspect monitored infrastructure nodes.'}
+            </p>
+            {isLiveMode && (
+              <div className="pt-2">
+                <Link
+                  to="/dashboard/integrations"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-xs transition-all no-underline"
                 >
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 shrink-0">
-                        {asset.provider === 'GITHUB' ? <GitBranch size={14} /> : <Database size={14} />}
-                      </div>
-                      <div className="min-w-0 font-sans">
-                        <div className="font-semibold text-slate-900 dark:text-slate-100 truncate max-w-[280px]">
-                          {asset.name}
-                        </div>
-                        <div className="text-[11px] text-slate-400 font-mono truncate max-w-[280px]">
-                          {asset.identifier}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-
-                  <td className="py-3 px-3">
-                    <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-medium border border-slate-200 dark:border-slate-700">
-                      {asset.provider}
-                    </span>
-                  </td>
-
-                  <td className="py-3 px-3 text-slate-600 dark:text-slate-400 text-[11px]">
-                    {asset.type}
-                  </td>
-
-                  <td className="py-3 px-3 text-slate-600 dark:text-slate-400 text-[11px]">
-                    <span className="flex items-center gap-1">
-                      <GitBranch size={11} className="text-slate-400" />
-                      <span>{asset.defaultBranch}</span>
-                    </span>
-                  </td>
-
-                  <td className="py-3 px-3">
-                    {asset.branchProtection ? (
-                      <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-[11px] font-medium">
-                        <CheckCircle2 size={12} />
-                        <span>Enforced</span>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 text-[11px] font-medium">
-                        <AlertTriangle size={12} />
-                        <span>Disabled</span>
-                      </span>
-                    )}
-                  </td>
-
-                  <td className="py-3 px-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full ${asset.complianceScore >= 90 ? 'bg-emerald-500' : 'bg-amber-500'}`} 
-                          style={{ width: `${asset.complianceScore}%` }} 
-                        />
-                      </div>
-                      <span className="text-[11px] tabular-nums font-semibold">{asset.complianceScore}%</span>
-                    </div>
-                  </td>
-
-                  <td className="py-3 px-4 text-right">
-                    <button
-                      type="button"
-                      onClick={() => handleInspectAst(asset)}
-                      className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-mono transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
-                    >
-                      Inspect AST
-                    </button>
-                  </td>
+                  <span>Connect GitHub Integration &rarr;</span>
+                </Link>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 font-mono text-[11px] text-slate-500 uppercase tracking-wider">
+                  <th className="py-3 px-4 font-medium">Identifier / Asset</th>
+                  <th className="py-3 px-3 font-medium">Provider</th>
+                  <th className="py-3 px-3 font-medium">Type</th>
+                  <th className="py-3 px-3 font-medium">Scope</th>
+                  <th className="py-3 px-3 font-medium">Protection</th>
+                  <th className="py-3 px-3 font-medium">Compliance</th>
+                  <th className="py-3 px-4 font-medium text-right">Inspect</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 font-mono">
+                {filteredAssets.map((asset) => (
+                  <tr 
+                    key={asset.id} 
+                    className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
+                  >
+                    <td className="py-3 px-4">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 shrink-0">
+                          {asset.provider === 'GITHUB' ? <GitBranch size={14} /> : <Database size={14} />}
+                        </div>
+                        <div className="min-w-0 font-sans">
+                          <div className="font-semibold text-slate-900 dark:text-slate-100 truncate max-w-[280px]">
+                            {asset.name}
+                          </div>
+                          <div className="text-[11px] text-slate-400 font-mono truncate max-w-[280px]">
+                            {asset.identifier}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="py-3 px-3">
+                      <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-medium border border-slate-200 dark:border-slate-700">
+                        {asset.provider}
+                      </span>
+                    </td>
+
+                    <td className="py-3 px-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      {asset.type}
+                    </td>
+
+                    <td className="py-3 px-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      <span className="flex items-center gap-1">
+                        <GitBranch size={11} className="text-slate-400" />
+                        <span>{asset.defaultBranch}</span>
+                      </span>
+                    </td>
+
+                    <td className="py-3 px-3">
+                      {asset.branchProtection ? (
+                        <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-[11px] font-medium">
+                          <CheckCircle2 size={12} />
+                          <span>Enforced</span>
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-rose-600 dark:text-rose-400 text-[11px] font-medium">
+                          <AlertTriangle size={12} />
+                          <span>Disabled</span>
+                        </span>
+                      )}
+                    </td>
+
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-16 bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full rounded-full ${asset.complianceScore >= 90 ? 'bg-emerald-500' : 'bg-amber-500'}`} 
+                            style={{ width: `${asset.complianceScore}%` }} 
+                          />
+                        </div>
+                        <span className="text-[11px] tabular-nums font-semibold">{asset.complianceScore}%</span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 px-4 text-right">
+                      <button
+                        type="button"
+                        onClick={() => handleInspectAst(asset)}
+                        className="px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-mono transition-colors cursor-pointer border border-slate-200 dark:border-slate-700"
+                      >
+                        Inspect AST
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       {/* Slide-over AST Drawer for Detailed Inspection */}
