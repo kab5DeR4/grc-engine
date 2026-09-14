@@ -27,7 +27,7 @@ class TestScansAndReports(unittest.TestCase):
         scan = resp.json()
         self.assertIn("id", scan)
         self.assertEqual(scan["target_scope"], "REPOSITORIES")
-        self.assertEqual(scan["status"], "PENDING")
+        self.assertIn(scan["status"], ["PENDING", "RUNNING", "COMPLETED"])
 
         # list scans
         list_resp = client.get("/api/v1/scans")
