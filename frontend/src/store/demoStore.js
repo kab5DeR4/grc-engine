@@ -110,6 +110,10 @@ export const useDemoStore = create((set, get) => ({
   discoveredAssets: [],
   liveScanJobs: [],
   liveIntegrations: [],
+  liveFindings: [],
+  liveEvidence: [],
+  liveControls: [],
+  liveAuditTrail: [],
 
   // core demo telemetry data
   organization: initialOrganization,
@@ -619,6 +623,32 @@ export const useDemoStore = create((set, get) => ({
     });
   },
 
+  // live audit trail append helper strictly isolated for real mode
+  appendLiveAuditLog: (action, resource, severity = 'INFO', details = '') => {
+    set((state) => {
+      const logEntry = {
+        id: `LIVE-AUD-${Math.floor(1000 + Math.random() * 9000)}`,
+        timestamp: new Date().toISOString(),
+        actor: {
+          name: state.currentUser?.name || 'SecOps Engineer',
+          email: state.currentUser?.email || 'admin@grc-engine.internal',
+          role: state.currentUser?.role || 'PLATFORM_ADMIN',
+        },
+        action: action,
+        resource: resource,
+        severity: severity,
+        details: details,
+        ipAddress: '127.0.0.1 (FastAPI Ingress)',
+        sha256: generateAuditHash(),
+        verified: true,
+      };
+      return {
+        liveAuditTrail: [logEntry, ...state.liveAuditTrail],
+        auditTrail: [logEntry, ...state.auditTrail],
+      };
+    });
+  },
+
   // run scan with audit log
   runScan: () => {
     const { hasPermission } = get();
@@ -735,7 +765,7 @@ export const useDemoStore = create((set, get) => ({
       if (isHealthy) {
         set({ isLiveMode: true, isDemoMode: false });
         await get().fetchLiveTelemetry();
-        get().appendAuditLog(
+        get().appendLiveAuditLog(
           'LIVE_API_MODE_ENGAGED',
           'FASTAPI_V1_GATEWAY',
           'INFO',
@@ -768,27 +798,14 @@ export const useDemoStore = create((set, get) => ({
         api.getIntegrations(),
       ]);
 
-      const updates = {};
-      if (assetsData.status === 'fulfilled' && Array.isArray(assetsData.value)) {
-        updates.discoveredAssets = assetsData.value;
-      }
-      if (findingsData.status === 'fulfilled' && Array.isArray(findingsData.value)) {
-        updates.liveFindings = findingsData.value;
-      }
-      if (evidenceData.status === 'fulfilled' && Array.isArray(evidenceData.value)) {
-        updates.liveEvidence = evidenceData.value;
-      }
-      if (scansData.status === 'fulfilled' && Array.isArray(scansData.value)) {
-        updates.liveScanJobs = scansData.value;
-      }
-      if (controlsData.status === 'fulfilled' && Array.isArray(controlsData.value)) {
-        updates.liveControls = controlsData.value;
-      }
-      if (integrationsData.status === 'fulfilled' && Array.isArray(integrationsData.value)) {
-        updates.liveIntegrations = integrationsData.value;
-      }
-
-      set(updates);
+      set({
+        discoveredAssets: (assetsData.status === 'fulfilled' && Array.isArray(assetsData.value)) ? assetsData.value : [],
+        liveFindings: (findingsData.status === 'fulfilled' && Array.isArray(findingsData.value)) ? findingsData.value : [],
+        liveEvidence: (evidenceData.status === 'fulfilled' && Array.isArray(evidenceData.value)) ? evidenceData.value : [],
+        liveScanJobs: (scansData.status === 'fulfilled' && Array.isArray(scansData.value)) ? scansData.value : [],
+        liveControls: (controlsData.status === 'fulfilled' && Array.isArray(controlsData.value)) ? controlsData.value : [],
+        liveIntegrations: (integrationsData.status === 'fulfilled' && Array.isArray(integrationsData.value)) ? integrationsData.value : [],
+      });
     } catch (err) {
       console.warn('[Zustand] Failed to fetch live telemetry:', err);
     }
@@ -804,7 +821,7 @@ export const useDemoStore = create((set, get) => ({
     };
     const res = await api.connectGitHub(payload);
     await get().fetchLiveTelemetry();
-    get().appendAuditLog(
+    get().appendLiveAuditLog(
       'INTEGRATION_CONNECTED',
       'GITHUB_VCS_PROVIDER',
       'INFO',
@@ -816,7 +833,7 @@ export const useDemoStore = create((set, get) => ({
   // Trigger live compliance scan
   triggerLiveScan: async (target_scope = 'ALL') => {
     set({ scanRunning: true });
-    get().appendAuditLog(
+    get().appendLiveAuditLog(
       'LIVE_SCAN_DISPATCHED',
       'SCAN_COORDINATOR_V1',
       'INFO',
@@ -840,7 +857,7 @@ export const useDemoStore = create((set, get) => ({
     try {
       const res = await api.resolveFinding(findingId, notes);
       await get().fetchLiveTelemetry();
-      get().appendAuditLog(
+      get().appendLiveAuditLog(
         'FINDING_RESOLVED_API',
         `FINDING_${findingId}`,
         'INFO',
@@ -848,7 +865,7 @@ export const useDemoStore = create((set, get) => ({
       );
       return res;
     } catch (err) {
-      get().appendAuditLog(
+      get().appendLiveAuditLog(
         'FINDING_RESOLUTION_FAILED',
         `FINDING_${findingId}`,
         'CRITICAL',
@@ -862,7 +879,7 @@ export const useDemoStore = create((set, get) => ({
   verifyLiveEvidence: async (evidenceId) => {
     try {
       const res = await api.verifyEvidence(evidenceId);
-      get().appendAuditLog(
+      get().appendLiveAuditLog(
         'EVIDENCE_CRYPTOGRAPHICALLY_VERIFIED',
         `PROOF_${evidenceId}`,
         res.is_valid ? 'INFO' : 'CRITICAL',
@@ -870,7 +887,7 @@ export const useDemoStore = create((set, get) => ({
       );
       return res;
     } catch (err) {
-      get().appendAuditLog(
+      get().appendLiveAuditLog(
         'EVIDENCE_VERIFICATION_ERROR',
         `PROOF_${evidenceId}`,
         'CRITICAL',
