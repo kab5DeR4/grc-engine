@@ -9,18 +9,37 @@ export default function ScansPage() {
     appendAuditLog, 
     currentUser, 
     isLiveMode, 
+    discoveredAssets,
+    liveIntegrations,
     triggerLiveScan,
     fetchLiveTelemetry
   } = useDemoStore();
   const canRunScans = hasPermission('run_scans');
 
+  const hasLiveIntegrations = Boolean((liveIntegrations && liveIntegrations.length > 0) || (discoveredAssets && discoveredAssets.length > 0));
+
   const [scanning, setScanning] = useState(false);
-  const [progress, setProgress] = useState(100);
-  const [logs, setLogs] = useState([
-    '[INIT] Continuous monitoring runner initialized.',
-    '[OK] SHA-256 proof chain verified at genesis.',
-    '[READY] Ready for on-demand or scheduled compliance scan.',
-  ]);
+  const [progress, setProgress] = useState(isLiveMode ? (hasLiveIntegrations ? 100 : 0) : 100);
+  const [logs, setLogs] = useState(() => {
+    if (isLiveMode) {
+      return hasLiveIntegrations
+        ? [
+            '[LIVE API MODE] Connected to FastAPI backend (http://127.0.0.1:8000).',
+            `[TELEMETRY] ${discoveredAssets?.length || 0} live assets ready for automated evaluation.`,
+            '[READY] Click "Run Live Scan Now" to dispatch scan to FastAPI worker.',
+          ]
+        : [
+            '[LIVE API MODE] Connected to FastAPI backend (http://127.0.0.1:8000).',
+            '[TELEMETRY] No live connectors registered. Connect GitHub in Integrations to begin.',
+            '[STANDBY] Awaiting live telemetry connector.',
+          ];
+    }
+    return [
+      '[INIT] Continuous monitoring runner initialized.',
+      '[OK] SHA-256 proof chain verified at genesis.',
+      '[READY] Ready for on-demand or scheduled compliance scan.',
+    ];
+  });
 
   useEffect(() => {
     if (isLiveMode) {
@@ -44,7 +63,7 @@ export default function ScansPage() {
         setLogs(l => [
           ...l,
           `[OK] Scan Job ID: ${scanRes.id || 'SCAN-LATEST'}`,
-          `[EVAL] Evaluated ${scanRes.assets_scanned_count || 4} assets against canonical controls.`,
+          `[EVAL] Evaluated ${scanRes.assets_scanned_count || (discoveredAssets?.length || 0)} assets against canonical controls.`,
           `[COMPLETE] Compliance verification complete (Status: ${scanRes.status || 'COMPLETED'}).`,
         ]);
         setProgress(100);

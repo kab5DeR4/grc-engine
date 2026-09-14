@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { integrationsData } from '../data/demo/integrations';
 import { useDemoStore } from '../store/demoStore';
 import { api } from '../services/api';
@@ -8,10 +8,15 @@ import IntegrationList from '../components/integrations/IntegrationList';
 import IntegrationDetails from '../components/integrations/IntegrationDetails';
 
 export default function DashboardIntegrations() {
-  const { isLiveMode, connectLiveGitHub, appendAuditLog } = useDemoStore();
+  const { isLiveMode, liveIntegrations, connectLiveGitHub, appendAuditLog, fetchLiveTelemetry } = useDemoStore();
+
+  useEffect(() => {
+    if (isLiveMode) {
+      fetchLiveTelemetry();
+    }
+  }, [isLiveMode, fetchLiveTelemetry]);
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState('ALL');
-  const [selectedIntegration, setSelectedIntegration] = useState(integrationsData[0]);
   const [isTesting, setIsTesting] = useState(false);
   const [testResult, setTestResult] = useState(null);
   const [configState, setConfigState] = useState(() => integrationsData.reduce((acc, curr) => {
@@ -19,9 +24,29 @@ export default function DashboardIntegrations() {
     return acc;
   }, {}));
 
+  const activeIntegrationsList = useMemo(() => {
+    if (isLiveMode) {
+      return integrationsData.map(item => {
+        const liveMatch = (liveIntegrations || []).find(
+          li => (li.integration_type || li.id || '').toUpperCase().includes(item.id.toUpperCase())
+        );
+        const isConnected = Boolean(liveMatch);
+        return {
+          ...item,
+          status: isConnected ? 'CONNECTED' : 'DISCONNECTED',
+          lastSync: isConnected ? (liveMatch.updated_at ? new Date(liveMatch.updated_at).toLocaleTimeString() : 'Just now') : 'Never',
+          telemetry: isConnected ? item.telemetry : [],
+        };
+      });
+    }
+    return integrationsData;
+  }, [isLiveMode, liveIntegrations]);
+
+  const [selectedIntegration, setSelectedIntegration] = useState(activeIntegrationsList[0]);
+
   const categories = ['ALL', 'CLOUD', 'CI/CD', 'WORKFLOW'];
 
-  const filteredIntegrations = integrationsData.filter(item => {
+  const filteredIntegrations = activeIntegrationsList.filter(item => {
     const matchesCategory = activeCategory === 'ALL' || item.category === activeCategory;
     const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase()) || 
                           item.type.toLowerCase().includes(search.toLowerCase());
