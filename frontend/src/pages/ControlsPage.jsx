@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Shield, CheckCircle2, Terminal, ArrowRight, Check } from 'lucide-react';
+import { useDemoStore } from '../store/demoStore';
 
 const controlsData = [
   {
@@ -78,14 +79,49 @@ const controlsData = [
 ];
 
 export default function ControlsPage() {
+  const { isLiveMode, liveControls, fetchLiveTelemetry } = useDemoStore();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('ALL');
-  const [selectedControl, setSelectedControl] = useState(controlsData[0]);
   const [tested, setTested] = useState(false);
+
+  useEffect(() => {
+    if (isLiveMode) {
+      fetchLiveTelemetry();
+    }
+  }, [isLiveMode, fetchLiveTelemetry]);
+
+  const activeControls = useMemo(() => {
+    if (isLiveMode) {
+      if (liveControls && liveControls.length > 0) {
+        return liveControls.map(c => ({
+          id: c.control_code || c.id,
+          name: c.title || c.name,
+          category: (c.category || 'INFRASTRUCTURE').toUpperCase(),
+          framework: c.framework_mapping || 'SOC 2 / ISO 27001',
+          severity: c.severity || 'HIGH',
+          status: c.status || 'VERIFIED PASS',
+          telemetry: c.telemetry_source || 'REST API / AST PROBE',
+          description: c.description || 'Canonical security control rule.',
+          implementation: c.implementation_spec || 'Deterministic Engine Rule Evaluator',
+          lastVerified: c.last_evaluated_at || new Date().toISOString(),
+        }));
+      }
+      return [];
+    }
+    return controlsData;
+  }, [isLiveMode, liveControls]);
+
+  const [selectedControl, setSelectedControl] = useState(activeControls[0] || null);
+
+  useEffect(() => {
+    if (activeControls.length > 0 && (!selectedControl || !activeControls.some(c => c.id === selectedControl.id))) {
+      setSelectedControl(activeControls[0]);
+    }
+  }, [activeControls, selectedControl]);
 
   const categories = ['ALL', 'CRYPTOGRAPHY', 'IDENTITY', 'AUDIT', 'INFRASTRUCTURE', 'BOUNDARY'];
 
-  const filteredControls = controlsData.filter(item => {
+  const filteredControls = activeControls.filter(item => {
     const matchesCategory = category === 'ALL' || item.category === category;
     const matchesSearch = item.name.toLowerCase().includes(search.toLowerCase()) || 
                           item.id.toLowerCase().includes(search.toLowerCase()) ||
@@ -159,48 +195,73 @@ export default function ControlsPage() {
         
         {/* Left Column: Controls List (7 Cols) */}
         <div className="lg:col-span-7 space-y-3">
-          {filteredControls.map((item) => {
-            const isSelected = selectedControl?.id === item.id;
-            return (
-              <div
-                key={item.id}
-                onClick={() => setSelectedControl(item)}
-                className={`p-4 rounded-xl border transition-all cursor-pointer font-sans space-y-2.5 ${
-                  isSelected
-                    ? 'bg-white dark:bg-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xs ring-1 ring-zinc-900 dark:ring-zinc-100'
-                    : 'bg-[var(--surface)] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center justify-between font-mono text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-orange-600 dark:text-orange-400">
-                      {item.id}
-                    </span>
-                    <span className="text-slate-300 dark:text-slate-700">&bull;</span>
-                    <span className="text-slate-500 font-mono text-[11px]">
-                      {item.framework}
+          {filteredControls.length === 0 ? (
+            <div className="p-12 text-center bg-[var(--surface)] rounded-xl border border-dashed border-slate-200 dark:border-slate-800 space-y-3">
+              <Shield size={36} className="mx-auto text-slate-400 opacity-60" />
+              <div className="text-sm font-bold text-slate-900 dark:text-white">
+                {isLiveMode ? 'No Live Controls Evaluated' : 'No Matching Controls Found'}
+              </div>
+              <p className="text-xs text-slate-500 font-mono max-w-sm mx-auto leading-relaxed">
+                {isLiveMode 
+                  ? 'Connect GitHub or a cloud provider in Integrations, then trigger a compliance scan to evaluate canonical controls.'
+                  : 'Try adjusting your search query or filter category.'}
+              </p>
+              {isLiveMode && (
+                <div className="pt-2">
+                  <Link
+                    to="/dashboard/integrations"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold transition-all no-underline"
+                  >
+                    <span>Go to Integrations</span>
+                    <ArrowRight size={13} />
+                  </Link>
+                </div>
+              )}
+            </div>
+          ) : (
+            filteredControls.map((item) => {
+              const isSelected = selectedControl?.id === item.id;
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => setSelectedControl(item)}
+                  className={`p-4 rounded-xl border transition-all cursor-pointer font-sans space-y-2.5 ${
+                    isSelected
+                      ? 'bg-white dark:bg-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xs ring-1 ring-zinc-900 dark:ring-zinc-100'
+                      : 'bg-[var(--surface)] border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between font-mono text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-orange-600 dark:text-orange-400">
+                        {item.id}
+                      </span>
+                      <span className="text-slate-300 dark:text-slate-700">&bull;</span>
+                      <span className="text-slate-500 font-mono text-[11px]">
+                        {item.framework}
+                      </span>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded text-[10.5px] font-medium ${
+                      item.status === 'VERIFIED PASS'
+                        ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60'
+                        : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/60'
+                    }`}>
+                      {item.status}
                     </span>
                   </div>
-                  <span className={`px-2 py-0.5 rounded text-[10.5px] font-medium ${
-                    item.status === 'VERIFIED PASS'
-                      ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60'
-                      : 'bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200/60 dark:border-amber-800/60'
-                  }`}>
-                    {item.status}
-                  </span>
-                </div>
 
-                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-                  {item.name}
-                </h3>
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                    {item.name}
+                  </h3>
 
-                <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-1 border-t border-slate-100 dark:border-slate-800">
-                  <span>Telemetry: {item.telemetry}</span>
-                  <span className="text-[10.5px] uppercase">{item.category}</span>
+                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-1 border-t border-slate-100 dark:border-slate-800">
+                    <span>Telemetry: {item.telemetry}</span>
+                    <span className="text-[10.5px] uppercase">{item.category}</span>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
 
         {/* Right Column: Sticky Control Specification Sheet (5 Cols) */}

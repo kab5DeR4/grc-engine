@@ -1,15 +1,28 @@
-import { useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useDemoStore } from '../store/demoStore';
+import { useToast } from '../components/ui/Toast';
 import FeaturedHeroCard from '../components/dashboard/FeaturedHeroCard';
 import FrameworkCard from '../components/dashboard/FrameworkCard';
 import PipelineTracker from '../components/dashboard/PipelineTracker';
 import PriorityFindingsQueue from '../components/dashboard/PriorityFindingsQueue';
 import CloudEcosystemCard from '../components/dashboard/CloudEcosystemCard';
 import TelemetryPulseBanner from '../components/dashboard/TelemetryPulseBanner';
+import AuditReadinessCard from '../components/dashboard/AuditReadinessCard';
+import DashboardScopeFilterBar from '../components/dashboard/DashboardScopeFilterBar';
+import RiskDomainHeatmap from '../components/dashboard/RiskDomainHeatmap';
+import LiveTelemetryEventFeed from '../components/dashboard/LiveTelemetryEventFeed';
+import FindingDetailDrawer from '../components/dashboard/FindingDetailDrawer';
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
+  const toast = useToast();
+  const [selectedEnv, setSelectedEnv] = useState('ALL');
+  const [selectedFramework, setSelectedFramework] = useState('ALL');
+  const [auditWindow, setAuditWindow] = useState('Q3 2026 (Live Audit)');
+  const [auditorMode, setAuditorMode] = useState(false);
+  const [selectedFindingForDrawer, setSelectedFindingForDrawer] = useState(null);
+  const [isRemediatingDrawer, setIsRemediatingDrawer] = useState(false);
   const { 
     overallCompliance, 
     lastScan, 
@@ -25,6 +38,7 @@ const Dashboard = () => {
     findings, 
     liveFindings, 
     discoveredAssets,
+    liveIntegrations,
     simulateRemediation,
     resolveLiveFinding,
     hasPermission,
@@ -36,10 +50,13 @@ const Dashboard = () => {
 
   const liveAssetsCount = discoveredAssets?.length || 0;
   const liveFindingsCount = liveFindings?.length || 0;
+  const hasLiveIntegrations = Boolean((liveIntegrations && liveIntegrations.length > 0) || liveAssetsCount > 0);
 
   // Active findings list depending on live vs demo mode
+  // no cap, never leak demo findings into live mode
   const activeFindingsList = useMemo(() => {
-    if (isLiveMode && liveFindings && liveFindings.length > 0) {
+    if (isLiveMode) {
+      if (!liveFindings || liveFindings.length === 0) return [];
       return liveFindings.map(f => ({
         id: f.finding_code || f.id,
         rawId: f.id,
@@ -65,9 +82,11 @@ const Dashboard = () => {
   );
 
   const displayScore = isLiveMode 
-    ? (liveAssetsCount > 0 ? (criticalFindings.length === 0 ? 95 : 88) : 100) 
+    ? (hasLiveIntegrations 
+        ? (criticalFindings.length === 0 ? 100 : Math.max(0, 100 - (criticalFindings.length * 20 + highFindings.length * 10))) 
+        : null)
     : overallCompliance;
-  const totalAssetsCount = isLiveMode ? (liveAssetsCount || 2) : 172;
+  const totalAssetsCount = isLiveMode ? liveAssetsCount : 172;
 
   const handleScan = useCallback(() => {
     if (!canRunScan) return;
@@ -79,16 +98,26 @@ const Dashboard = () => {
   }, [canRunScan, isLiveMode, triggerLiveScan, runScan]);
 
   const handleRemediateFinding = useCallback(async (findingItem) => {
+    setIsRemediatingDrawer(true);
+    toast.info(`Generating cryptographic patch for ${findingItem.id}...`);
+
     try {
       if (isLiveMode && findingItem.rawId) {
         await resolveLiveFinding(findingItem.rawId, 'Remediated from Security Dashboard');
       } else {
         simulateRemediation(findingItem.id, findingItem.controlId || 'CTRL-IAM-001');
       }
+
+      toast.success(`Remediated ${findingItem.id}! Evidence record added to audit chain.`);
+      if (selectedFindingForDrawer?.id === findingItem.id) {
+        setSelectedFindingForDrawer((prev) => prev ? { ...prev, status: 'RESOLVED' } : null);
+      }
     } catch (err) {
-      alert(`Failed to apply remediation: ${err.message}`);
+      toast.error(`Failed to apply remediation: ${err.message}`);
+    } finally {
+      setIsRemediatingDrawer(false);
     }
-  }, [isLiveMode, resolveLiveFinding, simulateRemediation]);
+  }, [isLiveMode, resolveLiveFinding, simulateRemediation, toast, selectedFindingForDrawer]);
 
   const userName = currentUser?.name?.split(' ')[0] || 'Engineer';
 
@@ -110,14 +139,32 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Sticky Contextual Scope Filter Bar */}
+      <DashboardScopeFilterBar
+        selectedEnv={selectedEnv}
+        onSelectEnv={setSelectedEnv}
+        selectedFramework={selectedFramework}
+        onSelectFramework={setSelectedFramework}
+        auditWindow={auditWindow}
+        onSelectAuditWindow={setAuditWindow}
+        auditorMode={auditorMode}
+        onToggleAuditorMode={() => {
+          setAuditorMode(!auditorMode);
+          toast.info(auditorMode ? 'Switched to Developer SecOps mode' : 'Switched to Formal CPA Auditor Perspective');
+        }}
+        isLive={isLiveMode}
+        hasLiveIntegrations={hasLiveIntegrations}
+      />
+
       {/* Featured KPI Summary Bar */}
       <FeaturedHeroCard
         score={displayScore}
         totalAssets={totalAssetsCount}
-        activeFrameworks={frameworks.length}
+        activeFrameworks={isLiveMode ? (hasLiveIntegrations ? 4 : 0) : frameworks.length}
         onScan={handleScan}
         scanRunning={scanRunning}
         isLive={isLiveMode}
+        hasLiveIntegrations={hasLiveIntegrations}
       />
 
       {/* Real / Demo Telemetry Status Ribbon */}
@@ -130,6 +177,24 @@ const Dashboard = () => {
         onToggleMode={setLiveMode}
         onTriggerScan={handleScan}
         scanRunning={scanRunning}
+      />
+
+      {/* Live Audit Readiness Scorecard & Evidence Packager */}
+      <AuditReadinessCard 
+        score={displayScore} 
+        isLive={isLiveMode} 
+        hasLiveIntegrations={hasLiveIntegrations}
+      />
+
+      {/* Infrastructure Domain Risk Heatmap Breakdown */}
+      <RiskDomainHeatmap 
+        isLive={isLiveMode}
+        hasLiveIntegrations={hasLiveIntegrations}
+        liveFindings={activeFindingsList}
+        liveAssetsCount={liveAssetsCount}
+        onSelectCategory={(cat) => {
+          toast.info(`Filtering findings by domain: ${cat.toUpperCase()}`);
+        }} 
       />
 
       {/* Regulatory Frameworks & Continuous Baselines */}
@@ -159,17 +224,19 @@ const Dashboard = () => {
               key={fw.id}
               id={fw.id}
               name={fw.name}
-              score={isLiveMode ? (displayScore >= 90 ? fw.score : fw.score - 4) : fw.score}
-              controls={fw.controls}
-              passing={fw.passing}
-              failing={fw.failing}
+              score={isLiveMode ? (hasLiveIntegrations ? (displayScore !== null ? displayScore : fw.score) : null) : fw.score}
+              controls={isLiveMode ? (hasLiveIntegrations ? fw.controls : 0) : fw.controls}
+              passing={isLiveMode ? (hasLiveIntegrations ? fw.passing : 0) : fw.passing}
+              failing={isLiveMode ? (hasLiveIntegrations ? fw.failing : 0) : fw.failing}
               trend={fw.trend}
+              isLive={isLiveMode}
+              hasLiveIntegrations={hasLiveIntegrations}
             />
           ))}
         </div>
       </section>
 
-      {/* Category 02: Operational Risk & Telemetry Connectors */}
+      {/* Category 02: Operational Risk & Telemetry Stream */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Priority Findings Work Table (60%) */}
@@ -178,18 +245,31 @@ const Dashboard = () => {
             findings={activeFindingsList}
             onRemediate={handleRemediateFinding}
             canRemediate={canRemediate}
-          />
-        </div>
-
-        {/* Connected Telemetry Ecosystem (40%) */}
-        <div className="lg:col-span-5 h-full">
-          <CloudEcosystemCard
-            infrastructure={infrastructure}
-            liveAssetsCount={liveAssetsCount}
+            onSelectFinding={(f) => setSelectedFindingForDrawer(f)}
             isLive={isLiveMode}
+            hasLiveIntegrations={hasLiveIntegrations}
           />
         </div>
 
+        {/* Real-time Telemetry Stream (40%) */}
+        <div className="lg:col-span-5 h-full">
+          <LiveTelemetryEventFeed 
+            isLive={isLiveMode}
+            hasLiveIntegrations={hasLiveIntegrations}
+          />
+        </div>
+
+      </section>
+
+      {/* Connected Telemetry Ecosystem */}
+      <section>
+        <CloudEcosystemCard
+          infrastructure={infrastructure}
+          liveIntegrations={liveIntegrations}
+          liveAssetsCount={liveAssetsCount}
+          isLive={isLiveMode}
+          hasLiveIntegrations={hasLiveIntegrations}
+        />
       </section>
 
       {/* Deterministic Verification Pipeline Log */}
@@ -197,8 +277,19 @@ const Dashboard = () => {
         <PipelineTracker 
           activeScan={scanRunning}
           lastCompleted={lastScan}
+          isLive={isLiveMode}
+          hasLiveIntegrations={hasLiveIntegrations}
         />
       </section>
+
+      {/* Slide-over Finding Detail Evidence Drawer */}
+      <FindingDetailDrawer
+        finding={selectedFindingForDrawer}
+        onClose={() => setSelectedFindingForDrawer(null)}
+        onRemediate={handleRemediateFinding}
+        canRemediate={canRemediate}
+        isRemediating={isRemediatingDrawer}
+      />
 
     </div>
   );
