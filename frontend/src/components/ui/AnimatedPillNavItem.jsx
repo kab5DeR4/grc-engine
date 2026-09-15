@@ -20,14 +20,14 @@ export function AnimatedPillNavItem({
       onClick={onClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`group relative overflow-hidden inline-flex items-center justify-center px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 cursor-pointer select-none bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 ${
+      className={`group relative overflow-hidden inline-flex items-center justify-center px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer select-none bg-zinc-100/90 dark:bg-zinc-900/90 hover:bg-zinc-200/80 dark:hover:bg-zinc-800/80 text-zinc-700 dark:text-zinc-300 border border-zinc-200/60 dark:border-zinc-800/60 ${
         isActive ? 'ring-1 ring-zinc-400 dark:ring-zinc-600 font-semibold' : ''
       } ${className}`}
     >
-      {/* Rising Circle Background Layer */}
+      {/* Rising Background Layer */}
       <span
-        className={`absolute left-1/2 -bottom-4 -translate-x-1/2 rounded-full pointer-events-none bg-zinc-900 dark:bg-zinc-100 transition-all duration-300 ease-out ${
-          isHovered ? 'w-48 h-48 -bottom-16 opacity-100 scale-100' : 'w-0 h-0 opacity-0 scale-0'
+        className={`absolute inset-0 pointer-events-none rounded-lg bg-zinc-900 dark:bg-zinc-100 transition-all duration-250 ease-out ${
+          isHovered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
         }`}
         aria-hidden="true"
       />

@@ -1,10 +1,8 @@
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useDemoStore } from '../../store/demoStore';
 import HeroEvidenceBackground from './HeroEvidenceBackground';
-import InteractiveCursorGlowButton from '../ui/InteractiveCursorGlowButton';
-import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 function GithubIcon({ size = 15, className = '' }) {
   return (
@@ -34,62 +32,52 @@ const HeroSection = memo(function HeroSection() {
     navigate('/dashboard');
   };
 
-  const loopSteps = [
-    { label: 'Control', code: '01' },
-    { label: 'Requirement', code: '02' },
-    { label: 'Infrastructure', code: '03' },
-    { label: 'Evidence', code: '04' },
-    { label: 'Verification', code: '05' },
-    { label: 'Result', code: '06' },
-  ];
-
   return (
-    <section className="relative w-full min-h-screen flex items-center justify-center pt-16 pb-16 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden">
+    <section className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center justify-center pt-24 pb-20 sm:pt-28 sm:pb-24 px-4 sm:px-6 lg:px-8 font-sans overflow-hidden">
       <HeroEvidenceBackground />
 
-      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center justify-center text-center space-y-8">
+      <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center justify-center text-center space-y-8 sm:space-y-10">
         
-        {/* Top: Conceptual Workflow Loop Strip */}
-        <div className="flex items-center justify-center">
-          <div className="inline-flex flex-wrap items-center justify-center gap-1 sm:gap-2 px-3.5 py-1.5 rounded-full bg-zinc-100/90 dark:bg-zinc-900/90 border border-zinc-200/80 dark:border-zinc-800 text-[11px] font-mono text-zinc-600 dark:text-zinc-400 shadow-xs backdrop-blur-sm">
-            {loopSteps.map((step, idx) => (
-              <div key={step.label} className="flex items-center gap-1 sm:gap-1.5">
-                <span className={`${idx === 3 || idx === 4 ? 'text-orange-600 dark:text-orange-400 font-medium' : 'text-zinc-700 dark:text-zinc-300'}`}>
-                  {step.label}
-                </span>
-                {idx < loopSteps.length - 1 && (
-                  <ChevronRight size={11} className="text-zinc-400 dark:text-zinc-600 shrink-0" />
-                )}
-              </div>
-            ))}
-          </div>
+        {/* Subtle Conceptual Product-Flow Indicator (Restrained enterprise workflow, hidden on mobile for clean hierarchy) */}
+        <div className="hidden sm:inline-flex items-center gap-2.5 sm:gap-3 px-3.5 py-1.5 rounded-md border border-zinc-200/90 dark:border-zinc-800/90 bg-white/95 dark:bg-zinc-900/95 text-[11px] font-mono tracking-wider uppercase text-zinc-500 dark:text-zinc-400 select-none shadow-xs">
+          <span className="text-zinc-800 dark:text-zinc-200 font-medium">CONTROL</span>
+          <span className="text-zinc-300 dark:text-zinc-700 select-none text-xs" aria-hidden="true">→</span>
+          <span className="text-zinc-800 dark:text-zinc-200 font-medium">EVIDENCE</span>
+          <span className="text-zinc-300 dark:text-zinc-700 select-none text-xs" aria-hidden="true">→</span>
+          <span className="text-zinc-800 dark:text-zinc-200 font-medium">VERIFICATION</span>
+          <span className="text-zinc-300 dark:text-zinc-700 select-none text-xs" aria-hidden="true">→</span>
+          <span className="text-orange-600 dark:text-orange-400 font-semibold">RESULT</span>
         </div>
 
         {/* Hero Narrative: Headline, Subtitle, CTAs */}
         <div className="space-y-6 max-w-3xl mx-auto">
-          <AnimatedBlurTextHeading
-            as="h1"
-            className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 leading-[1.08]"
-          >
-            Compliance, grounded in verifiable evidence.
-          </AnimatedBlurTextHeading>
+          <h1 className="text-[2.25rem] xs:text-4xl sm:text-6xl md:text-[4.25rem] lg:text-[4.75rem] font-bold tracking-tight text-zinc-950 dark:text-zinc-50 leading-[1.1] sm:leading-[1.06]">
+            <span className="block">Compliance,</span>
+            <span className="block">grounded in verifiable</span>
+            <span className="block">evidence.</span>
+          </h1>
           
           <p className="text-base sm:text-lg md:text-xl text-zinc-600 dark:text-zinc-400 font-normal leading-relaxed max-w-2xl mx-auto">
-            Connect compliance controls to evidence from your infrastructure and source code. GRC Engine continuously evaluates technical state and preserves the evidence behind each result.
+            Connect compliance controls to evidence from your infrastructure and source code. Continuously evaluate technical state, verify controls, and preserve the evidence behind every result.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3.5 pt-4">
-            <InteractiveCursorGlowButton onClick={handleLaunchDemo}>
-              <span>Launch Product Demo</span>
-            </InteractiveCursorGlowButton>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3.5 pt-4 w-full sm:w-auto">
+            <button
+              type="button"
+              onClick={handleLaunchDemo}
+              className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium text-white bg-zinc-950 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-950 dark:hover:bg-white border border-zinc-950 dark:border-zinc-100 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.99] cursor-pointer w-full sm:w-auto"
+            >
+              <span>Explore Interactive Demo</span>
+              <ArrowRight size={15} className="text-orange-400 dark:text-orange-600 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+            </button>
 
             <a
               href="https://github.com/kab5DeR4/grc-engine"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white/90 dark:bg-zinc-900/90 hover:bg-zinc-50 dark:hover:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-800 shadow-xs backdrop-blur-sm transition-all no-underline"
+              className="group inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg text-sm font-medium text-zinc-800 dark:text-zinc-200 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800 border border-zinc-300 dark:border-zinc-800 shadow-xs transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-zinc-400 dark:hover:border-zinc-700 active:translate-y-0 active:scale-[0.99] no-underline w-full sm:w-auto"
             >
-              <GithubIcon size={16} />
+              <GithubIcon size={16} className="text-zinc-700 dark:text-zinc-300" />
               <span>View on GitHub</span>
             </a>
           </div>

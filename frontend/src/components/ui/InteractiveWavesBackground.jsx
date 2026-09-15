@@ -83,10 +83,10 @@ class Noise {
 
 /**
  * InteractiveWavesBackground
- * Faithful implementation of ReactBits interactive wavy background effect using Perlin noise and canvas.
+ * Responsive interactive topographic wavy background using Perlin noise and canvas.
  */
 export const InteractiveWavesBackground = memo(function InteractiveWavesBackground({
-  lineColor = 'rgba(0, 0, 0, 0.4)',
+  lineColor = 'rgba(0, 0, 0, 0.32)',
   backgroundColor = 'transparent',
   waveSpeedX = 0.0125,
   waveSpeedY = 0.005,
@@ -322,26 +322,10 @@ export const InteractiveWavesBackground = memo(function InteractiveWavesBackgrou
       }
     }
 
-    // Initial setup with ResizeObserver & IntersectionObserver for performance CPU optimization
+    // Initial setup with ResizeObserver & immediate animation frame
     setSize();
     setLines();
-
-    let isVisible = true;
-    const intersectionObserver = new IntersectionObserver(([entry]) => {
-      isVisible = entry.isIntersecting;
-      if (isVisible) {
-        if (!frameIdRef.current) {
-          frameIdRef.current = requestAnimationFrame(tick);
-        }
-      } else {
-        if (frameIdRef.current) {
-          cancelAnimationFrame(frameIdRef.current);
-          frameIdRef.current = null;
-        }
-      }
-    }, { threshold: 0.05 });
-
-    intersectionObserver.observe(container);
+    frameIdRef.current = requestAnimationFrame(tick);
 
     const resizeObserver = new ResizeObserver(() => {
       onResize();
@@ -353,7 +337,6 @@ export const InteractiveWavesBackground = memo(function InteractiveWavesBackgrou
     window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     return () => {
-      intersectionObserver.disconnect();
       resizeObserver.disconnect();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);

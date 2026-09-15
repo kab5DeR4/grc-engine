@@ -11,29 +11,29 @@ const HeroEvidenceBackground = memo(function HeroEvidenceBackground() {
       {/* Interactive Perlin Noise Waves - Full Bleed Edge-to-Edge */}
       <div className="absolute inset-0">
         <InteractiveWavesBackground
-          lineColor="rgba(0, 0, 0, 0.45)"
-          waveSpeedX={0.0125}
-          waveSpeedY={0.005}
-          waveAmpX={32}
-          waveAmpY={16}
-          xGap={10}
+          lineColor="rgba(0, 0, 0, 0.32)"
+          waveSpeedX={0.0095}
+          waveSpeedY={0.0038}
+          waveAmpX={24}
+          waveAmpY={12}
+          xGap={12}
           yGap={32}
           friction={0.925}
           tension={0.006}
-          maxCursorMove={110}
+          maxCursorMove={85}
           className="dark:hidden"
         />
         <InteractiveWavesBackground
-          lineColor="rgba(255, 255, 255, 0.35)"
-          waveSpeedX={0.0125}
-          waveSpeedY={0.005}
-          waveAmpX={32}
-          waveAmpY={16}
-          xGap={10}
+          lineColor="rgba(255, 255, 255, 0.25)"
+          waveSpeedX={0.0095}
+          waveSpeedY={0.0038}
+          waveAmpX={24}
+          waveAmpY={12}
+          xGap={12}
           yGap={32}
           friction={0.925}
           tension={0.006}
-          maxCursorMove={110}
+          maxCursorMove={85}
           className="hidden dark:block"
         />
       </div>

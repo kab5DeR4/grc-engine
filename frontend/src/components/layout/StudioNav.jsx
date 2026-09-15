@@ -87,7 +87,7 @@ const StudioNav = memo(function StudioNav() {
           </div>
 
           {/* Center: GSAP Animated Pill Navigation Links */}
-          <nav className="hidden md:flex items-center gap-2">
+          <nav className="hidden md:flex items-center gap-2.5 lg:gap-3">
             <AnimatedPillNavItem 
               label="Platform" 
               onClick={() => navigate('/dashboard')} 
@@ -150,13 +150,13 @@ const StudioNav = memo(function StudioNav() {
               Sign Up
             </Link>
 
-            {/* Launch Product CTA */}
+            {/* Launch Platform CTA */}
             <button 
               type="button"
               onClick={handleDemoLaunch}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white shadow-sm transition-all border border-zinc-900 dark:border-zinc-100 active:scale-[0.98] cursor-pointer"
             >
-              <span>Launch Product</span>
+              <span>Launch Platform</span>
               <ArrowRight size={13} className="text-orange-400 dark:text-orange-600" />
             </button>
 
@@ -227,7 +227,7 @@ const StudioNav = memo(function StudioNav() {
                 onClick={handleDemoLaunch}
                 className="w-full py-2 text-center text-xs font-medium bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded border-none cursor-pointer"
               >
-                Launch Product Demo
+                Launch Platform
               </button>
             </div>
           </div>
