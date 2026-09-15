@@ -3,8 +3,7 @@ import {
   Check, 
   GitBranch, 
   Lock, 
-  Database,
-  ExternalLink
+  Database
 } from 'lucide-react';
 import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
@@ -21,7 +20,7 @@ const ProductShowcaseSection = memo(function ProductShowcaseSection() {
       frameworks: ['SOC 2 CC8.1', 'ISO 27001 A.8.28', 'NIST PR.PS-01'],
       controlName: 'Mandatory Pull Request Reviews & Admin Lock',
       condition: 'Branch protection mandates >= 2 reviewers and prohibits force pushes or administrator bypass.',
-      status: 'PASS',
+      status: 'VERIFIED',
       payload: {
         resource: "github.branch.main",
         enforce_admins: true,
@@ -43,7 +42,7 @@ const ProductShowcaseSection = memo(function ProductShowcaseSection() {
       frameworks: ['SOC 2 CC6.1', 'ISO 27001 A.5.17', 'NIST PR.AA-01'],
       controlName: 'Privileged User Hardware MFA Enforcement',
       condition: 'All privileged IAM identities must have active virtual or hardware MFA tokens attached.',
-      status: 'PASS',
+      status: 'VERIFIED',
       payload: {
         user_name: "platform-admin",
         mfa_active: true,
@@ -64,7 +63,7 @@ const ProductShowcaseSection = memo(function ProductShowcaseSection() {
       frameworks: ['SOC 2 CC6.1', 'ISO 27001 A.8.24', 'NIST PR.DS-01'],
       controlName: 'Customer-Managed KMS Key (CMK) Encryption',
       condition: 'S3 buckets containing sensitive attestation records must enforce SSE-KMS with customer CMK.',
-      status: 'PASS',
+      status: 'VERIFIED',
       payload: {
         bucket: "audit-evidence-vault-prod",
         sse_algorithm: "aws:kms",
@@ -82,147 +81,156 @@ const ProductShowcaseSection = memo(function ProductShowcaseSection() {
   const currentAsset = assets[selectedAssetIndex];
 
   return (
-    <section className="w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
-      <div className="max-w-7xl mx-auto space-y-10">
+    <section className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800">
+      <div className="max-w-7xl mx-auto space-y-12">
         
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="max-w-2xl space-y-2">
-            <div className="text-[11px] font-mono tracking-wider uppercase text-zinc-500">
-              Inspection Interface
+          <div className="max-w-2xl space-y-3">
+            <div className="text-xs font-mono tracking-wider uppercase text-zinc-500 font-semibold">
+              Evidence-Driven Verification
             </div>
             <AnimatedBlurTextHeading 
               as="h2" 
-              className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+              className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
             >
               See what the system can actually verify.
             </AnimatedBlurTextHeading>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
               Real infrastructure state evaluated deterministically against canonical controls, complete with immutable SHA-256 evidence provenance.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono px-2.5 py-1 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200/80 dark:border-zinc-800">
-              Demo environment &bull; Sample data
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[10px] font-mono px-2 py-1 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 border border-zinc-200/80 dark:border-zinc-800 uppercase tracking-widest">
+              Live Evaluation Engine
             </span>
           </div>
         </div>
 
-        {/* Realistic Interactive Product UI Showcase */}
-        <div className="rounded-xl border border-zinc-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm overflow-hidden">
+        {/* Product UI Showcase */}
+        <div className="rounded-xl border border-zinc-200/90 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm overflow-hidden flex flex-col">
           
           {/* Asset Selector Tabs */}
-          <div className="flex border-b border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/60 overflow-x-auto">
+          <div className="flex border-b border-zinc-200/80 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/60 overflow-x-auto no-scrollbar">
             {assets.map((asset, idx) => (
               <button
                 key={asset.id}
                 type="button"
                 onClick={() => setSelectedAssetIndex(idx)}
-                className={`px-4 py-3 text-xs font-medium border-r border-zinc-200/80 dark:border-zinc-800 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2 ${
+                className={`px-6 py-4 text-sm font-medium border-r border-zinc-200/80 dark:border-zinc-800 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-2.5 ${
                   selectedAssetIndex === idx
                     ? 'bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 border-b-2 border-b-orange-600 dark:border-b-orange-500'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/40'
+                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/40'
                 }`}
               >
-                {idx === 0 && <GitBranch size={13} className="text-zinc-500" />}
-                {idx === 1 && <Lock size={13} className="text-zinc-500" />}
-                {idx === 2 && <Database size={13} className="text-zinc-500" />}
+                {idx === 0 && <GitBranch size={14} />}
+                {idx === 1 && <Lock size={14} />}
+                {idx === 2 && <Database size={14} />}
                 <span>{asset.title}</span>
               </button>
             ))}
           </div>
 
-          {/* Asset Metadata & Evaluation Detail Bar */}
-          <div className="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="p-6 sm:p-8 flex flex-col space-y-8">
             
-            {/* Left Column: Target Resource & Control Definition */}
-            <div className="lg:col-span-6 space-y-4">
-              <div className="space-y-1.5">
-                <div className="flex flex-wrap items-center gap-1.5">
+            {/* DOMINANT VERIFICATION RESULT */}
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-zinc-200/80 dark:border-zinc-800">
+              <div className="space-y-2">
+                <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                  Control Evaluated
+                </div>
+                <h3 className="text-xl sm:text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                  {currentAsset.controlName}
+                </h3>
+                <div className="flex flex-wrap items-center gap-2 pt-1">
                   {currentAsset.frameworks.map((fw) => (
                     <span 
                       key={fw} 
-                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-800"
+                      className="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800/50 text-zinc-600 dark:text-zinc-400 border border-zinc-200/60 dark:border-zinc-700/60"
                     >
                       {fw}
                     </span>
                   ))}
                 </div>
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 pt-1">
-                  {currentAsset.controlName}
-                </h3>
-                <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                  {currentAsset.condition}
-                </p>
               </div>
 
-              {/* Resource identification metadata */}
-              <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-zinc-800/60 space-y-2 text-xs font-mono">
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-400">Resource:</span>
-                  <span className="text-zinc-800 dark:text-zinc-200 font-medium truncate max-w-[260px]">
-                    {currentAsset.resource}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-400">Target:</span>
-                  <span className="text-zinc-700 dark:text-zinc-300">
-                    {currentAsset.branch}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-400">Method:</span>
-                  <span className="text-zinc-600 dark:text-zinc-400 truncate max-w-[260px]">
-                    {currentAsset.method}
-                  </span>
-                </div>
-              </div>
-
-              {/* Verification Outcome */}
-              <div className="flex items-center justify-between pt-1">
-                <div className="text-xs text-zinc-500 font-mono">
-                  Evaluation Verdict:
-                </div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 text-xs font-mono font-medium">
-                  <Check size={12} strokeWidth={3} />
-                  <span>{currentAsset.status} // DETERMINISTIC</span>
+              <div className="flex-shrink-0">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 font-mono">
+                  <Check size={16} strokeWidth={3} />
+                  <span className="font-semibold tracking-wide">{currentAsset.status}</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Ingested Evidence JSON & Immutable Hash */}
-            <div className="lg:col-span-6 space-y-3 flex flex-col justify-between">
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-mono">
-                  <span className="text-zinc-600 dark:text-zinc-400 font-medium">
-                    Evidence Payload
-                  </span>
-                  <span className="text-[11px] text-zinc-400">
-                    {currentAsset.collectedAt}
-                  </span>
+            {/* TECHNICAL EVIDENCE DETAILS */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              
+              {/* Context & Metadata */}
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                    Policy Rule
+                  </div>
+                  <p className="text-sm text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                    {currentAsset.condition}
+                  </p>
                 </div>
 
-                <div className="p-3.5 rounded-lg bg-zinc-900 text-zinc-200 font-mono text-xs leading-relaxed overflow-x-auto border border-zinc-800">
-                  <pre className="text-zinc-300">
-                    {JSON.stringify(currentAsset.payload, null, 2)}
-                  </pre>
+                <div className="space-y-3">
+                  <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                    Evidence Source
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-200 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 rounded overflow-hidden text-xs">
+                    <div className="bg-zinc-50 dark:bg-zinc-900/50 p-3 space-y-1">
+                      <span className="text-zinc-500 block">System</span>
+                      <span className="text-zinc-900 dark:text-zinc-100 font-medium">{currentAsset.type}</span>
+                    </div>
+                    <div className="bg-zinc-50 dark:bg-zinc-900/50 p-3 space-y-1">
+                      <span className="text-zinc-500 block">Target</span>
+                      <span className="text-zinc-900 dark:text-zinc-100 font-medium">{currentAsset.branch}</span>
+                    </div>
+                    <div className="bg-zinc-50 dark:bg-zinc-900/50 p-3 space-y-1 sm:col-span-2">
+                      <span className="text-zinc-500 block">Resource ID</span>
+                      <span className="text-zinc-900 dark:text-zinc-100 font-mono truncate block">{currentAsset.resource}</span>
+                    </div>
+                    <div className="bg-zinc-50 dark:bg-zinc-900/50 p-3 space-y-1 sm:col-span-2">
+                      <span className="text-zinc-500 block">Last Verified</span>
+                      <span className="text-zinc-900 dark:text-zinc-100 font-mono">{currentAsset.collectedAt}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/60 dark:border-zinc-800/60 space-y-1 text-[11px] font-mono">
-                <div className="flex items-center justify-between text-zinc-500">
-                  <span>Cryptographic Ledger ID:</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-medium">Verified</span>
+              {/* Payload & Integrity */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                      Technical State
+                    </div>
+                    <div className="text-[10px] font-mono text-zinc-500 truncate max-w-[200px]">
+                      {currentAsset.method}
+                    </div>
+                  </div>
+                  <div className="p-4 rounded border border-zinc-200/80 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 font-mono text-xs overflow-x-auto text-zinc-800 dark:text-zinc-300">
+                    <pre>
+                      {JSON.stringify(currentAsset.payload, null, 2)}
+                    </pre>
+                  </div>
                 </div>
-                <div className="text-zinc-800 dark:text-zinc-300 truncate select-all">
-                  {currentAsset.hash}
+                
+                <div className="flex items-center justify-between p-3 rounded border border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/50 dark:bg-emerald-950/10 text-[10px] font-mono">
+                  <span className="text-zinc-500">Cryptographic Hash</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-medium truncate max-w-[220px] sm:max-w-[300px]">
+                    {currentAsset.hash}
+                  </span>
                 </div>
               </div>
+
             </div>
 
           </div>
-
         </div>
 
       </div>
