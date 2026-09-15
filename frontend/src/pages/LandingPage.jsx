@@ -2,10 +2,9 @@ import StudioNav from '../components/layout/StudioNav';
 import StudioFooter from '../components/layout/StudioFooter';
 import HeroSection from '../components/landing/HeroSection';
 import CoreWorkflowSection from '../components/landing/CoreWorkflowSection';
-import ProductShowcaseSection from '../components/landing/ProductShowcaseSection';
+import CoreCapabilitiesSection from '../components/landing/CoreCapabilitiesSection';
 import ProblemComparison from '../components/landing/ProblemComparison';
-import EvidenceModelSection from '../components/landing/EvidenceModelSection';
-import RealEvidenceRecordSection from '../components/landing/RealEvidenceRecordSection';
+import ProductShowcaseSection from '../components/landing/ProductShowcaseSection';
 import SecurityPrinciplesSection from '../components/landing/SecurityPrinciplesSection';
 import IntegrationsSection from '../components/landing/IntegrationsSection';
 import ArchitectureSection from '../components/landing/ArchitectureSection';
@@ -26,41 +25,38 @@ export default function LandingPage() {
       <StudioNav />
 
       <main>
-        {/* 02 — Hero with Conceptual Loop & Product Verification Centerpiece */}
+        {/* 01 — HERO */}
         <HeroSection />
 
-        {/* 03 — Core Product Story: 01 Control to 05 Report */}
+        {/* 02 — SYSTEM WORKFLOW */}
         <CoreWorkflowSection />
 
-        {/* 04 — Product UI Showcase: What the system can actually verify */}
-        <ProductShowcaseSection />
+        {/* 03 — CORE CAPABILITIES */}
+        <CoreCapabilitiesSection />
 
-        {/* 05 — Problem & Solution: Compliance shouldn't depend on screenshots */}
+        {/* 04 — THE GAP / PROBLEM */}
         <ProblemComparison />
 
-        {/* 06 — Evidence Model: 1 Evidence layer to Multiple Frameworks */}
-        <EvidenceModelSection />
+        {/* 05 — EVIDENCE-DRIVEN VERIFICATION */}
+        <ProductShowcaseSection />
 
-        {/* 07 — Real Concrete Evidence Record Example */}
-        <RealEvidenceRecordSection />
-
-        {/* 08 — Security: Built for sensitive infrastructure (4 key principles) */}
+        {/* 06 — SECURITY ARCHITECTURE */}
         <SecurityPrinciplesSection />
 
-        {/* 09 — Integrations: Connect the systems you already use */}
+        {/* 07 — INTEGRATIONS */}
         <IntegrationsSection />
 
-        {/* 10 — Compact Technical Architecture */}
+        {/* 08 — ARCHITECTURE & PIPELINE */}
         <ArchitectureSection />
 
-        {/* 11 — Open Source Identity */}
+        {/* 09 — OPEN SOURCE */}
         <OpenSourceSection />
 
-        {/* 12 — Final CTA */}
+        {/* 10 — FINAL CTA */}
         <FinalCtaSection />
       </main>
 
-      {/* 13 — Minimal Professional Footer */}
+      {/* Footer */}
       <StudioFooter />
     </div>
   );
