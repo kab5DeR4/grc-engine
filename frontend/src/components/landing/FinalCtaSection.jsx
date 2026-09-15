@@ -33,22 +33,22 @@ const FinalCtaSection = memo(function FinalCtaSection() {
   };
 
   return (
-    <section className="w-full py-12 sm:py-16 px-4 sm:px-6 lg:px-8 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800 text-center">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <section className="w-full py-20 sm:py-32 px-4 sm:px-6 lg:px-8 font-sans bg-white dark:bg-zinc-950 border-t border-zinc-200/80 dark:border-zinc-800 text-center">
+      <div className="max-w-3xl mx-auto space-y-8">
         
-        <div className="space-y-3">
+        <div className="space-y-4">
           <AnimatedBlurTextHeading 
             as="h2" 
-            className="text-2xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
           >
-            See what your infrastructure can actually prove.
+            See compliance verification in action.
           </AnimatedBlurTextHeading>
           <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto leading-relaxed">
-            Test compliance controls against live and mock configurations in the interactive sandbox.
+            Test controls against live and mock configuration state in the interactive sandbox.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <InteractiveCursorGlowButton onClick={handleLaunch}>
             <span>Launch Product Demo</span>
           </InteractiveCursorGlowButton>
@@ -57,16 +57,16 @@ const FinalCtaSection = memo(function FinalCtaSection() {
             href="https://github.com/kab5DeR4/grc-engine"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-800 transition-colors no-underline"
+            className="inline-flex items-center justify-center w-full sm:w-auto gap-2 px-6 py-3 rounded-lg text-sm font-medium text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-800/80 border border-zinc-200 dark:border-zinc-800 transition-colors no-underline"
           >
-            <GithubIcon size={15} />
-            <span>View GitHub</span>
+            <GithubIcon size={16} />
+            <span>View on GitHub</span>
           </a>
         </div>
 
-        <div className="pt-2">
+        <div className="pt-6">
           <span className="text-[11px] font-mono text-zinc-400">
-            Self-hosted &bull; MIT License &bull; Read-Only Telemetry
+            Self-hosted &bull; Read-Only Telemetry
           </span>
         </div>
 

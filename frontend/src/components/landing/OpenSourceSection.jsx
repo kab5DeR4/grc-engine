@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { ExternalLink, Code2, GitFork, Check } from 'lucide-react';
+import { ExternalLink, Check } from 'lucide-react';
 import AnimatedBlurTextHeading from '../ui/AnimatedBlurTextHeading';
 
 function GithubIcon({ size = 16, className = '' }) {
@@ -23,62 +23,57 @@ function GithubIcon({ size = 16, className = '' }) {
 
 const OpenSourceSection = memo(function OpenSourceSection() {
   return (
-    <section className="w-full py-10 sm:py-12 px-4 sm:px-6 lg:px-8 font-sans bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/80 dark:border-zinc-800">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <section className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 font-sans bg-zinc-50/50 dark:bg-zinc-950/50 border-t border-zinc-200/80 dark:border-zinc-800">
+      <div className="max-w-5xl mx-auto space-y-12">
         
+        {/* Section Header */}
+        <div className="max-w-2xl space-y-3">
+          <div className="text-xs font-mono tracking-wider uppercase text-zinc-500 font-semibold">
+            Trust & Transparency
+          </div>
+          <AnimatedBlurTextHeading 
+            as="h2" 
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
+          >
+            Built in the open.
+          </AnimatedBlurTextHeading>
+          <p className="text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            Security tools require trust. GRC Engine is open source, allowing you to inspect the implementation, review the architecture, and verify the deterministic evaluation engine yourself.
+          </p>
+        </div>
+
         {/* Main Content Container */}
-        <div className="p-6 sm:p-8 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="p-8 sm:p-10 rounded-2xl bg-white dark:bg-zinc-900 border border-zinc-200/90 dark:border-zinc-800 shadow-sm flex flex-col items-center text-center gap-8 relative overflow-hidden">
           
-          <div className="max-w-xl space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
-                Open Source
-              </span>
-              <span className="text-zinc-300 dark:text-zinc-700">&bull;</span>
-              <span className="text-[11px] font-mono text-zinc-500">
-                MIT License
-              </span>
-            </div>
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
 
-            <AnimatedBlurTextHeading 
-              as="h2" 
-              className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
-            >
-              Explore the system.
-            </AnimatedBlurTextHeading>
-
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-              GRC Engine is built in the open. Inspect the source code, review the canonical control definitions, and test the deterministic evaluation engine on your own machine.
-            </p>
-
-            <div className="pt-2 flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs font-mono text-zinc-500">
-              <span className="flex items-center gap-1">
-                <Check size={12} className="text-emerald-600" />
-                <span>FastAPI + Python Core</span>
-              </span>
-              <span className="flex items-center gap-1">
-                <Check size={12} className="text-emerald-600" />
-                <span>React 19 Frontend</span>
-              </span>
-              <span className="flex items-center gap-1">
-                <Check size={12} className="text-emerald-600" />
-                <span>Automated Test Matrix</span>
-              </span>
-            </div>
+          <div className="relative z-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm font-mono text-zinc-600 dark:text-zinc-400">
+            <span className="flex items-center gap-2">
+              <Check size={14} className="text-emerald-600 dark:text-emerald-500" />
+              <span>MIT License</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <Check size={14} className="text-emerald-600 dark:text-emerald-500" />
+              <span>FastAPI Python Core</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <Check size={14} className="text-emerald-600 dark:text-emerald-500" />
+              <span>React 19 Frontend</span>
+            </span>
           </div>
 
-          <div className="flex flex-col items-start md:items-end gap-3 shrink-0">
+          <div className="relative z-10 flex flex-col items-center gap-3">
             <a
               href="https://github.com/kab5DeR4/grc-engine"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium text-zinc-900 dark:text-zinc-100 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700/80 border border-zinc-200 dark:border-zinc-700 transition-colors no-underline"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-zinc-900 hover:bg-zinc-800 dark:text-zinc-900 dark:bg-zinc-100 dark:hover:bg-white shadow-sm transition-colors no-underline"
             >
-              <GithubIcon size={16} />
+              <GithubIcon size={18} />
               <span>View on GitHub</span>
-              <ExternalLink size={13} className="text-zinc-400 ml-0.5" />
+              <ExternalLink size={14} className="opacity-70 ml-1" />
             </a>
-            <span className="text-[11px] font-mono text-zinc-400">
+            <span className="text-xs font-mono text-zinc-500 bg-zinc-100 dark:bg-zinc-800/80 px-2 py-1 rounded">
               kab5DeR4/grc-engine
             </span>
           </div>
