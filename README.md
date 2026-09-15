@@ -88,7 +88,8 @@ flowchart TD
 
 > Experience the live dashboard with real-time persona switching (Platform Admin, Security Engineer, External Auditor) and theme selector.
 
-<img width="1919" height="946" alt="GRC Engine Interactive Dashboard" src="https://github.com/user-attachments/assets/7160d545-925f-4257-adbf-bab943823652" />
+<img width="1847" height="957" alt="image" src="https://github.com/user-attachments/assets/98df55b2-1e8f-4c51-bd75-c94d991ddea0" />
+
 
 🚀 **Try the interactive app:** [https://grc-engine.vercel.app](https://grc-engine.vercel.app)
 
