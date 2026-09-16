@@ -68,3 +68,7 @@ htmlcov/
 DEVELOPMENT_MASTER_PLAN.md
 instructions.md
 
+# Agent Skills & Prompts (Local only)
+.skills/
+
+

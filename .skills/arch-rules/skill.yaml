@@ -1,4 +1,0 @@
-name: arch-rules
-description: Architectural rules and code generation standards enforcing CLEAR framework, RBAC, payload sanitization, and audit logging.
-trigger_slash_command: /arch
-apply_to_code_generation: true
