@@ -11,7 +11,7 @@ from sqlalchemy import select
 
 from database import get_db
 from models.finding import Finding
-from api.deps import get_current_user_optional
+from api.deps import get_current_org_id
 
 router = APIRouter()
 
@@ -37,12 +37,11 @@ async def list_findings(
     status_filter: Optional[str] = Query(None, alias="status"),
     severity: Optional[str] = Query(None),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user_optional)
+    org_id: str = Depends(get_current_org_id),
 ):
-    """List compliance findings and gap evaluations."""
-    query = select(Finding)
-    if user:
-        query = query.where(Finding.organization_id == user.organization_id)
+    """List compliance findings and gap evaluations for current organization."""
+    # lock down query to tenant org id, prevent data leakage fr
+    query = select(Finding).where(Finding.organization_id == org_id)
     if status_filter:
         query = query.where(Finding.status == status_filter)
     if severity:
@@ -74,13 +73,20 @@ async def list_findings(
 async def resolve_finding(
     finding_id: str,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user_optional)
+    org_id: str = Depends(get_current_org_id),
 ):
-    """Mark a finding as resolved/remediated."""
+    """Mark a finding as resolved/remediated with tenant ownership check."""
     result = await db.execute(select(Finding).where(Finding.id == finding_id))
     finding = result.scalars().first()
     if not finding:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Finding not found")
+
+    # stop cross-org tampering, no IDOR allowed fr
+    if finding.organization_id != org_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to modify findings for another organization",
+        )
     
     finding.status = "RESOLVED"
     await db.commit()
@@ -101,3 +107,4 @@ async def resolve_finding(
         created_at=finding.created_at,
         updated_at=finding.updated_at
     )
+
