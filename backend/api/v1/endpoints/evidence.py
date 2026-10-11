@@ -13,7 +13,7 @@ from sqlalchemy import select
 
 from database import get_db
 from models.evidence import EvidenceArtifact
-from api.deps import get_current_user_optional
+from api.deps import get_current_org_id
 
 router = APIRouter()
 
@@ -40,12 +40,12 @@ class EvidenceVerifyResponse(BaseModel):
 @router.get("", response_model=List[EvidenceResponse])
 async def list_evidence(
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user_optional)
+    org_id: str = Depends(get_current_org_id),
 ):
-    """List immutable cryptographic evidence artifacts."""
-    query = select(EvidenceArtifact)
-    if user:
-        query = query.where(EvidenceArtifact.organization_id == user.organization_id)
+    """List immutable cryptographic evidence artifacts for current organization."""
+    # lock down query to tenant org id, avoid cross-org leak fr
+    query = select(EvidenceArtifact).where(EvidenceArtifact.organization_id == org_id)
+
 
     result = await db.execute(query)
     artifacts = result.scalars().all()
