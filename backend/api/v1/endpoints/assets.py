@@ -11,7 +11,7 @@ from sqlalchemy import select
 
 from database import get_db
 from models.asset import Asset
-from api.deps import get_current_user_optional
+from api.deps import get_current_org_id
 
 router = APIRouter()
 
@@ -34,14 +34,14 @@ class AssetResponse(BaseModel):
 async def list_assets(
     asset_type: Optional[str] = Query(None, description="Filter by asset type like GITHUB_REPO, AWS_S3"),
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user_optional)
+    org_id: str = Depends(get_current_org_id),
 ):
     """List discovered technical assets across infrastructure."""
-    query = select(Asset)
-    if user:
-        query = query.where(Asset.organization_id == user.organization_id)
+    # lock down asset list to tenant organization fr
+    query = select(Asset).where(Asset.organization_id == org_id)
     if asset_type:
         query = query.where(Asset.asset_type == asset_type)
+
 
     result = await db.execute(query)
     assets = result.scalars().all()
