@@ -13,7 +13,7 @@ from sqlalchemy import select
 from database import get_db
 from models.integration import Integration
 from models.organization import Organization
-from api.deps import get_current_user_optional
+from api.deps import get_current_org_id
 from connectors import get_connector, GitHubConnector, MockGitHubConnector
 from connectors.base import ConnectionTestResult
 from core.security import sanitize_input_string
@@ -74,12 +74,11 @@ class IntegrationResponse(BaseModel):
 @router.get("", response_model=List[IntegrationResponse])
 async def list_integrations(
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user_optional),
+    org_id: str = Depends(get_current_org_id),
 ):
-    """List all connected integrations."""
-    query = select(Integration)
-    if user:
-        query = query.where(Integration.organization_id == user.organization_id)
+    """List all connected integrations for current organization."""
+    # lock down query to tenant org id, no cross-org leaks fr
+    query = select(Integration).where(Integration.organization_id == org_id)
 
     result = await db.execute(query)
     integrations = result.scalars().all()
@@ -121,22 +120,12 @@ async def test_github_connection(payload: IntegrationTestPayload):
 async def connect_github(
     payload: IntegrationCreatePayload,
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user_optional),
+    org_id: str = Depends(get_current_org_id),
 ):
     """
     Connect a GitHub integration (live PAT or mock mode).
     Validates connection before saving to database.
     """
-    org_id = user.organization_id if user else None
-    if not org_id:
-        org_res = await db.execute(select(Organization).limit(1))
-        org = org_res.scalars().first()
-        if not org:
-            org = Organization(name="Default Organization", slug="default-org")
-            db.add(org)
-            await db.flush()
-        org_id = org.id
-
     creds = payload.credentials
     if payload.is_mock:
         creds["is_mock"] = True
@@ -189,14 +178,16 @@ async def connect_github(
 @router.get("/github/status")
 async def get_github_status(
     db: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user_optional),
+    org_id: str = Depends(get_current_org_id),
 ):
     """
     Check the status of the primary active GitHub integration.
     """
-    query = select(Integration).where(Integration.provider_type == "github")
-    if user:
-        query = query.where(Integration.organization_id == user.organization_id)
+    # strictly tenant-scoped lookup fr
+    query = select(Integration).where(
+        Integration.provider_type == "github",
+        Integration.organization_id == org_id,
+    )
     
     result = await db.execute(query)
     integration = result.scalars().first()
@@ -216,3 +207,4 @@ async def get_github_status(
         "telemetry_summary": integration.telemetry_summary or {},
         "last_sync_at": integration.last_sync_at,
     }
+
