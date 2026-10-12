@@ -100,15 +100,35 @@ class TestControlsAndEvidence(unittest.TestCase):
                     session.add(asset)
                     await session.flush()
 
+                import uuid
+                from datetime import datetime, timezone
+                from core.trust_anchor import build_evidence_manifest, sign_evidence_manifest, trust_anchor_ledger
+                ev_id = str(uuid.uuid4())
+                collected_dt = datetime(2026, 10, 12, 0, 0, 0, tzinfo=timezone.utc)
+                manifest = build_evidence_manifest(
+                    evidence_id=ev_id,
+                    organization_id=org.id,
+                    canonical_control_id=None,
+                    source_uri="github://acme-corp/payments-service/branches/main/protection",
+                    collected_at=collected_dt,
+                    payload_digest=expected_hash,
+                )
+                manifest_sig = sign_evidence_manifest(manifest)
+                anchor_entry = trust_anchor_ledger.record_anchor(ev_id, expected_hash, manifest_sig)
+
                 artifact = EvidenceArtifact(
+                    id=ev_id,
                     organization_id=org.id,
                     asset_id=asset.id,
                     evidence_code="EVD-TEST-001",
                     title="GitHub Branch Protection Evidence",
                     sha256_hash=expected_hash,
+                    manifest_signature=manifest_sig,
+                    trust_anchor_id=str(anchor_entry.get("sequence")),
                     source_uri="github://acme-corp/payments-service/branches/main/protection",
                     raw_payload_json=test_payload,
-                    status="VERIFIED_IMMUTABLE"
+                    status="VERIFIED_IMMUTABLE",
+                    collected_at=collected_dt,
                 )
                 session.add(artifact)
                 await session.commit()
@@ -124,6 +144,8 @@ class TestControlsAndEvidence(unittest.TestCase):
         self.assertEqual(data["id"], artifact_id)
         self.assertEqual(data["recorded_hash"], expected_hash)
         self.assertEqual(data["computed_hash"], expected_hash)
+        self.assertTrue(data["digest_matches"])
+        self.assertTrue(data["trust_anchor_verified"])
         self.assertTrue(data["is_valid"])
 
 if __name__ == "__main__":
