@@ -32,7 +32,7 @@ Traditional compliance platforms (e.g. Vanta, Drata, Archer) historically began 
 **GRC Engine turns compliance upside down:**
 - **Infrastructure is the single source of truth:** Compliance state is derived directly from live version control, IAM configurations, and cloud provider telemetry.
 - **Zero-Hallucination Determinism:** Compliance pass/fail logic is 100% mathematical and rule-based—AI models never decide whether a regulatory control passes.
-- **Cryptographic Tamper-Evident Proofs:** Every ingested configuration snapshot is hashed using SHA-256 to create immutable, auditor-verifiable ledgers.
+- **Cryptographic Tamper-Evident Proofs:** Configuration snapshots receive deterministic SHA-256 payload digests anchored via HMAC-signed manifests and append-only hash chains independent of the mutable database store.
 - **Multi-Standard Regulatory Mapping:** Unified canonical controls map seamlessly across **SOC 2 Type II, ISO/IEC 27001:2022, NIST CSF 2.0, CIS Controls v8, and GDPR**.
 
 ---
@@ -55,7 +55,7 @@ flowchart TD
         INGEST["Connector Manager<br/>(GitHub PAT & Mock Sandbox)"]
         NORM["Canonical Control Normalizer"]
         EVAL["Deterministic Evaluation Engine<br/>(Zero AI Hallucinations)"]
-        VAULT["Tamper-Evident Evidence Vault<br/>(SHA-256 Cryptographic Ledger)"]
+        VAULT["Tamper-Evident Evidence Vault<br/>(SHA-256 Digest + Independent Trust Anchor)"]
         REPORT["Attestation & Report Generator"]
     end
 
@@ -118,7 +118,7 @@ Explore the live app or local server with pre-configured role personas:
 | 🛡️ [**Threat Model**](docs/THREAT_MODEL.md) | Comprehensive STRIDE & DREAD risk assessment, attack vectors, and trust boundaries. |
 | 🔐 [**Security Model & RBAC**](docs/SECURITY_MODEL.md) | Deep dive into RBAC clearance hierarchy, SHA-256 canonical hashing, and data isolation. |
 | 🧪 [**Control Evaluation Examples**](docs/CONTROL_EVALUATION_EXAMPLES.md) | Worked examples from raw vendor JSON to canonical controls and deterministic verdicts. |
-| 📦 [**Sample Evidence JSON**](docs/SAMPLE_EVIDENCE.json) | Immutable cryptographic evidence proof records with SHA-256 signatures. |
+| 📦 [**Sample Evidence JSON**](docs/SAMPLE_EVIDENCE.json) | Cryptographic evidence proof records with SHA-256 payload digests and HMAC-signed manifests. |
 | 📄 [**Sample Compliance Report**](docs/SAMPLE_COMPLIANCE_REPORT.md) | Realistic SOC 2 & ISO 27001 executive auditor attestation package. |
 | 🧭 [**Evaluator Demo Walkthrough**](docs/DEMO_WALKTHROUGH.md) | 5-minute step-by-step evaluator guide for UI, API, and CLI. |
 | ⚠️ [**Known Limitations**](docs/KNOWN_LIMITATIONS.md) | Honest engineering trade-offs regarding API rate limits, database concurrency, and scale. |
