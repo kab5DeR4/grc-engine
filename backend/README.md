@@ -67,7 +67,7 @@ uvicorn server:app --reload --port 8000
 ## Security & Data Integrity
 
 - **Deterministic Evaluation:** 100% reproducible pass/fail verdicts and risk calculation.
-- **Tamper-Evident Evidence Vault:** Audit artifacts hashed using SHA-256 for cryptographic non-repudiation.
+- **Tamper-Evident Evidence Vault:** Audit artifacts hashed with canonical SHA-256 payload digests and authenticated via independent HMAC-signed manifests and append-only hash chains.
 - **Local-First Privacy:** No sensitive infrastructure tokens or policy data leaves your secure perimeter.
 
 ---
