@@ -333,7 +333,7 @@ export default function ArchivePage() {
                   className="w-full py-2 px-3 rounded-lg bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer border border-zinc-900 dark:border-zinc-100"
                 >
                   <ShieldCheck size={14} className={verifying ? 'animate-spin' : ''} />
-                  <span>{verifying ? 'Verifying SHA-256 Seal...' : 'Verify Cryptographic Signature'}</span>
+                  <span>{verifying ? 'Verifying Integrity & Trust Anchor...' : 'Verify Evidence & Trust Anchor'}</span>
                 </button>
 
                 {verificationResult && (
@@ -342,7 +342,7 @@ export default function ArchivePage() {
                       ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' 
                       : 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200 dark:border-rose-800'
                   }`}>
-                    {verificationResult === 'PASS' ? '✓ Cryptographic Proof Valid: Database signature matches SHA-256 digest' : '✗ Verification Failed: Hash mismatch'}
+                    {verificationResult === 'PASS' ? '✓ Evidence Valid: Payload digest & Trust Anchor verified' : '✗ Verification Failed: Integrity or Trust Anchor mismatch'}
                   </div>
                 )}
               </div>
