@@ -27,6 +27,7 @@ from models.evidence import EvidenceArtifact
 from models.finding import Finding
 from api.deps import get_current_org_id
 from connectors import get_connector
+from core.trust_anchor import compute_payload_digest, build_evidence_manifest, sign_evidence_manifest, trust_anchor_ledger
 
 logger = logging.getLogger("grc_engine.scans")
 router = APIRouter()
@@ -50,9 +51,8 @@ class ScanJobResponse(BaseModel):
 
 
 def compute_sha256(payload: Dict[str, Any]) -> str:
-    """Computes deterministic FIPS 180-4 SHA-256 digest from key-sorted JSON."""
-    raw = json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
-    return hashlib.sha256(raw).hexdigest()
+    """Computes deterministic SHA-256 payload digest from key-sorted JSON."""
+    return compute_payload_digest(payload)
 
 
 async def execute_compliance_scan(
@@ -145,9 +145,27 @@ async def execute_compliance_scan(
                         canonical_ctrl = controls_map.get(st.control_code)
                         canonical_ctrl_id = canonical_ctrl.id if canonical_ctrl else None
 
-                        # create SHA-256 tamper-evident evidence snapshot
+                        # compute canonical payload digest and sign manifest via independent trust anchor
                         digest = compute_sha256(st.raw_payload)
+                        evidence_id = str(uuid.uuid4())
+                        collected_time = datetime.now(timezone.utc)
+                        manifest = build_evidence_manifest(
+                            evidence_id=evidence_id,
+                            organization_id=org_id,
+                            canonical_control_id=canonical_ctrl_id,
+                            source_uri=st.evidence_uri,
+                            collected_at=collected_time,
+                            payload_digest=digest,
+                        )
+                        manifest_sig = sign_evidence_manifest(manifest)
+                        anchor_entry = trust_anchor_ledger.record_anchor(
+                            evidence_id=evidence_id,
+                            payload_digest=digest,
+                            manifest_signature=manifest_sig,
+                        )
+
                         evidence = EvidenceArtifact(
+                            id=evidence_id,
                             organization_id=org_id,
                             asset_id=asset.id,
                             canonical_control_id=canonical_ctrl_id,
@@ -156,9 +174,11 @@ async def execute_compliance_scan(
                             title=f"{st.control_code} Verification for {dto.name}",
                             source_uri=st.evidence_uri,
                             sha256_hash=digest,
+                            manifest_signature=manifest_sig,
+                            trust_anchor_id=str(anchor_entry.get("sequence")),
                             raw_payload_json=st.raw_payload,
                             status="VERIFIED_IMMUTABLE",
-                            collected_at=datetime.now(timezone.utc),
+                            collected_at=collected_time,
                         )
                         db.add(evidence)
 
