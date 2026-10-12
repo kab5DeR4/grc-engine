@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
 
+    # secret key for trust anchor hmac, separate from db fr
+    EVIDENCE_SIGNING_KEY: str = "grc-engine-evidence-anchor-hmac-key-independent-from-db"
+    EVIDENCE_LEDGER_FILE: str = "evidence_anchors.jsonl"
+
     # CORS configuration
     BACKEND_CORS_ORIGINS: List[str] = [
         "http://localhost:5173",
