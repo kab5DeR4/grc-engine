@@ -91,8 +91,10 @@ GRC Engine ingests sensitive infrastructure configuration state from third-party
 
 | STRIDE Category | Threat Description | Severity (DREAD) | Implemented Mitigation | Verification Mechanism |
 | :--- | :--- | :---: | :--- | :--- |
-| **Tampering** | Database administrator directly edits `evidence_artifacts.raw_payload_json` to turn FAIL into PASS. | **Critical (9.2)** | Every evidence record stores a cryptographically independent SHA-256 digest calculated over canonically sorted JSON keys. The `/verify` endpoint detects any payload alteration. | `test_controls_and_evidence.py::test_evidence_verification_endpoint` |
-| **Repudiation** | Attestation package exported for auditors lacks verifiable authenticity proof. | **High (7.8)** | HTML and JSON reports include cryptographic proof manifests with SHA-256 hash digests and generator version metadata. | `report_generator.py`, `docs/SAMPLE_EVIDENCE.json` |
+| **Tampering** | Rogue operator alters `raw_payload_json` in the database to forge a passing audit status. | **High (8.0)** | Canonical SHA-256 payload digest mismatch is immediately flagged on `/verify`. | `test_evidence_tamper_resistance.py::test_tamper_payload_only_fails_verification` |
+| **Tampering** | Database administrator modifies **both** `raw_payload_json` and adjacent `sha256_hash` in the database table. | **Critical (9.4)** | Independent Trust Anchor: Evidence manifest is authenticated using HMAC-SHA256 with a protected signing key (`EVIDENCE_SIGNING_KEY`) stored outside the database, and anchored in an append-only ledger. Altering DB columns fails trust anchor verification. | `test_evidence_tamper_resistance.py::test_tamper_both_payload_and_digest_fails_verification` |
+| **Tampering** | Adversary deletes evidence records or attempts in-place modification (`PUT`/`PATCH`/`DELETE`). | **High (7.6)** | API explicitly rejects mutations with `405 Method Not Allowed`; ORM event listeners forbid updates/deletions; append-only trust anchor ledger detects missing sequence entries. | `test_evidence_tamper_resistance.py::test_delete_records_rejected_and_detected`, `test_unauthorized_updates_rejected` |
+| **Repudiation** | Attestation package exported for auditors lacks verifiable authenticity proof. | **High (7.8)** | Reports include cryptographic manifests with SHA-256 digests, HMAC trust anchor signatures, and generator metadata. | `report_generator.py`, `docs/SAMPLE_EVIDENCE.json` |
 
 ---
 
@@ -111,7 +113,7 @@ $$\text{Risk Score} = \frac{D + R + E + A + D}{5}$$
 ┌────────────────────────────────────────┬───┬───┬───┬───┬───┬───────┬──────────┐
 │ Threat Scenario                        │ D │ R │ E │ A │ D │ Score │ Rating   │
 ├────────────────────────────────────────┼───┼───┼───┼───┼───┼───────┼──────────┤
-│ Evidence Payload DB Tampering          │ 9 │ 9 │ 8 │ 10│ 10│  9.2  │ CRITICAL │
+│ Evidence DB Tampering (Payload+Digest) │ 9 │ 9 │ 8 │ 10│ 10│  9.2  │ CRITICAL │
 │ Unencrypted Token Leakage              │ 9 │ 9 │ 8 │ 10│ 9 │  9.0  │ CRITICAL │
 │ JWT Secret Forgery / Algorithm Swap    │ 9 │ 9 │ 8 │ 10│ 8 │  8.8  │ CRITICAL │
 │ Unauthorized Finding Resolution (IDOR) │ 8 │ 9 │ 8 │ 9 │ 9 │  8.6  │ HIGH     │
@@ -124,7 +126,7 @@ $$\text{Risk Score} = \frac{D + R + E + A + D}{5}$$
 
 ## 5. Security Controls & Defensive Invariants
 
-1. **Deterministic Immutability Invariant:** Once an evidence artifact is generated, its SHA-256 digest is permanently bound to its raw payload. Any subsequent mutation of the database row invalidates `GET /api/v1/evidence/{id}/verify`.
+1. **Evidence Integrity & Independent Trust Anchor Invariant:** Storing a digest adjacent to mutable data does not protect against an adversary who can modify both columns. Evidence artifacts are anchored by an independent trust anchor (HMAC-SHA256 signed manifest with a protected key and an append-only ledger chain outside the mutable SQL store). Any mutation of payload, mutation of both payload and digest, deletion of records, or unauthorized updates invalidates verification.
 2. **Zero-Trust Telemetry Invariant:** External connector data is parsed through strict Pydantic DTOs before entering the evaluation pipeline. No unstructured inputs can execute arbitrary code.
 3. **Tenant Isolation Invariant:** All SQLAlchemy queries filter explicitly by `organization_id`. Cross-tenant record access is strictly rejected at the ORM query layer.
 4. **Credential Privacy Invariant:** Vendor secrets (PATs, access keys) are never stored in plain text, never returned in full in API responses, and never printed to server log streams.
