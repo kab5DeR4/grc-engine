@@ -56,9 +56,9 @@ A step-by-step walkthrough guide to evaluate the full capabilities of **GRC Engi
 
 ### Step 5: Cryptographic Proof Verification in Evidence Vault
 1. Navigate to **Evidence Vault**:
-   - Inspect the table of immutable SHA-256 artifacts.
+   - Inspect the table of SHA-256 evidence artifacts and trust anchor seals.
    - Select any evidence record and click **[ CRYPTOGRAPHIC INTEGRITY PROOF ]**.
-   - Observe the 64-character hex signature computed over canonical JSON telemetry.
+   - Observe the 64-character SHA-256 payload digest and independent HMAC manifest authentication tag.
 
 ### Step 6: Export Auditor Attestation Package
 1. Navigate to **Reports**:
