@@ -60,7 +60,24 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         finally:
             await session.close()
 
+def _sync_sqlite_columns(sync_conn):
+    # patch missing columns on sqlite if tables exist fr
+    try:
+        cursor = sync_conn.connection.cursor()
+        cursor.execute("PRAGMA table_info(evidence_artifacts)")
+        existing_cols = [row[1] for row in cursor.fetchall()]
+        if existing_cols:
+            if "manifest_signature" not in existing_cols:
+                cursor.execute("ALTER TABLE evidence_artifacts ADD COLUMN manifest_signature VARCHAR(64)")
+            if "trust_anchor_id" not in existing_cols:
+                cursor.execute("ALTER TABLE evidence_artifacts ADD COLUMN trust_anchor_id VARCHAR(64)")
+        cursor.close()
+    except Exception:
+        pass
+
 # helper to initialize database schema (tables creation)
 async def init_db() -> None:
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        if "sqlite" in DATABASE_URL:
+            await conn.run_sync(_sync_sqlite_columns)
